@@ -17,6 +17,7 @@ public class MyGame extends Game  {
     public static int offset;
     private Timer timer;
     private Pieces pieces;
+    private Tetrimino currentTetrimino;
 
     public MyGame() {
         // initialize variables here
@@ -57,7 +58,7 @@ public class MyGame extends Game  {
     }
 
     public void createTetrimino() {
-        Tetrimino piece = pieces.new LongPiece();
+        currentTetrimino = pieces.new LongPiece();
     }
 
     public static void addTetriminoNode(Tetrimino t, int direction, int row, int col) {
@@ -127,11 +128,32 @@ public class MyGame extends Game  {
         board[row][col] = t;
     }
 
+    public void moveLeft() {
+        for (int i = 0; i < board.length; i++) {
+            for (int k = 0; k < board[i].length; k++) {
+                if (board[i][k] == currentTetrimino) {
+                    Tetrimino t = currentTetrimino;
+
+                    while (t != null) {
+                        t.col--;
+                        board[i][k - 1] = null;
+                        board[t.row][t.col] = t;
+                        t = t.getNext();
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public void keyTyped(KeyEvent ke) {}
 
     @Override
-    public void keyPressed(KeyEvent ke) {}
+    public void keyPressed(KeyEvent ke) {
+        if (ke.getKeyCode() == ke.VK_LEFT) {
+            moveLeft();
+        }
+    }
 
     @Override
     public void keyReleased(KeyEvent ke) {}
