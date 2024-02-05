@@ -39,6 +39,8 @@ public class MyGame extends Game  {
         if (currentTetrimino == null) {
             clearRow();
             currentTetrimino = getTetrimino();
+        } else {
+            currentTetrimino.updateRotations();
         }
     }
     
@@ -73,7 +75,24 @@ public class MyGame extends Game  {
             }
         }
 
-        for (int i = 0; i < nodes.length; i++) nodes[i].row++;
+        for (int i = 0; i < nodes.length; i++) {
+            nodes[i].row++;
+        }
+
+        TetriminoNode[][] rotations = currentTetrimino.getRotations();
+
+        for (int r = 0; r < rotations.length; r++) {
+            for (int c = 0; c < rotations[r].length; c++) {
+                if (rotations[r][c] != null) {
+                    boolean move = true;
+                    for (int i = 0; i < nodes.length; i++) {
+                        if (nodes[i].equals(rotations[r][c])) move = false;
+                    }
+                    
+                    if (move) rotations[r][c].row++;
+                }
+            }
+        }
 
         for (int i = 0; i < nodes.length; i++) {
             TetriminoNode node = nodes[i];
@@ -122,6 +141,21 @@ public class MyGame extends Game  {
             nodes[i].col += 1 * direction;
         }
 
+        TetriminoNode[][] rotations = currentTetrimino.getRotations();
+
+        for (int r = 0; r < rotations.length; r++) {
+            for (int c = 0; c < rotations[r].length; c++) {
+                if (rotations[r][c] != null) {
+                    boolean move = true;
+                    for (int i = 0; i < nodes.length; i++) {
+                        if (nodes[i].equals(rotations[r][c])) move = false;
+                    }
+                    
+                    if (move) rotations[r][c].col += 1 * direction;
+                }
+            }
+        }
+
         for (int i = 0; i < nodes.length; i++) {
             TetriminoNode node = nodes[i];
             board[node.row][node.col] = node;
@@ -137,7 +171,7 @@ public class MyGame extends Game  {
 
         switch (num) {
             case 0:
-                t = pieces.new LongPiece();
+                t = pieces.new IPiece();
                 break;
 
             case 1:
@@ -153,7 +187,7 @@ public class MyGame extends Game  {
                 break;
 
             case 4:
-                t = pieces.new BoxPiece();
+                t = pieces.new OPiece();
                 break;
 
             case 5:
@@ -161,7 +195,7 @@ public class MyGame extends Game  {
                 break;
 
             case 6:
-                t = pieces.new BackLPiece();
+                t = pieces.new JPiece();
                 break;
         }
 
@@ -216,7 +250,7 @@ public class MyGame extends Game  {
                 break;
 
             case 38: // Up Arrow Key
-                currentTetrimino.rotateRight();
+                currentTetrimino.rotate(1);
                 break;
 
             case 39: // Right Arrow Key
@@ -228,7 +262,7 @@ public class MyGame extends Game  {
                 break;
 
             case 90: // Z Key
-                currentTetrimino.rotateLeft();
+                currentTetrimino.rotate(-1);
                 break;
 
             case 82: // R Key
