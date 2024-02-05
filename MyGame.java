@@ -39,8 +39,6 @@ public class MyGame extends Game  {
         if (currentTetrimino == null) {
             clearRow();
             currentTetrimino = getTetrimino();
-        } else {
-            currentTetrimino.updateRotations();
         }
     }
     
@@ -85,9 +83,7 @@ public class MyGame extends Game  {
             for (int c = 0; c < rotations[r].length; c++) {
                 if (rotations[r][c] != null) {
                     boolean move = true;
-                    for (int i = 0; i < nodes.length; i++) {
-                        if (nodes[i].equals(rotations[r][c])) move = false;
-                    }
+                    if (nodes.equals(rotations[r])) move = false;
                     
                     if (move) rotations[r][c].row++;
                 }
@@ -147,10 +143,7 @@ public class MyGame extends Game  {
             for (int c = 0; c < rotations[r].length; c++) {
                 if (rotations[r][c] != null) {
                     boolean move = true;
-                    for (int i = 0; i < nodes.length; i++) {
-                        if (nodes[i].equals(rotations[r][c])) move = false;
-                    }
-                    
+                    if (nodes.equals(rotations[r])) move = false;
                     if (move) rotations[r][c].col += 1 * direction;
                 }
             }
@@ -250,7 +243,7 @@ public class MyGame extends Game  {
                 break;
 
             case 38: // Up Arrow Key
-                currentTetrimino.rotate(1);
+                if (currentTetrimino != null) currentTetrimino.rotate(1);
                 break;
 
             case 39: // Right Arrow Key
@@ -262,7 +255,7 @@ public class MyGame extends Game  {
                 break;
 
             case 90: // Z Key
-                currentTetrimino.rotate(-1);
+            if (currentTetrimino != null) currentTetrimino.rotate(-1);
                 break;
 
             case 82: // R Key

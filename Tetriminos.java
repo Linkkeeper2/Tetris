@@ -11,7 +11,7 @@ public class Tetriminos {
             }
 
             this.nodes = nodes;
-            this.rotations = new TetriminoNode[4][4];
+            createRotations();
         }
 
         public void rotate(int factor) {
@@ -45,7 +45,7 @@ public class Tetriminos {
             MyGame.updateArray();
         }
 
-        public void updateRotations() {
+        private void createRotations() {
             rotations = new TetriminoNode[4][4];
 
             for (int i = 0; i < rotations[0].length; i++) {

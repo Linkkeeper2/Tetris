@@ -21,7 +21,7 @@ public class Tetrimino {
 
     public void rotate(int factor) {}
 
-    public void updateRotations() {}
+    private void createRotations() {}
 
     protected boolean canRotate(int nextRow, int nextCol) {
         if (!(nextRow >= 0 && nextRow < MyGame.board.length && nextCol >= 0 && nextCol < MyGame.board[0].length)) return false;
