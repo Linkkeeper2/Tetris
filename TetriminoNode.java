@@ -2,6 +2,7 @@ import java.awt.Color;
 
 public class TetriminoNode {
     private Color color;
+    public int id;
     public int row;
     public int col;
 

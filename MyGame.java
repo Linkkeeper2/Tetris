@@ -17,13 +17,13 @@ public class MyGame extends Game  {
     private Timer timer;
     private Tetriminos pieces;
     private Tetrimino currentTetrimino;
+    private int tNum = 0; // Number of Tetriminos used (Keeps track of ID for each Tetrimino)
 
     public MyGame() {
         // initialize variables here
         board = new TetriminoNode[16][8];
         offset = 100;
         pieces = new Tetriminos();
-        createTetrimino();
         updateArray();
 
         timer = new Timer();
@@ -36,6 +36,7 @@ public class MyGame extends Game  {
     
     public void update() {
         // updating logic
+        if (currentTetrimino == null) currentTetrimino = getTetrimino();
     }
     
     public void draw(Graphics pen) {
@@ -54,10 +55,6 @@ public class MyGame extends Game  {
         }
     }
 
-    public void createTetrimino() {
-        currentTetrimino = pieces.new LPiece();
-    }
-
     public void moveTetriminos() {
         if (currentTetrimino == null) return;
 
@@ -65,6 +62,9 @@ public class MyGame extends Game  {
 
         for (int i = 0; i < nodes.length; i++) {
             if (nodes[i].row >= board.length - 1) {
+                currentTetrimino = null;
+                return;
+            } else if (board[nodes[i].row + 1][nodes[i].col] != null && board[nodes[i].row + 1][nodes[i].col].id != nodes[i].id) {
                 currentTetrimino = null;
                 return;
             }
@@ -123,12 +123,58 @@ public class MyGame extends Game  {
         updateArray();
     }
 
+    public Tetrimino getTetrimino() {
+        int num = (int)(Math.random() * 7);
+        Tetrimino t = pieces.new LPiece();
+
+        switch (num) {
+            case 0:
+                t = pieces.new LongPiece();
+                break;
+
+            case 1:
+                t = pieces.new TPiece();
+                break;
+
+            case 2:
+                t = pieces.new ZPiece();
+                break;
+
+            case 3:
+                t = pieces.new SPiece();
+                break;
+
+            case 4:
+                t = pieces.new BoxPiece();
+                break;
+
+            case 5:
+                t = pieces.new LPiece();
+                break;
+
+            case 6:
+                t = pieces.new BackLPiece();
+                break;
+        }
+
+        t.setID(tNum);
+        tNum++;
+
+        return t;
+    }
+
     @Override
     public void keyTyped(KeyEvent ke) {}
 
     @Override
     public void keyPressed(KeyEvent ke) {
         switch (ke.getKeyCode()) {
+            case 32: // SPACE
+                for (int i = 0; i < board.length; i++) {
+                    moveTetriminos();
+                }
+                break;
+
             case 37: // Left Arrow Key
                 move(-1);
                 break;
@@ -139,7 +185,7 @@ public class MyGame extends Game  {
 
             case 40: // Down Arrow Key
                 moveTetriminos();
-                break; 
+                break;
         }
     }
 
