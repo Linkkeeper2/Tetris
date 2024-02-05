@@ -14,40 +14,10 @@ public class Tetriminos {
             createRotations();
         }
 
-        public void rotate(int factor) {
-            for (int i = 0; i < rotations[this.direction].length; i++) {
-                TetriminoNode node = rotations[this.direction][i];
-
-                if (!canRotate(node.row, node.col)) return;
-            }
-
-            for (int i = 0; i < nodes.length; i++) {
-                TetriminoNode node = nodes[i];
-                MyGame.board[node.row][node.col] = null;
-            }
-
-            nodes = rotations[this.direction];
-
-            // Yes there is a more efficient way to do this, but for some reason it works better this way (Looping rotation)
-            if (factor == 1) {
-                if (this.direction < 3) this.direction++;
-                else this.direction = 0;
-            } else if (factor == -1) {
-                if (this.direction > 0) this.direction--;
-                else this.direction = 3;
-            }
-
-            for (int i = 0; i < nodes.length; i++) {
-                TetriminoNode node = nodes[i];
-                MyGame.board[node.row][node.col] = node;
-            }
-            
-            MyGame.updateArray();
-        }
-
-        private void createRotations() {
+        protected void createRotations() {
             rotations = new TetriminoNode[4][4];
 
+            // Default
             for (int i = 0; i < rotations[0].length; i++) {
                 rotations[0][i] = new TetriminoNode(new Color(0, 255, 255), 0, i + 2);
             }
@@ -79,6 +49,33 @@ public class Tetriminos {
             MyGame.add(nodes[3], 0, 4);
 
             this.nodes = nodes;
+            createRotations();
+        }
+
+        protected void createRotations() {
+            rotations = new TetriminoNode[4][4];
+
+            // Default
+            for (int i = 0; i < rotations[0].length - 1; i++) {
+                rotations[0][i] = new TetriminoNode(new Color(255, 0, 255), 1, i + 2);
+            }
+            rotations[0][3] = new TetriminoNode(new Color(255, 0, 255), 0, 3);
+
+            for (int i = 0; i < rotations[1].length - 1; i++) {
+                rotations[1][i] = new TetriminoNode(new Color(255, 0, 255), i, 3);
+            }
+            rotations[1][3] = new TetriminoNode(new Color(255, 0, 255), 1, 4);
+
+            for (int i = 0; i < rotations[2].length - 1; i++) {
+                rotations[2][i] = new TetriminoNode(new Color(255, 0, 255), 1, i + 2);
+            }
+            rotations[2][3] = new TetriminoNode(new Color(255, 0, 255), 2, 3);
+
+            for (int i = 0; i < rotations[3].length - 1; i++) {
+                rotations[3][i] = new TetriminoNode(new Color(255, 0, 255), i, 3);
+            }
+            rotations[3][3] = new TetriminoNode(new Color(255, 0, 255), 1, 2);
+
         }
     }
 

@@ -159,7 +159,7 @@ public class MyGame extends Game  {
 
     public Tetrimino getTetrimino() {
         int num = (int)(Math.random() * 7);
-        num = 0;
+        num = 1;
         Tetrimino t = null;
 
         switch (num) {
