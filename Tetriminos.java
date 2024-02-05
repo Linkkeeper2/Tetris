@@ -75,7 +75,6 @@ public class Tetriminos {
                 rotations[3][i] = new TetriminoNode(new Color(255, 0, 255), i, 3);
             }
             rotations[3][3] = new TetriminoNode(new Color(255, 0, 255), 1, 2);
-
         }
     }
 
@@ -93,6 +92,32 @@ public class Tetriminos {
             }
 
             this.nodes = nodes;
+            createRotations();
+        }
+
+        protected void createRotations() {
+            rotations = new TetriminoNode[4][4];
+
+            // Default
+            rotations[0][0] = new TetriminoNode(new Color(255, 0, 0), 0, 2);
+            rotations[0][1] = new TetriminoNode(new Color(255, 0, 0), 0, 3);
+            rotations[0][2] = new TetriminoNode(new Color(255, 0, 0), 1, 3);
+            rotations[0][3] = new TetriminoNode(new Color(255, 0, 0), 1, 4);
+
+            rotations[1][0] = new TetriminoNode(new Color(255, 0, 0), 0, 4);
+            rotations[1][1] = new TetriminoNode(new Color(255, 0, 0), 1, 4);
+            rotations[1][2] = new TetriminoNode(new Color(255, 0, 0), 1, 3);
+            rotations[1][3] = new TetriminoNode(new Color(255, 0, 0), 2, 3);
+
+            rotations[2][0] = new TetriminoNode(new Color(255, 0, 0), 1, 2);
+            rotations[2][1] = new TetriminoNode(new Color(255, 0, 0), 1, 3);
+            rotations[2][2] = new TetriminoNode(new Color(255, 0, 0), 2, 3);
+            rotations[2][3] = new TetriminoNode(new Color(255, 0, 0), 2, 4);
+
+            rotations[3][0] = new TetriminoNode(new Color(255, 0, 0), 0, 3);
+            rotations[3][1] = new TetriminoNode(new Color(255, 0, 0), 1, 3);
+            rotations[3][2] = new TetriminoNode(new Color(255, 0, 0), 1, 2);
+            rotations[3][3] = new TetriminoNode(new Color(255, 0, 0), 2, 2);
         }
     }
 
@@ -110,6 +135,32 @@ public class Tetriminos {
             }
 
             this.nodes = nodes;
+            createRotations();
+        }
+
+        protected void createRotations() {
+            rotations = new TetriminoNode[4][4];
+
+            // Default
+            rotations[0][0] = new TetriminoNode(new Color(0, 255, 0), 1, 2);
+            rotations[0][1] = new TetriminoNode(new Color(0, 255, 0), 1, 3);
+            rotations[0][2] = new TetriminoNode(new Color(0, 255, 0), 0, 3);
+            rotations[0][3] = new TetriminoNode(new Color(0, 255, 0), 0, 4);
+
+            rotations[1][0] = new TetriminoNode(new Color(0, 255, 0), 0, 3);
+            rotations[1][1] = new TetriminoNode(new Color(0, 255, 0), 1, 3);
+            rotations[1][2] = new TetriminoNode(new Color(0, 255, 0), 1, 4);
+            rotations[1][3] = new TetriminoNode(new Color(0, 255, 0), 2, 4);
+
+            rotations[2][0] = new TetriminoNode(new Color(0, 255, 0), 2, 2);
+            rotations[2][1] = new TetriminoNode(new Color(0, 255, 0), 2, 3);
+            rotations[2][2] = new TetriminoNode(new Color(0, 255, 0), 1, 3);
+            rotations[2][3] = new TetriminoNode(new Color(0, 255, 0), 1, 4);
+
+            rotations[3][0] = new TetriminoNode(new Color(0, 255, 0), 0, 2);
+            rotations[3][1] = new TetriminoNode(new Color(0, 255, 0), 1, 2);
+            rotations[3][2] = new TetriminoNode(new Color(0, 255, 0), 1, 3);
+            rotations[3][3] = new TetriminoNode(new Color(0, 255, 0), 2, 3);
         }
     }
 
@@ -127,6 +178,7 @@ public class Tetriminos {
             }
 
             this.nodes = nodes;
+            this.direction = -1;
         }
     }
 
@@ -144,6 +196,32 @@ public class Tetriminos {
             }
 
             this.nodes = nodes;
+            createRotations();
+        }
+
+        protected void createRotations() {
+            rotations = new TetriminoNode[4][4];
+
+            // Default
+            for (int i = 0; i < rotations[0].length - 1; i++) {
+                rotations[0][i] = new TetriminoNode(new Color(255, 100, 0), 1, i + 2);
+            }
+            rotations[0][3] = new TetriminoNode(new Color(255, 100, 0), 0, 4);
+
+            for (int i = 0; i < rotations[1].length - 1; i++) {
+                rotations[1][i] = new TetriminoNode(new Color(255, 100, 0), i, 3);
+            }
+            rotations[1][3] = new TetriminoNode(new Color(255, 100, 0), 2, 4);
+
+            for (int i = 0; i < rotations[2].length - 1; i++) {
+                rotations[2][i] = new TetriminoNode(new Color(255, 100, 0), 1, i + 2);
+            }
+            rotations[2][3] = new TetriminoNode(new Color(255, 100, 0), 2, 2);
+
+            for (int i = 0; i < rotations[3].length - 1; i++) {
+                rotations[3][i] = new TetriminoNode(new Color(255, 100, 0), i, 3);
+            }
+            rotations[3][3] = new TetriminoNode(new Color(255, 100, 0), 0, 2);
         }
     }
 
@@ -161,6 +239,32 @@ public class Tetriminos {
             }
 
             this.nodes = nodes;
+            createRotations();
+        }
+
+        protected void createRotations() {
+            rotations = new TetriminoNode[4][4];
+
+            // Default
+            for (int i = 0; i < rotations[0].length - 1; i++) {
+                rotations[0][i] = new TetriminoNode(new Color(0, 0, 255), 1, i + 2);
+            }
+            rotations[0][3] = new TetriminoNode(new Color(0, 0, 255), 0, 2);
+
+            for (int i = 0; i < rotations[1].length - 1; i++) {
+                rotations[1][i] = new TetriminoNode(new Color(0, 0, 255), i, 3);
+            }
+            rotations[1][3] = new TetriminoNode(new Color(0, 0, 255), 0, 4);
+
+            for (int i = 0; i < rotations[2].length - 1; i++) {
+                rotations[2][i] = new TetriminoNode(new Color(0, 0, 255), 1, i + 2);
+            }
+            rotations[2][3] = new TetriminoNode(new Color(0, 0, 255), 2, 4);
+
+            for (int i = 0; i < rotations[3].length - 1; i++) {
+                rotations[3][i] = new TetriminoNode(new Color(0, 0, 255), i, 3);
+            }
+            rotations[3][3] = new TetriminoNode(new Color(0, 0, 255), 2, 2);
         }
     }
 }

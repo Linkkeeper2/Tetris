@@ -18,6 +18,7 @@ public class MyGame extends Game  {
     private Tetriminos pieces;
     private Tetrimino currentTetrimino;
     private int tNum = 0; // Number of Tetriminos used (Keeps track of ID for each Tetrimino)
+    private boolean hardDropping = false; // Determines whether or not the regular drop interval should occur (prevents Tetrimino clipping while Hard Dropping)
 
     public MyGame() {
         // initialize variables here
@@ -73,29 +74,33 @@ public class MyGame extends Game  {
             }
         }
 
-        for (int i = 0; i < nodes.length; i++) {
-            nodes[i].row++;
-        }
-
-        TetriminoNode[][] rotations = currentTetrimino.getRotations();
-
-        for (int r = 0; r < rotations.length; r++) {
-            for (int c = 0; c < rotations[r].length; c++) {
-                if (rotations[r][c] != null) {
-                    boolean move = true;
-                    if (nodes.equals(rotations[r])) move = false;
-                    
-                    if (move) rotations[r][c].row++;
+        if (!hardDropping) {
+            for (int i = 0; i < nodes.length; i++) {
+                nodes[i].row++;
+            }
+    
+            TetriminoNode[][] rotations = currentTetrimino.getRotations();
+    
+            if (rotations != null) {
+                for (int r = 0; r < rotations.length; r++) {
+                    for (int c = 0; c < rotations[r].length; c++) {
+                        if (rotations[r][c] != null) {
+                            boolean move = true;
+                            if (nodes.equals(rotations[r])) move = false;
+                            
+                            if (move) rotations[r][c].row++;
+                        }
+                    }
                 }
             }
+    
+            for (int i = 0; i < nodes.length; i++) {
+                TetriminoNode node = nodes[i];
+                board[node.row][node.col] = node;
+            }
+    
+            updateArray();
         }
-
-        for (int i = 0; i < nodes.length; i++) {
-            TetriminoNode node = nodes[i];
-            board[node.row][node.col] = node;
-        }
-
-        updateArray();
     }
     
     public static void add(TetriminoNode t, int row, int col) {
@@ -139,12 +144,14 @@ public class MyGame extends Game  {
 
         TetriminoNode[][] rotations = currentTetrimino.getRotations();
 
-        for (int r = 0; r < rotations.length; r++) {
-            for (int c = 0; c < rotations[r].length; c++) {
-                if (rotations[r][c] != null) {
-                    boolean move = true;
-                    if (nodes.equals(rotations[r])) move = false;
-                    if (move) rotations[r][c].col += 1 * direction;
+        if (rotations != null) {
+            for (int r = 0; r < rotations.length; r++) {
+                for (int c = 0; c < rotations[r].length; c++) {
+                    if (rotations[r][c] != null) {
+                        boolean move = true;
+                        if (nodes.equals(rotations[r])) move = false;
+                        if (move) rotations[r][c].col += 1 * direction;
+                    }
                 }
             }
         }
@@ -159,7 +166,6 @@ public class MyGame extends Game  {
 
     public Tetrimino getTetrimino() {
         int num = (int)(Math.random() * 7);
-        num = 1;
         Tetrimino t = null;
 
         switch (num) {
@@ -226,6 +232,56 @@ public class MyGame extends Game  {
         }
     }
 
+    public void hardDrop() {
+        hardDropping = true;
+
+        for (int k = 0; k < board.length; k++) {
+            if (currentTetrimino == null) return;
+
+            TetriminoNode[] nodes = currentTetrimino.getNodes();
+
+            for (int i = 0; i < nodes.length; i++) {
+                if (nodes[i].row >= board.length - 1) {
+                    currentTetrimino = null;
+                    hardDropping = false;
+                    return;
+                } else if (board[nodes[i].row + 1][nodes[i].col] != null && board[nodes[i].row + 1][nodes[i].col].id != nodes[i].id) {
+                    currentTetrimino = null;
+                    hardDropping = false;
+                    return;
+                }
+            }
+
+            for (int i = 0; i < nodes.length; i++) {
+                nodes[i].row++;
+            }
+    
+            TetriminoNode[][] rotations = currentTetrimino.getRotations();
+    
+            if (rotations != null) {
+                for (int r = 0; r < rotations.length; r++) {
+                    for (int c = 0; c < rotations[r].length; c++) {
+                        if (rotations[r][c] != null) {
+                            boolean move = true;
+                            if (nodes.equals(rotations[r])) move = false;
+                            
+                            if (move) rotations[r][c].row++;
+                        }
+                    }
+                }
+            }
+    
+            for (int i = 0; i < nodes.length; i++) {
+                TetriminoNode node = nodes[i];
+                board[node.row][node.col] = node;
+            }
+    
+            updateArray();
+        }
+
+        hardDropping = false;
+    }
+
     @Override
     public void keyTyped(KeyEvent ke) {}
 
@@ -233,9 +289,7 @@ public class MyGame extends Game  {
     public void keyPressed(KeyEvent ke) {
         switch (ke.getKeyCode()) {
             case 32: // SPACE
-                for (int i = 0; i < board.length; i++) {
-                    moveTetriminos();
-                }
+                hardDrop();
                 break;
 
             case 37: // Left Arrow Key
@@ -243,7 +297,7 @@ public class MyGame extends Game  {
                 break;
 
             case 38: // Up Arrow Key
-                if (currentTetrimino != null) currentTetrimino.rotate(1);
+                if (currentTetrimino != null && currentTetrimino.direction != -1) currentTetrimino.rotate(1);
                 break;
 
             case 39: // Right Arrow Key
@@ -255,7 +309,7 @@ public class MyGame extends Game  {
                 break;
 
             case 90: // Z Key
-            if (currentTetrimino != null) currentTetrimino.rotate(-1);
+                if (currentTetrimino != null && currentTetrimino.direction != -1) currentTetrimino.rotate(-1);
                 break;
 
             case 82: // R Key
