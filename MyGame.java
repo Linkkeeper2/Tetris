@@ -114,9 +114,13 @@ public class MyGame extends Game  {
                     if (nodes[i].col >= board[0].length - 1) return;
                     break;
             }
+
+            if (board[nodes[i].row][nodes[i].col + 1 * direction] != null && board[nodes[i].row][nodes[i].col + 1 * direction].id != nodes[i].id) return;
         }
 
-        for (int i = 0; i < nodes.length; i++) nodes[i].col += 1 * direction;
+        for (int i = 0; i < nodes.length; i++) {
+            nodes[i].col += 1 * direction;
+        }
 
         for (int i = 0; i < nodes.length; i++) {
             TetriminoNode node = nodes[i];
@@ -179,6 +183,10 @@ public class MyGame extends Game  {
 
             if (clear) {
                 board[r] = new TetriminoNode[8];
+
+                // for (int i = r; i > 0; i--) {
+                //     board[i] = board[i - 1];
+                // }
             }
         }
     }
