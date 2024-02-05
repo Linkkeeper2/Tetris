@@ -87,7 +87,7 @@ public class MyGame extends Game  {
         board[row][col] = t;
     }
 
-    public void updateArray() {
+    public static void updateArray() {
         // Updates the the board used to move Tetriminos
         for (int r = 0; r < board.length; r++) {
             for (int c = 0; c < board[r].length; c++) {
@@ -132,6 +132,7 @@ public class MyGame extends Game  {
 
     public Tetrimino getTetrimino() {
         int num = (int)(Math.random() * 7);
+        num = 0;
         Tetrimino t = null;
 
         switch (num) {
@@ -214,12 +215,20 @@ public class MyGame extends Game  {
                 move(-1);
                 break;
 
+            case 38: // Up Arrow Key
+                currentTetrimino.rotateRight();
+                break;
+
             case 39: // Right Arrow Key
                 move(1);
                 break;
 
             case 40: // Down Arrow Key
                 moveTetriminos();
+                break;
+
+            case 90: // Z Key
+                currentTetrimino.rotateLeft();
                 break;
         }
     }

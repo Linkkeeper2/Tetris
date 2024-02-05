@@ -11,6 +11,51 @@ public class Tetriminos {
             }
 
             this.nodes = nodes;
+            this.direction = 0;
+        }
+
+        public void rotateRight() {
+            switch (direction) {
+                case 0:
+                    for (int i = 1; i < nodes.length; i++) {
+                        TetriminoNode node = nodes[i];
+
+                        if (!canRotate(node.row + i, nodes[0].col)) return;
+                    }
+
+                    for (int i = 1; i < nodes.length; i++) {
+                        TetriminoNode node = nodes[i];
+                        node.row += i;
+                        node.col = nodes[0].col;
+                        MyGame.board[node.row][node.col] = node;
+                    }
+                    break;
+            }
+
+            direction++;
+            MyGame.updateArray();
+        }
+
+        public void rotateLeft() {
+            switch (direction) {
+                case 1:
+                    for (int i = 1; i < nodes.length; i++) {
+                        TetriminoNode node = nodes[i];
+
+                        if (!canRotate(node.row - i, node.col + i)) return;
+                    }
+
+                    for (int i = 1; i < nodes.length; i++) {
+                        TetriminoNode node = nodes[i];
+                        node.row -= i;
+                        node.col += i;
+                        MyGame.board[node.row][node.col] = node;
+                    }
+                    break;
+            }
+
+            direction--;
+            MyGame.updateArray();
         }
     }
 
