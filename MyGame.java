@@ -88,7 +88,7 @@ public class MyGame extends Game  {
     }
 
     public void updateArray() {
-        // Updates the copy of the board used to move Tetriminos
+        // Updates the the board used to move Tetriminos
         for (int r = 0; r < board.length; r++) {
             for (int c = 0; c < board[r].length; c++) {
                 if (board[r][c] != null) {
@@ -182,11 +182,18 @@ public class MyGame extends Game  {
             }
 
             if (clear) {
-                board[r] = new TetriminoNode[8];
+                for (int i = r; i > 0; i--) {
+                    board[i] = new TetriminoNode[8];
+                    boolean stop = true;
+                    
+                    for (int k = 0; k < board[i].length; k++) {
+                        if (board[i - 1][k] != null) stop = false;
+                        board[i][k] = board[i - 1][k];
+                        if (board[i][k] != null) board[i][k].row++;
+                    }
 
-                // for (int i = r; i > 0; i--) {
-                //     board[i] = board[i - 1];
-                // }
+                    if (stop) break;
+                }
             }
         }
     }
