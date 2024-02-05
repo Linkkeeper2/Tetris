@@ -11,50 +11,38 @@ public class Tetriminos {
             }
 
             this.nodes = nodes;
-            this.direction = 0;
         }
 
         public void rotateRight() {
-            switch (direction) {
-                case 0:
-                    for (int i = 1; i < nodes.length; i++) {
-                        TetriminoNode node = nodes[i];
+            for (int i = 0; i < nodes.length; i++) {
+                TetriminoNode node = nodes[i];
 
-                        if (!canRotate(node.row + i, nodes[0].col)) return;
-                    }
-
-                    for (int i = 1; i < nodes.length; i++) {
-                        TetriminoNode node = nodes[i];
-                        node.row += i;
-                        node.col = nodes[0].col;
-                        MyGame.board[node.row][node.col] = node;
-                    }
-                    break;
+                if (!canRotate(node.row - (i - 1), nodes[1].col)) return;
             }
 
-            direction++;
+            for (int i = 0; i < nodes.length; i++) {
+                TetriminoNode node = nodes[i];
+                node.row -= i - 1;
+                if (nodes[0].col != nodes[1].col) node.col = nodes[1].col;
+                MyGame.board[node.row][node.col] = node;
+            }
             MyGame.updateArray();
         }
 
         public void rotateLeft() {
-            switch (direction) {
-                case 1:
-                    for (int i = 1; i < nodes.length; i++) {
-                        TetriminoNode node = nodes[i];
+            for (int i = 0; i < nodes.length; i++) {
+                TetriminoNode node = nodes[i];
 
-                        if (!canRotate(node.row - i, node.col + i)) return;
-                    }
-
-                    for (int i = 1; i < nodes.length; i++) {
-                        TetriminoNode node = nodes[i];
-                        node.row -= i;
-                        node.col += i;
-                        MyGame.board[node.row][node.col] = node;
-                    }
-                    break;
+                if (!canRotate(node.row + (i - 1), nodes[1].col + (i - 1))) return;
             }
 
-            direction--;
+            for (int i = 0; i < nodes.length; i++) {
+                TetriminoNode node = nodes[i];
+                node.row += i - 1;
+                node.col = nodes[1].col + (i - 1);
+                MyGame.board[node.row][node.col] = node;
+            }
+
             MyGame.updateArray();
         }
     }

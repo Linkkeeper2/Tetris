@@ -1,7 +1,6 @@
 public class Tetrimino {
     protected TetriminoNode[] nodes;
     protected int id; // The current Tetrimino ID (First Tetrimino in game = 0, next one is 1, etc.)
-    protected int direction;
 
     public TetriminoNode[] getNodes() {
         return nodes;

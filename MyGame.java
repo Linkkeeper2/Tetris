@@ -230,6 +230,11 @@ public class MyGame extends Game  {
             case 90: // Z Key
                 currentTetrimino.rotateLeft();
                 break;
+
+            case 82: // R Key
+                currentTetrimino = null;
+                board = new TetriminoNode[16][8];
+                break;
         }
     }
 
