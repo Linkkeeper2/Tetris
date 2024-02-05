@@ -36,7 +36,10 @@ public class MyGame extends Game  {
     
     public void update() {
         // updating logic
-        if (currentTetrimino == null) currentTetrimino = getTetrimino();
+        if (currentTetrimino == null) {
+            clearRow();
+            currentTetrimino = getTetrimino();
+        }
     }
     
     public void draw(Graphics pen) {
@@ -125,7 +128,7 @@ public class MyGame extends Game  {
 
     public Tetrimino getTetrimino() {
         int num = (int)(Math.random() * 7);
-        Tetrimino t = pieces.new LPiece();
+        Tetrimino t = null;
 
         switch (num) {
             case 0:
@@ -161,6 +164,23 @@ public class MyGame extends Game  {
         tNum++;
 
         return t;
+    }
+
+    public void clearRow() {
+        for (int r = 0; r < board.length; r++) {
+            boolean clear = true;
+
+            for (int c = 0; c < board[r].length; c++) {
+                if (board[r][c] == null) {
+                    clear = false;
+                    break;
+                }
+            }
+
+            if (clear) {
+                board[r] = new TetriminoNode[8];
+            }
+        }
     }
 
     @Override
