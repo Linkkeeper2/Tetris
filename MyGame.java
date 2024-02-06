@@ -16,9 +16,7 @@ public class MyGame extends Game  {
     public static int offset;
     private static Timer timer;
     private static Tetriminos pieces;
-    private static Tetrimino currentTetrimino;
-    private static Tetrimino nextTetrimino;
-    private static Tetrimino heldTetrimino;
+    private static Tetrimino currentTetrimino, nextTetrimino, heldTetrimino;
     private static int tNum = 0; // Number of Tetriminos used (Keeps track of ID for each Tetrimino)
     private static boolean hardDropping = false; // Determines whether or not the regular drop interval should occur (prevents Tetrimino clipping while Hard Dropping)
     private static int speed = 1000; // The millisecond delay between automatic Tetrimino movement
@@ -29,11 +27,13 @@ public class MyGame extends Game  {
     private static boolean held = false; // Has the player held a piece on the current turn?
     private Menus menus;
     private static Menu menu;
+    private String lineString; // Displays, Single, Double, Triple, or Tetris
 
     public MyGame() {
         // initialize variables here
         menus = new Menus();
         menu = menus.new MainMenu();
+        lineString = "";
     }
 
     public static void startGame() {
@@ -93,6 +93,7 @@ public class MyGame extends Game  {
             pen.drawString("Level: " + level, 0, 60);
             pen.drawString("Next", 0, 80);
             pen.drawString("Hold", 0, 220);
+            pen.drawString(lineString, 0, 700);
     
             if (alive) {
                 TetriminoNode[] nodes = nextTetrimino.getNodes();
@@ -352,20 +353,30 @@ public class MyGame extends Game  {
         switch (linesCleared) {
             case 1:
                 score += 100;
+                lineString = "+100 Single!";
                 break;
 
             case 2:
                 score += 400;
+                lineString = "+400 Double!";
                 break;
 
             case 3:
                 score += 800;
+                lineString = "+800 Triple!";
                 break;
 
             case 4:
                 score += 1600;
+                lineString = "+1600 Tetris!";
                 break;
         }
+
+        timer.schedule(new TimerTask() {
+            public void run() {
+                lineString = "";
+            }
+        }, (long)500);
     }
 
     public void hardDrop() {
