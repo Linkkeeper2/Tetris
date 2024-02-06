@@ -7,7 +7,7 @@ public class Menus {
             text[0] = new Text("Tetris", MyGame.SCREEN_WIDTH / 2, 48);
 
             this.buttons = new Button[1];
-            buttons[0] = new Button(MyGame.SCREEN_WIDTH / 2 - 150, 200, 150, 50, Color.GRAY);
+            buttons[0] = new Button(MyGame.SCREEN_WIDTH / 2 - 75, 200, 150, 50, Color.GRAY);
         }
     }
 }
