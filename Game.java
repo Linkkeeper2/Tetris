@@ -2,10 +2,11 @@ import java.awt.BorderLayout;
 import java.awt.Graphics;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public abstract class Game implements KeyListener, MouseListener
+public abstract class Game implements KeyListener, MouseListener, MouseMotionListener
 {
     private JFrame frame;
     private GamePanel gamePanel;

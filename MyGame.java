@@ -14,18 +14,19 @@ public class MyGame extends Game  {
     // declare variables here
     public static TetriminoNode[][] board;
     public static int offset;
-    private Timer timer;
-    private Tetriminos pieces;
-    private Tetrimino currentTetrimino;
-    private Tetrimino nextTetrimino;
-    private int tNum = 0; // Number of Tetriminos used (Keeps track of ID for each Tetrimino)
-    private boolean hardDropping = false; // Determines whether or not the regular drop interval should occur (prevents Tetrimino clipping while Hard Dropping)
-    private int speed = 1000; // The millisecond delay between automatic Tetrimino movement
+    private static Timer timer;
+    private static Tetriminos pieces;
+    private static Tetrimino currentTetrimino;
+    private static Tetrimino nextTetrimino;
+    private static int tNum = 0; // Number of Tetriminos used (Keeps track of ID for each Tetrimino)
+    private static boolean hardDropping = false; // Determines whether or not the regular drop interval should occur (prevents Tetrimino clipping while Hard Dropping)
+    private static int speed = 1000; // The millisecond delay between automatic Tetrimino movement
     private int lines = 0; // The number of lines cleared
-    private int score = 0;
-    private boolean alive = false;
+    private int score = 0; // The total score of the player
+    private int level = 1; // The level (speed) of the game
+    private static boolean alive = false;
     private Menus menus;
-    private Menu menu;
+    private static Menu menu;
 
     public MyGame() {
         // initialize variables here
@@ -33,11 +34,12 @@ public class MyGame extends Game  {
         menu = menus.new MainMenu();
     }
 
-    public void startGame() {
+    public static void startGame() {
+        alive = true;
+        menu = null;
         board = new TetriminoNode[20][10];
         offset = 100;
         pieces = new Tetriminos();
-        updateArray();
 
         timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -47,7 +49,8 @@ public class MyGame extends Game  {
         }, (long)speed);
         currentTetrimino = getTetrimino();
         nextTetrimino = getNextTetrimino();
-        alive = true;
+
+        updateArray();
     }
     
     public void update() {
@@ -84,7 +87,8 @@ public class MyGame extends Game  {
             pen.setColor(Color.BLACK);
             pen.drawString("Lines: " + lines, 0, 20);
             pen.drawString("Score: " + score, 0, 40);
-            pen.drawString("Next", 0, 60);
+            pen.drawString("Level: " + level, 0, 60);
+            pen.drawString("Next", 0, 80);
     
             if (alive) {
                 TetriminoNode[] nodes = nextTetrimino.getNodes();
@@ -92,7 +96,7 @@ public class MyGame extends Game  {
                 for (int i = 0; i < nodes.length; i++) {
                     TetriminoNode node = nodes[i];
                     pen.setColor(node.getColor());
-                    pen.fillRect(node.row * 25 + 20, node.col * 25 + 15, 25, 25);
+                    pen.fillRect(node.row * 25 + 20, node.col * 25 + 35, 25, 25);
                 }
             }
         } else {
@@ -100,7 +104,7 @@ public class MyGame extends Game  {
         }
     }
 
-    public void moveTetriminos() {
+    public static void moveTetriminos() {
         if (!alive) return;
 
         if (currentTetrimino == null) return;
@@ -151,11 +155,13 @@ public class MyGame extends Game  {
 
     public static void updateArray() {
         // Updates the the board used to move Tetriminos
-        for (int r = 0; r < board.length; r++) {
-            for (int c = 0; c < board[r].length; c++) {
-                if (board[r][c] != null) {
-                    TetriminoNode node = board[r][c];
-                    if (node.row != r || node.col != c) board[r][c] = null;
+        if (menu == null) {
+            for (int r = 0; r < board.length; r++) {
+                for (int c = 0; c < board[r].length; c++) {
+                    if (board[r][c] != null) {
+                        TetriminoNode node = board[r][c];
+                        if (node.row != r || node.col != c) board[r][c] = null;
+                    }
                 }
             }
         }
@@ -208,7 +214,7 @@ public class MyGame extends Game  {
         updateArray();
     }
 
-    public Tetrimino getTetrimino() {
+    public static Tetrimino getTetrimino() {
         if (!alive) return null;
 
         int num = (int)(Math.random() * 7);
@@ -250,7 +256,7 @@ public class MyGame extends Game  {
         return t;
     }
 
-    public Tetrimino getNextTetrimino() {
+    public static Tetrimino getNextTetrimino() {
         if (!alive) return null;
 
         int num = (int)(Math.random() * 7);
@@ -311,7 +317,7 @@ public class MyGame extends Game  {
                 lines++;
                 linesCleared++;
 
-                if (lines % 10 == 0) if (speed > 100) speed -= 100;
+                speedCalculation();
 
                 for (int i = r; i > 0; i--) {
                     board[i] = new TetriminoNode[board[0].length];
@@ -402,7 +408,7 @@ public class MyGame extends Game  {
         hardDropping = false;
     }
 
-    public void automaticMove() {
+    public static void automaticMove() {
         // Used for automatic Tetrimino movement to reschedule the task
         if (!alive) return;
 
@@ -460,6 +466,17 @@ public class MyGame extends Game  {
         nextTetrimino = getNextTetrimino();
     }
 
+    public void speedCalculation() {
+        if (lines % 10 == 0) {
+            level++;
+
+            if (speed > 100) speed -= 100;
+            else {
+                if (speed > 20) speed -= 5;
+            }
+        }
+    }
+
     @Override
     public void keyTyped(KeyEvent ke) {}
 
@@ -496,7 +513,9 @@ public class MyGame extends Game  {
     public void keyReleased(KeyEvent ke) {}
 
     @Override
-    public void mouseClicked(MouseEvent ke) {}
+    public void mouseClicked(MouseEvent ke) {
+        if (menu != null) menu.buttonInteractions(ke);
+    }
 
     @Override
     public void mousePressed(MouseEvent me) {}
@@ -509,6 +528,16 @@ public class MyGame extends Game  {
 
     @Override
     public void mouseExited(MouseEvent me) {}
+
+    @Override
+    public void mouseMoved(MouseEvent me) {
+        if (menu != null) menu.buttonInteractions(me);
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent me) {
+        if (menu != null) menu.buttonInteractions(me);
+    }
         
     //Launches the Game
     public static void main(String[] args) { new MyGame().start(TITLE, SCREEN_WIDTH,SCREEN_HEIGHT); }
