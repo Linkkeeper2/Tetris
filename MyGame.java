@@ -23,10 +23,11 @@ public class MyGame extends Game  {
     private int speed = 1000; // The millisecond delay between automatic Tetrimino movement
     private int lines = 0; // The number of lines cleared
     private int score = 0;
+    private boolean alive = true;
 
     public MyGame() {
         // initialize variables here
-        board = new TetriminoNode[20][8];
+        board = new TetriminoNode[20][10];
         offset = 100;
         pieces = new Tetriminos();
         updateArray();
@@ -43,7 +44,7 @@ public class MyGame extends Game  {
     
     public void update() {
         // updating logic
-        if (currentTetrimino == null) {
+        if (currentTetrimino == null && alive) {
             clearRow();
             swapTetriminos();
         }
@@ -57,31 +58,39 @@ public class MyGame extends Game  {
                 if (board[r][c] == null) {
                     pen.setColor(Color.gray);
                     pen.fillRect(c * 25 + offset, r * 25 + offset, 25, 25);
+                    pen.setColor(Color.DARK_GRAY);
+                    pen.drawRect(c * 25 + offset, r * 25 + offset, 25, 25);
                 } else {
                     TetriminoNode curr = board[r][c];
                     
                     pen.setColor(curr.getColor());
                     pen.fillRect(curr.col * 25 + offset, curr.row * 25 + offset, 25, 25);
+                    pen.setColor(curr.getDarkColor());
+                    pen.drawRect(curr.col * 25 + offset, curr.row * 25 + offset, 25, 25);
                 }
             }
         }
-    
+        
         pen.setFont(new Font("comicsansms", 0, 20));
         pen.setColor(Color.BLACK);
         pen.drawString("Lines: " + lines, 0, 20);
         pen.drawString("Score: " + score, 0, 40);
         pen.drawString("Next", 0, 60);
 
-        TetriminoNode[] nodes = nextTetrimino.getNodes();
+        if (alive) {
+            TetriminoNode[] nodes = nextTetrimino.getNodes();
 
-        for (int i = 0; i < nodes.length; i++) {
-            TetriminoNode node = nodes[i];
-            pen.setColor(node.getColor());
-            pen.fillRect(node.row * 25 + 15, node.col * 25 + 15, 25, 25);
+            for (int i = 0; i < nodes.length; i++) {
+                TetriminoNode node = nodes[i];
+                pen.setColor(node.getColor());
+                pen.fillRect(node.row * 25 + 20, node.col * 25 + 15, 25, 25);
+            }
         }
     }
 
     public void moveTetriminos() {
+        if (!alive) return;
+
         if (currentTetrimino == null) return;
 
         TetriminoNode[] nodes = currentTetrimino.getNodes();
@@ -141,6 +150,8 @@ public class MyGame extends Game  {
     }
 
     public void move(int direction) {
+        if (!alive) return;
+
         if (currentTetrimino == null) return;
 
         TetriminoNode[] nodes = currentTetrimino.getNodes();
@@ -186,6 +197,8 @@ public class MyGame extends Game  {
     }
 
     public Tetrimino getTetrimino() {
+        if (!alive) return null;
+
         int num = (int)(Math.random() * 7);
         Tetrimino t = null;
 
@@ -226,6 +239,8 @@ public class MyGame extends Game  {
     }
 
     public Tetrimino getNextTetrimino() {
+        if (!alive) return null;
+
         int num = (int)(Math.random() * 7);
         Tetrimino t = null;
 
@@ -266,6 +281,8 @@ public class MyGame extends Game  {
     }
 
     public void clearRow() {
+        if (!alive) return;
+
         int linesCleared = 0;
 
         for (int r = 0; r < board.length; r++) {
@@ -285,7 +302,7 @@ public class MyGame extends Game  {
                 if (lines % 10 == 0) if (speed > 100) speed -= 100;
 
                 for (int i = r; i > 0; i--) {
-                    board[i] = new TetriminoNode[8];
+                    board[i] = new TetriminoNode[board[0].length];
                     boolean stop = true;
                     
                     for (int k = 0; k < board[i].length; k++) {
@@ -319,6 +336,8 @@ public class MyGame extends Game  {
     }
 
     public void hardDrop() {
+        if (!alive) return;
+
         hardDropping = true;
 
         for (int k = 0; k < board.length; k++) {
@@ -373,6 +392,8 @@ public class MyGame extends Game  {
 
     public void automaticMove() {
         // Used for automatic Tetrimino movement to reschedule the task
+        if (!alive) return;
+
         moveTetriminos();
         timer.schedule(new TimerTask() {
             public void run() {
@@ -383,6 +404,14 @@ public class MyGame extends Game  {
 
     public void swapTetriminos() {
         // Swaps the current Tetrimino with the one in the next box
+        for (int i = 0; i < 2; i++) {
+            for (int k = 0; k < board[i].length; k++) {
+                if (board[i][k] != null) {
+                    alive = false;
+                }
+            }
+        }
+
         switch (nextTetrimino.getType()) {
             case "IPiece":
                 currentTetrimino = pieces.new IPiece();
@@ -447,11 +476,6 @@ public class MyGame extends Game  {
 
             case 90: // Z Key
                 if (currentTetrimino != null && currentTetrimino.direction != -1) currentTetrimino.rotate(-1);
-                break;
-
-            case 82: // R Key
-                currentTetrimino = null;
-                board = new TetriminoNode[16][8];
                 break;
         }
     }
