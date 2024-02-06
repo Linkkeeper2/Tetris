@@ -41,6 +41,8 @@ public class MyGame extends Game  {
             clearRow();
             currentTetrimino = getTetrimino();
         }
+
+        updateArray();
     }
     
     public void draw(Graphics pen) {
