@@ -23,10 +23,17 @@ public class MyGame extends Game  {
     private int speed = 1000; // The millisecond delay between automatic Tetrimino movement
     private int lines = 0; // The number of lines cleared
     private int score = 0;
-    private boolean alive = true;
+    private boolean alive = false;
+    private Menus menus;
+    private Menu menu;
 
     public MyGame() {
         // initialize variables here
+        menus = new Menus();
+        menu = menus.new MainMenu();
+    }
+
+    public void startGame() {
         board = new TetriminoNode[20][10];
         offset = 100;
         pieces = new Tetriminos();
@@ -40,6 +47,7 @@ public class MyGame extends Game  {
         }, (long)speed);
         currentTetrimino = getTetrimino();
         nextTetrimino = getNextTetrimino();
+        alive = true;
     }
     
     public void update() {
@@ -53,38 +61,42 @@ public class MyGame extends Game  {
     }
     
     public void draw(Graphics pen) {
-        for (int r = 0; r < board.length; r++) {
-            for (int c = 0; c < board[r].length; c++) {
-                if (board[r][c] == null) {
-                    pen.setColor(Color.gray);
-                    pen.fillRect(c * 25 + offset, r * 25 + offset, 25, 25);
-                    pen.setColor(Color.DARK_GRAY);
-                    pen.drawRect(c * 25 + offset, r * 25 + offset, 25, 25);
-                } else {
-                    TetriminoNode curr = board[r][c];
-                    
-                    pen.setColor(curr.getColor());
-                    pen.fillRect(curr.col * 25 + offset, curr.row * 25 + offset, 25, 25);
-                    pen.setColor(curr.getDarkColor());
-                    pen.drawRect(curr.col * 25 + offset, curr.row * 25 + offset, 25, 25);
+        if (menu == null) {
+            for (int r = 0; r < board.length; r++) {
+                for (int c = 0; c < board[r].length; c++) {
+                    if (board[r][c] == null) {
+                        pen.setColor(Color.gray);
+                        pen.fillRect(c * 25 + offset, r * 25 + offset, 25, 25);
+                        pen.setColor(Color.DARK_GRAY);
+                        pen.drawRect(c * 25 + offset, r * 25 + offset, 25, 25);
+                    } else {
+                        TetriminoNode curr = board[r][c];
+                        
+                        pen.setColor(curr.getColor());
+                        pen.fillRect(curr.col * 25 + offset, curr.row * 25 + offset, 25, 25);
+                        pen.setColor(curr.getDarkColor());
+                        pen.drawRect(curr.col * 25 + offset, curr.row * 25 + offset, 25, 25);
+                    }
                 }
             }
-        }
-        
-        pen.setFont(new Font("comicsansms", 0, 20));
-        pen.setColor(Color.BLACK);
-        pen.drawString("Lines: " + lines, 0, 20);
-        pen.drawString("Score: " + score, 0, 40);
-        pen.drawString("Next", 0, 60);
-
-        if (alive) {
-            TetriminoNode[] nodes = nextTetrimino.getNodes();
-
-            for (int i = 0; i < nodes.length; i++) {
-                TetriminoNode node = nodes[i];
-                pen.setColor(node.getColor());
-                pen.fillRect(node.row * 25 + 20, node.col * 25 + 15, 25, 25);
+            
+            pen.setFont(new Font("comicsansms", 0, 20));
+            pen.setColor(Color.BLACK);
+            pen.drawString("Lines: " + lines, 0, 20);
+            pen.drawString("Score: " + score, 0, 40);
+            pen.drawString("Next", 0, 60);
+    
+            if (alive) {
+                TetriminoNode[] nodes = nextTetrimino.getNodes();
+    
+                for (int i = 0; i < nodes.length; i++) {
+                    TetriminoNode node = nodes[i];
+                    pen.setColor(node.getColor());
+                    pen.fillRect(node.row * 25 + 20, node.col * 25 + 15, 25, 25);
+                }
             }
+        } else {
+            menu.draw(pen);
         }
     }
 
