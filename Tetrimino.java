@@ -22,7 +22,7 @@ public class Tetrimino {
         }
 
         if (rotations == null) return;
-        
+
         for (int i = 0; i < rotations.length; i++) {
             for (int k = 0; k < rotations[i].length; k++) {
                 rotations[i][k].id = this.id;
@@ -69,5 +69,9 @@ public class Tetrimino {
         if (MyGame.board[nextRow][nextCol] != null && MyGame.board[nextRow][nextCol].id != this.id) return false;
 
         return true;
+    }
+
+    protected String getType() {
+        return "Default";
     }
 }

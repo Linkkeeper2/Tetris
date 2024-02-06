@@ -15,6 +15,19 @@ public class Tetriminos {
             createRotations();
         }
 
+        public IPiece(boolean add) {
+            if (!add) {
+                this.color = new Color(0, 255, 255);
+                TetriminoNode[] nodes = new TetriminoNode[4];
+
+                for (int i = 0; i < 4; i++) {
+                    nodes[i] = new TetriminoNode(color, 0, i + 2);
+                }
+
+                this.nodes = nodes;
+            }
+        }
+
         protected void createRotations() {
             rotations = new TetriminoNode[4][4];
 
@@ -35,6 +48,10 @@ public class Tetriminos {
                 rotations[3][i] = new TetriminoNode(color, i, 3);
             }
         }
+    
+        protected String getType() {
+            return "IPiece";
+        }
     }
 
     public class TPiece extends Tetrimino  {
@@ -52,6 +69,21 @@ public class Tetriminos {
 
             this.nodes = nodes;
             createRotations();
+        }
+
+        public TPiece(boolean add) {
+            if (!add) {
+                this.color = new Color(255, 0, 255);
+                TetriminoNode[] nodes = new TetriminoNode[4];
+
+                for (int i = 0; i < 3; i++) {
+                    nodes[i] = new TetriminoNode(color, 1, i + 3);
+                }
+
+                nodes[3] = new TetriminoNode(color, 0, 4);
+
+                this.nodes = nodes;
+            }
         }
 
         protected void createRotations() {
@@ -78,6 +110,10 @@ public class Tetriminos {
             }
             rotations[3][3] = new TetriminoNode(color, 1, 2);
         }
+    
+        protected String getType() {
+            return "TPiece";
+        }
     }
 
     public class ZPiece extends Tetrimino  {
@@ -96,6 +132,20 @@ public class Tetriminos {
 
             this.nodes = nodes;
             createRotations();
+        }
+
+        public ZPiece(boolean add) {
+            if (!add) {
+                this.color = new Color(255, 0, 0);
+                TetriminoNode[] nodes = new TetriminoNode[4];
+
+                nodes[0] = new TetriminoNode(color, 2, 3);
+                nodes[1] = new TetriminoNode(color, 1, 3);
+                nodes[2] = new TetriminoNode(color, 1, 4);
+                nodes[3] = new TetriminoNode(color, 0, 4);
+
+                this.nodes = nodes;
+            }
         }
 
         protected void createRotations() {
@@ -122,6 +172,10 @@ public class Tetriminos {
             rotations[3][2] = new TetriminoNode(color, 1, 2);
             rotations[3][3] = new TetriminoNode(color, 2, 2);
         }
+    
+        protected String getType() {
+            return "ZPiece";
+        }
     }
 
     public class SPiece extends Tetrimino  {
@@ -140,6 +194,20 @@ public class Tetriminos {
 
             this.nodes = nodes;
             createRotations();
+        }
+
+        public SPiece(boolean add) {
+            if (!add) {
+                this.color = new Color(0, 255, 0);
+                TetriminoNode[] nodes = new TetriminoNode[4];
+
+                nodes[0] = new TetriminoNode(color, 2, 4);
+                nodes[1] = new TetriminoNode(color, 1, 4);
+                nodes[2] = new TetriminoNode(color, 1, 3);
+                nodes[3] = new TetriminoNode(color, 0, 3);
+
+                this.nodes = nodes;
+            }
         }
 
         protected void createRotations() {
@@ -166,6 +234,10 @@ public class Tetriminos {
             rotations[3][2] = new TetriminoNode(color, 1, 3);
             rotations[3][3] = new TetriminoNode(color, 2, 3);
         }
+    
+        protected String getType() {
+            return "SPiece";
+        }
     }
 
     public class OPiece extends Tetrimino  {
@@ -185,6 +257,25 @@ public class Tetriminos {
             this.nodes = nodes;
             this.direction = -1;
         }
+
+        public OPiece(boolean add) {
+            if (!add) {
+                this.color = new Color(255, 255, 0);
+                TetriminoNode[] nodes = new TetriminoNode[4];
+
+                nodes[0] = new TetriminoNode(color, 1, 4);
+                nodes[1] = new TetriminoNode(color, 0, 4);
+                nodes[2] = new TetriminoNode(color, 1, 3);
+                nodes[3] = new TetriminoNode(color, 0, 3);
+
+                this.nodes = nodes;
+                this.direction = -1;
+            }
+        }
+    
+        protected String getType() {
+            return "OPiece";
+        }
     }
 
     public class LPiece extends Tetrimino  {
@@ -203,6 +294,20 @@ public class Tetriminos {
 
             this.nodes = nodes;
             createRotations();
+        }
+
+        public LPiece(boolean add) {
+            if (!add) {
+                this.color = new Color(255, 100, 0);
+                TetriminoNode[] nodes = new TetriminoNode[4];
+
+                nodes[0] = new TetriminoNode(color, 0, 4);
+                nodes[1] = new TetriminoNode(color, 1, 4);
+                nodes[2] = new TetriminoNode(color, 1, 3);
+                nodes[3] = new TetriminoNode(color, 1, 2);
+
+                this.nodes = nodes;
+            }
         }
 
         protected void createRotations() {
@@ -229,6 +334,10 @@ public class Tetriminos {
             }
             rotations[3][3] = new TetriminoNode(color, 0, 2);
         }
+    
+        protected String getType() {
+            return "LPiece";
+        }
     }
 
     public class JPiece extends Tetrimino  {
@@ -247,6 +356,20 @@ public class Tetriminos {
 
             this.nodes = nodes;
             createRotations();
+        }
+
+        public JPiece(boolean add) {
+            if (!add) {
+                this.color = new Color(0, 0, 255);
+                TetriminoNode[] nodes = new TetriminoNode[4];
+
+                nodes[0] = new TetriminoNode(color, 0, 2);
+                nodes[1] = new TetriminoNode(color, 1, 2);
+                nodes[2] = new TetriminoNode(color, 1, 3);
+                nodes[3] = new TetriminoNode(color, 1, 4);
+
+                this.nodes = nodes;
+            }
         }
 
         protected void createRotations() {
@@ -272,6 +395,10 @@ public class Tetriminos {
                 rotations[3][i] = new TetriminoNode(color, i, 3);
             }
             rotations[3][3] = new TetriminoNode(color, 2, 2);
+        }
+    
+        protected String getType() {
+            return "JPiece";
         }
     }
 }

@@ -17,6 +17,7 @@ public class MyGame extends Game  {
     private Timer timer;
     private Tetriminos pieces;
     private Tetrimino currentTetrimino;
+    private Tetrimino nextTetrimino;
     private int tNum = 0; // Number of Tetriminos used (Keeps track of ID for each Tetrimino)
     private boolean hardDropping = false; // Determines whether or not the regular drop interval should occur (prevents Tetrimino clipping while Hard Dropping)
     private int speed = 1000; // The millisecond delay between automatic Tetrimino movement
@@ -36,13 +37,15 @@ public class MyGame extends Game  {
                 automaticMove();
             }
         }, (long)speed);
+        currentTetrimino = getTetrimino();
+        nextTetrimino = getNextTetrimino();
     }
     
     public void update() {
         // updating logic
         if (currentTetrimino == null) {
             clearRow();
-            currentTetrimino = getTetrimino();
+            swapTetriminos();
         }
 
         updateArray();
@@ -67,6 +70,15 @@ public class MyGame extends Game  {
         pen.setColor(Color.BLACK);
         pen.drawString("Lines: " + lines, 0, 20);
         pen.drawString("Score: " + score, 0, 40);
+        pen.drawString("Next", 0, 60);
+
+        TetriminoNode[] nodes = nextTetrimino.getNodes();
+
+        for (int i = 0; i < nodes.length; i++) {
+            TetriminoNode node = nodes[i];
+            pen.setColor(node.getColor());
+            pen.fillRect(node.row * 25 + 15, node.col * 25 + 15, 25, 25);
+        }
     }
 
     public void moveTetriminos() {
@@ -213,6 +225,46 @@ public class MyGame extends Game  {
         return t;
     }
 
+    public Tetrimino getNextTetrimino() {
+        int num = (int)(Math.random() * 7);
+        Tetrimino t = null;
+
+        switch (num) {
+            case 0:
+                t = pieces.new IPiece(false);
+                break;
+
+            case 1:
+                t = pieces.new TPiece(false);
+                break;
+
+            case 2:
+                t = pieces.new ZPiece(false);
+                break;
+
+            case 3:
+                t = pieces.new SPiece(false);
+                break;
+
+            case 4:
+                t = pieces.new OPiece(false);
+                break;
+
+            case 5:
+                t = pieces.new LPiece(false);
+                break;
+
+            case 6:
+                t = pieces.new JPiece(false);
+                break;
+        }
+
+        t.setID(tNum);
+        tNum++;
+
+        return t;
+    }
+
     public void clearRow() {
         int linesCleared = 0;
 
@@ -327,6 +379,44 @@ public class MyGame extends Game  {
                 automaticMove();
             }
         }, (long)speed);
+    }
+
+    public void swapTetriminos() {
+        // Swaps the current Tetrimino with the one in the next box
+        switch (nextTetrimino.getType()) {
+            case "IPiece":
+                currentTetrimino = pieces.new IPiece();
+                break;
+
+            case "TPiece":
+                currentTetrimino = pieces.new TPiece();
+                break;
+
+            case "ZPiece":
+                currentTetrimino = pieces.new ZPiece();
+                break;
+
+            case "SPiece":
+                currentTetrimino = pieces.new SPiece();
+                break;
+
+            case "OPiece":
+                currentTetrimino = pieces.new OPiece();
+                break;
+
+            case "LPiece":
+                currentTetrimino = pieces.new LPiece();
+                break;
+
+            case "JPiece":
+                currentTetrimino = pieces.new JPiece();
+                break;
+        }
+
+        currentTetrimino.setID(tNum);
+        tNum++;
+
+        nextTetrimino = getNextTetrimino();
     }
 
     @Override
