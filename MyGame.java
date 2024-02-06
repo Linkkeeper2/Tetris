@@ -26,7 +26,7 @@ public class MyGame extends Game  {
 
     public MyGame() {
         // initialize variables here
-        board = new TetriminoNode[16][8];
+        board = new TetriminoNode[20][8];
         offset = 100;
         pieces = new Tetriminos();
         updateArray();
