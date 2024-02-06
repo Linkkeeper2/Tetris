@@ -20,6 +20,14 @@ public class Tetrimino {
         for (int i = 0; i < nodes.length; i++) {
             nodes[i].id = this.id;
         }
+
+        if (rotations == null) return;
+        
+        for (int i = 0; i < rotations.length; i++) {
+            for (int k = 0; k < rotations[i].length; k++) {
+                rotations[i][k].id = this.id;
+            }
+        }
     }
 
     public void rotate(int factor) {
@@ -57,6 +65,8 @@ public class Tetrimino {
 
     protected boolean canRotate(int nextRow, int nextCol) {
         if (!(nextRow >= 0 && nextRow < MyGame.board.length && nextCol >= 0 && nextCol < MyGame.board[0].length)) return false;
+
+        if (MyGame.board[nextRow][nextCol] != null && MyGame.board[nextRow][nextCol].id != this.id) return false;
 
         return true;
     }
