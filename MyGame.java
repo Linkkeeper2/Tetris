@@ -19,6 +19,9 @@ public class MyGame extends Game  {
     private Tetrimino currentTetrimino;
     private int tNum = 0; // Number of Tetriminos used (Keeps track of ID for each Tetrimino)
     private boolean hardDropping = false; // Determines whether or not the regular drop interval should occur (prevents Tetrimino clipping while Hard Dropping)
+    private int speed = 1000; // The millisecond delay between automatic Tetrimino movement
+    private int lines = 0; // The number of lines cleared
+    private int score = 0;
 
     public MyGame() {
         // initialize variables here
@@ -30,9 +33,9 @@ public class MyGame extends Game  {
         timer = new Timer();
         timer.schedule(new TimerTask() {
             public void run() {
-                moveTetriminos();
+                automaticMove();
             }
-        }, (long)1000, (long)1000);
+        }, (long)speed);
     }
     
     public void update() {
@@ -59,6 +62,11 @@ public class MyGame extends Game  {
                 }
             }
         }
+    
+        pen.setFont(new Font("comicsansms", 0, 20));
+        pen.setColor(Color.BLACK);
+        pen.drawString("Lines: " + lines, 0, 20);
+        pen.drawString("Score: " + score, 0, 40);
     }
 
     public void moveTetriminos() {
@@ -87,10 +95,9 @@ public class MyGame extends Game  {
                 for (int r = 0; r < rotations.length; r++) {
                     for (int c = 0; c < rotations[r].length; c++) {
                         if (rotations[r][c] != null) {
-                            boolean move = true;
-                            if (nodes.equals(rotations[r])) move = false;
+                            if (nodes.equals(rotations[r])) break;
                             
-                            if (move) rotations[r][c].row++;
+                            rotations[r][c].row++;
                         }
                     }
                 }
@@ -207,6 +214,8 @@ public class MyGame extends Game  {
     }
 
     public void clearRow() {
+        int linesCleared = 0;
+
         for (int r = 0; r < board.length; r++) {
             boolean clear = true;
 
@@ -218,6 +227,11 @@ public class MyGame extends Game  {
             }
 
             if (clear) {
+                lines++;
+                linesCleared++;
+
+                if (lines % 10 == 0) if (speed > 100) speed -= 100;
+
                 for (int i = r; i > 0; i--) {
                     board[i] = new TetriminoNode[8];
                     boolean stop = true;
@@ -232,13 +246,34 @@ public class MyGame extends Game  {
                 }
             }
         }
+
+        switch (linesCleared) {
+            case 1:
+                score += 100;
+                break;
+
+            case 2:
+                score += 400;
+                break;
+
+            case 3:
+                score += 800;
+                break;
+
+            case 4:
+                score += 1600;
+                break;
+        }
     }
 
     public void hardDrop() {
         hardDropping = true;
 
         for (int k = 0; k < board.length; k++) {
-            if (currentTetrimino == null) return;
+            if (currentTetrimino == null) {
+                hardDropping = false;
+                return;
+            }
 
             TetriminoNode[] nodes = currentTetrimino.getNodes();
 
@@ -282,6 +317,16 @@ public class MyGame extends Game  {
         }
 
         hardDropping = false;
+    }
+
+    public void automaticMove() {
+        // Used for automatic Tetrimino movement to reschedule the task
+        moveTetriminos();
+        timer.schedule(new TimerTask() {
+            public void run() {
+                automaticMove();
+            }
+        }, (long)speed);
     }
 
     @Override
