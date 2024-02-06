@@ -18,6 +18,7 @@ public class MyGame extends Game  {
     private static Tetriminos pieces;
     private static Tetrimino currentTetrimino;
     private static Tetrimino nextTetrimino;
+    private static Tetrimino heldTetrimino;
     private static int tNum = 0; // Number of Tetriminos used (Keeps track of ID for each Tetrimino)
     private static boolean hardDropping = false; // Determines whether or not the regular drop interval should occur (prevents Tetrimino clipping while Hard Dropping)
     private static int speed = 1000; // The millisecond delay between automatic Tetrimino movement
@@ -25,6 +26,7 @@ public class MyGame extends Game  {
     private int score = 0; // The total score of the player
     private int level = 1; // The level (speed) of the game
     private static boolean alive = false;
+    private static boolean held = false; // Has the player held a piece on the current turn?
     private Menus menus;
     private static Menu menu;
 
@@ -57,6 +59,7 @@ public class MyGame extends Game  {
         // updating logic
         if (currentTetrimino == null && alive) {
             clearRow();
+            held = false;
             swapTetriminos();
         }
 
@@ -89,6 +92,7 @@ public class MyGame extends Game  {
             pen.drawString("Score: " + score, 0, 40);
             pen.drawString("Level: " + level, 0, 60);
             pen.drawString("Next", 0, 80);
+            pen.drawString("Hold", 0, 220);
     
             if (alive) {
                 TetriminoNode[] nodes = nextTetrimino.getNodes();
@@ -97,6 +101,16 @@ public class MyGame extends Game  {
                     TetriminoNode node = nodes[i];
                     pen.setColor(node.getColor());
                     pen.fillRect(node.row * 25 + 20, node.col * 25 + 35, 25, 25);
+                }
+
+                if (heldTetrimino != null) {
+                    nodes = heldTetrimino.getNodes();
+
+                    for (int i = 0; i < nodes.length; i++) {
+                        TetriminoNode node = nodes[i];
+                        pen.setColor(node.getColor());
+                        pen.fillRect(node.row * 25 + 20, node.col * 25 + 175, 25, 25);
+                    }
                 }
             }
         } else {
@@ -252,6 +266,7 @@ public class MyGame extends Game  {
 
         t.setID(tNum);
         tNum++;
+        held = false;
 
         return t;
     }
@@ -370,10 +385,12 @@ public class MyGame extends Game  {
                 if (nodes[i].row >= board.length - 1) {
                     currentTetrimino = null;
                     hardDropping = false;
+                    held = false;
                     return;
                 } else if (board[nodes[i].row + 1][nodes[i].col] != null && board[nodes[i].row + 1][nodes[i].col].id != nodes[i].id) {
                     currentTetrimino = null;
                     hardDropping = false;
+                    held = false;
                     return;
                 }
             }
@@ -406,6 +423,7 @@ public class MyGame extends Game  {
         }
 
         hardDropping = false;
+        held = false;
     }
 
     public static void automaticMove() {
@@ -477,6 +495,110 @@ public class MyGame extends Game  {
         }
     }
 
+    public static void hold() {
+        for (int i = 0; i < currentTetrimino.nodes.length; i++) {
+            board[currentTetrimino.nodes[i].row][currentTetrimino.nodes[i].col] = null;
+        }
+
+        if (heldTetrimino == null) {
+            switch (currentTetrimino.getType()) {
+                case "IPiece":
+                    heldTetrimino = pieces.new IPiece(false);
+                    break;
+    
+                case "TPiece":
+                    heldTetrimino = pieces.new TPiece(false);
+                    break;
+    
+                case "ZPiece":
+                    heldTetrimino = pieces.new ZPiece(false);
+                    break;
+    
+                case "SPiece":
+                    heldTetrimino = pieces.new SPiece(false);
+                    break;
+    
+                case "OPiece":
+                    heldTetrimino = pieces.new OPiece(false);
+                    break;
+    
+                case "LPiece":
+                    heldTetrimino = pieces.new LPiece(false);
+                    break;
+    
+                case "JPiece":
+                    heldTetrimino = pieces.new JPiece(false);
+                    break;
+            }
+            
+            currentTetrimino = null;
+        } else {
+            String type = currentTetrimino.getType();
+
+            switch (heldTetrimino.getType()) {
+                case "IPiece":
+                    currentTetrimino = pieces.new IPiece();
+                    break;
+    
+                case "TPiece":
+                    currentTetrimino = pieces.new TPiece();
+                    break;
+    
+                case "ZPiece":
+                    currentTetrimino = pieces.new ZPiece();
+                    break;
+    
+                case "SPiece":
+                    currentTetrimino = pieces.new SPiece();
+                    break;
+    
+                case "OPiece":
+                    currentTetrimino = pieces.new OPiece();
+                    break;
+    
+                case "LPiece":
+                    currentTetrimino = pieces.new LPiece();
+                    break;
+    
+                case "JPiece":
+                    currentTetrimino = pieces.new JPiece();
+                    break;
+            }
+
+            switch (type) {
+                case "IPiece":
+                    heldTetrimino = pieces.new IPiece(false);
+                    break;
+    
+                case "TPiece":
+                    heldTetrimino = pieces.new TPiece(false);
+                    break;
+    
+                case "ZPiece":
+                    heldTetrimino = pieces.new ZPiece(false);
+                    break;
+    
+                case "SPiece":
+                    heldTetrimino = pieces.new SPiece(false);
+                    break;
+    
+                case "OPiece":
+                    heldTetrimino = pieces.new OPiece(false);
+                    break;
+    
+                case "LPiece":
+                    heldTetrimino = pieces.new LPiece(false);
+                    break;
+    
+                case "JPiece":
+                    heldTetrimino = pieces.new JPiece(false);
+                    break;
+            }
+        }
+
+        held = true;
+    }
+
     @Override
     public void keyTyped(KeyEvent ke) {}
 
@@ -501,6 +623,10 @@ public class MyGame extends Game  {
 
             case 40: // Down Arrow Key
                 moveTetriminos();
+                break;
+
+            case 67: // C Key (Holding)
+                if (!held) hold();
                 break;
 
             case 90: // Z Key
