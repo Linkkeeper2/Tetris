@@ -81,6 +81,7 @@ public class MyGame extends Game  {
     
     public void draw(Graphics pen) {
         if (menu == null) {
+            // Draws the Board Tiles
             for (int r = 0; r < board.length; r++) {
                 for (int c = 0; c < board[r].length; c++) {
                     if (board[r][c] == null) {
@@ -88,18 +89,52 @@ public class MyGame extends Game  {
                         pen.fillRect(c * 25 + offset, r * 25 + offset, 25, 25);
                         pen.setColor(Color.DARK_GRAY);
                         pen.drawRect(c * 25 + offset, r * 25 + offset, 25, 25);
-                    } else {
+                    }
+                }
+            }
+
+            // Draws the Tetrimino Nodes
+            for (int r = 0; r < board.length; r++) {
+                for (int c = 0; c < board[r].length; c++) {
+                    if (board[r][c] != null) {
                         TetriminoNode curr = board[r][c];
-                        curr.updateColor();
                         
+                        // Draws the current node to the board
+                        curr.updateColor();
                         pen.setColor(curr.getColor());
                         pen.fillRect(curr.col * 25 + offset, curr.row * 25 + offset, 25, 25);
                         pen.setColor(curr.getDarkColor());
                         pen.drawRect(curr.col * 25 + offset, curr.row * 25 + offset, 25, 25);
+
+                        if (currentTetrimino != null) {
+                            // Determines if the indicator for dropping the Tetrimino should be drawn for the current node
+                            TetriminoNode[] nodes = currentTetrimino.getNodes();
+                            boolean stop = true;
+
+                            for (int i = 0; i < nodes.length; i++) {
+                                if (nodes[i].equals(curr)) {
+                                    stop = false;
+                                    break;
+                                }
+                            }
+
+                            if (!stop) {
+                                // Draws the indicator for dropping the Tetrimino
+                                for (int i = curr.row + 1; i < board.length; i++) {
+                                    if (board[i][c] == null) {
+                                        pen.setColor(Color.LIGHT_GRAY);
+                                        pen.fillRect(c * 25 + offset, i * 25 + offset, 25, 25);
+                                        pen.setColor(Color.GRAY);
+                                        pen.drawRect(c * 25 + offset, i * 25 + offset, 25, 25);
+                                    } else break;
+                                }
+                            }
+                        }
                     }
                 }
             }
             
+            // Draws the Text to the screen
             pen.setFont(new Font("comicsansms", 0, 20));
             pen.setColor(Color.WHITE);
             pen.drawString("Lines: " + lines, offset + board[0].length * 25 + 8, offset - 24);
@@ -112,7 +147,8 @@ public class MyGame extends Game  {
     
             if (alive) {
                 TetriminoNode[] nodes = nextTetrimino.getNodes();
-    
+                
+                // Draws the next Tetrimino
                 for (int i = 0; i < nodes.length; i++) {
                     TetriminoNode node = nodes[i];
                     node.updateColor();
@@ -125,6 +161,7 @@ public class MyGame extends Game  {
                 if (heldTetrimino != null) {
                     nodes = heldTetrimino.getNodes();
 
+                    // Draws the held Tetrimino
                     for (int i = 0; i < nodes.length; i++) {
                         TetriminoNode node = nodes[i];
                         node.updateColor();
