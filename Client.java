@@ -14,7 +14,6 @@ public class Client {
 
 		// establish a connection
 		try {
-
 			socket = new Socket(address, port);
 
 			System.out.println("Connected");
@@ -28,34 +27,15 @@ public class Client {
 		}
 
 		catch (UnknownHostException u) {
-
 			System.out.println(u);
 		}
 
 		catch (IOException i) {
-
 			System.out.println(i);
 		}
+	}
 
-		// string to read message from input
-		String line = "";
-
-		// keep reading until "End" is input
-		while (!line.equals("End")) {
-
-			try {
-
-				line = input.readLine();
-
-				out.writeUTF(line);
-			}
-
-			catch (IOException i) {
-
-				System.out.println(i);
-			}
-		}
-
+	public void close() {
 		// close the connection
 		try {
 

@@ -447,8 +447,7 @@ public class MyGame extends Game  {
             client.out.writeUTF(linesCleared + "");
         } catch (IOException i) {
             System.out.println(i);
-        } 
-        
+        }
 
         messageDirection = (int)(Math.random() * 2);
 
@@ -709,7 +708,8 @@ public class MyGame extends Game  {
     public void keyPressed(KeyEvent ke) {
         switch (ke.getKeyCode()) {
             case 27: // ESCAPE Key
-                if (!alive && menu == null) menu = menus.new MainMenu();
+                if (menu == null) menu = menus.new MainMenu();
+                else this.running = false;
                 break;
 
             case 32: // SPACE
