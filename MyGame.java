@@ -3,6 +3,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -35,9 +36,11 @@ public class MyGame extends Game  {
     private boolean[] arrows = new boolean[2]; // Determines whether or not to repeated left or right movement
     private int direction = 0; // -1 = Left, 1 = Right, 0 = None
     private long inputDelay = 200; // Delay for repeating directional inputs
+    private Client client; // Client to communicate with server
 
     public MyGame() {
         // initialize variables here
+        client = new Client("127.0.0.1", 5000);
         menus = new Menus();
         menu = menus.new MainMenu();
         message = new Menu().new Text("", 0, 0, Color.WHITE);
@@ -439,6 +442,13 @@ public class MyGame extends Game  {
                 message.contents = "+1600 Tetris!";
                 break;
         }
+
+        try {
+            client.out.writeUTF(linesCleared + "");
+        } catch (IOException i) {
+            System.out.println(i);
+        } 
+        
 
         messageDirection = (int)(Math.random() * 2);
 

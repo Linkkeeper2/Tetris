@@ -1,5 +1,4 @@
 // A Java program for a ClientSide
-
 import java.io.*;
 import java.net.*;
 
@@ -7,7 +6,7 @@ public class Client {
 	// initialize socket and input output streams
 	private Socket socket = null;
 	private DataInputStream input = null;
-	private DataOutputStream out = null;
+	public DataOutputStream out = null;
 
 	// constructor to put ip address and port
 	public Client(String address, int port)
@@ -71,11 +70,6 @@ public class Client {
 
 			System.out.println(i);
 		}
-	}
-
-	public static void main(String[] args)
-	{
-		Client client = new Client("127.0.0.1", 5000);
 	}
 }
 
