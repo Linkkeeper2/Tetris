@@ -5,7 +5,7 @@ public class ColorPalette {
     public int currentPalette;
 
     public ColorPalette() {
-        colors = new Color[10][7];
+        colors = new Color[25][7];
         currentPalette = 0;
         colors[0] = new Color[] {new Color(0, 255, 255), new Color(255, 0, 255), 
             new Color(255, 0, 0), new Color(0, 255, 0), new Color(255, 255, 0), 
