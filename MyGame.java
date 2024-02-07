@@ -31,6 +31,7 @@ public class MyGame extends Game  {
     private Menu.Text levelMessage; // Message for level ups
     public static ColorPalette palette;
     private int messageCol; // Column to display line clear messages
+    private int messageDirection; // Direction to move message when clearing lines
 
     public MyGame() {
         // initialize variables here
@@ -71,6 +72,11 @@ public class MyGame extends Game  {
         }
 
         updateArray();
+
+        if (!message.contents.equals("")) {
+            message.y--;
+            message.x += messageDirection == 0 ? 1 : -1;
+        }
     }
     
     public void draw(Graphics pen) {
@@ -389,6 +395,8 @@ public class MyGame extends Game  {
                 message.contents = "+1600 Tetris!";
                 break;
         }
+
+        messageDirection = (int)(Math.random() * 2);
 
         timer.schedule(new TimerTask() {
             public void run() {
