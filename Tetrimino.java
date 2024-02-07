@@ -6,6 +6,7 @@ public class Tetrimino {
     protected int id; // The current Tetrimino ID (First Tetrimino in game = 0, next one is 1, etc.)
     protected int direction = 1; // The current rotation direction of the Tetrimino
     protected Color color;
+    protected int colorIndex; // Label for which color in the Palette the Tetrimino uses
 
     public TetriminoNode[] getNodes() {
         return nodes;
@@ -74,4 +75,6 @@ public class Tetrimino {
     protected String getType() {
         return "Default";
     }
+
+    
 }

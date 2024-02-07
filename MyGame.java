@@ -22,18 +22,20 @@ public class MyGame extends Game  {
     private static int speed = 1000; // The millisecond delay between automatic Tetrimino movement
     private int lines = 0; // The number of lines cleared
     private int score = 0; // The total score of the player
-    private int level = 1; // The level (speed) of the game
+    public static int level = 1; // The level (speed) of the game
     private static boolean alive = false;
     private static boolean held = false; // Has the player held a piece on the current turn?
     private Menus menus;
     private static Menu menu;
     private String lineString; // Displays, Single, Double, Triple, or Tetris
+    public static ColorPalette palette;
 
     public MyGame() {
         // initialize variables here
         menus = new Menus();
         menu = menus.new MainMenu();
         lineString = "";
+        palette = new ColorPalette();
     }
 
     public static void startGame() {
@@ -77,6 +79,7 @@ public class MyGame extends Game  {
                         pen.drawRect(c * 25 + offset, r * 25 + offset, 25, 25);
                     } else {
                         TetriminoNode curr = board[r][c];
+                        curr.updateColor();
                         
                         pen.setColor(curr.getColor());
                         pen.fillRect(curr.col * 25 + offset, curr.row * 25 + offset, 25, 25);
@@ -100,8 +103,12 @@ public class MyGame extends Game  {
     
                 for (int i = 0; i < nodes.length; i++) {
                     TetriminoNode node = nodes[i];
+                    //node.updateColor();
+                    System.out.println(node.getColor());
                     pen.setColor(node.getColor());
                     pen.fillRect(node.row * 25 + 20, node.col * 25 + 35, 25, 25);
+                    pen.setColor(node.getDarkColor());
+                    pen.drawRect(node.row * 25 + 20, node.col * 25 + 35, 25, 25);
                 }
 
                 if (heldTetrimino != null) {
@@ -109,8 +116,11 @@ public class MyGame extends Game  {
 
                     for (int i = 0; i < nodes.length; i++) {
                         TetriminoNode node = nodes[i];
+                        //node.updateColor();
                         pen.setColor(node.getColor());
                         pen.fillRect(node.row * 25 + 20, node.col * 25 + 175, 25, 25);
+                        pen.setColor(node.getDarkColor());
+                        pen.drawRect(node.row * 25 + 20, node.col * 25 + 175, 25, 25);
                     }
                 }
             }
@@ -498,6 +508,8 @@ public class MyGame extends Game  {
     public void speedCalculation() {
         if (lines % 10 == 0) {
             level++;
+            if (palette.currentPalette < palette.getColors().length - 1) palette.currentPalette++;
+            else palette.currentPalette = 0;
 
             if (speed > 100) speed -= 100;
             else {

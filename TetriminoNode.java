@@ -5,8 +5,10 @@ public class TetriminoNode {
     public int id;
     public int row;
     public int col;
+    private int colorIndex;
 
-    public TetriminoNode(Color c, int row, int col) {
+    public TetriminoNode(Color c, int row, int col, int colorIndex) {
+        this.colorIndex = colorIndex;
         color = c;
         this.row = row;
         this.col = col;
@@ -36,5 +38,9 @@ public class TetriminoNode {
 
     public String toString() {
         return "Tetrimino at: (" + row + ", " + col + ")";
+    }
+
+    public void updateColor() {
+        this.color = MyGame.palette.getColors()[MyGame.palette.currentPalette][colorIndex];
     }
 }
