@@ -5,6 +5,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import java.awt.Color;
 
 public abstract class Game implements KeyListener, MouseListener, MouseMotionListener
 {
@@ -27,6 +28,7 @@ public abstract class Game implements KeyListener, MouseListener, MouseMotionLis
         frame.setVisible(true);
         frame.addKeyListener(this);
         frame.addMouseListener(this);
+        frame.setBackground(Color.BLACK);
         run();
     }
 

@@ -65,19 +65,21 @@ public class Menu {
     } 
 
     public class Text {
-        private String contents;
-        private int x;
-        private int y;
+        public String contents;
+        public int x;
+        public int y;
+        private Color color;
 
-        public Text(String contents, int x, int y) {
+        public Text(String contents, int x, int y, Color color) {
             this.contents = contents;
             this.x = x;
             this.y = y;
+            this.color = color;
         }
 
         public void draw(Graphics pen) {
             pen.setFont(new Font("comicsansms", 0, 20));
-            pen.setColor(Color.BLACK);
+            pen.setColor(color);
             pen.drawString(contents, x, y);
         }
     }

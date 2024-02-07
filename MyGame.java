@@ -8,7 +8,7 @@ import java.util.TimerTask;
 
 public class MyGame extends Game  {
     public static final String TITLE = "Tetris";
-    public static final int SCREEN_WIDTH = 400;
+    public static final int SCREEN_WIDTH = 600;
     public static final int SCREEN_HEIGHT = 800;
 
     // declare variables here
@@ -27,14 +27,17 @@ public class MyGame extends Game  {
     private static boolean held = false; // Has the player held a piece on the current turn?
     private Menus menus;
     private static Menu menu;
-    private String lineString; // Displays, Single, Double, Triple, or Tetris
+    private Menu.Text message; // Message for line clears
+    private Menu.Text levelMessage; // Message for level ups
     public static ColorPalette palette;
+    private int messageCol; // Column to display line clear messages
 
     public MyGame() {
         // initialize variables here
         menus = new Menus();
         menu = menus.new MainMenu();
-        lineString = "";
+        message = new Menu().new Text("", 0, 0, Color.WHITE);
+        levelMessage = new Menu().new Text("", 0, 700, Color.WHITE);
         palette = new ColorPalette();
     }
 
@@ -63,6 +66,8 @@ public class MyGame extends Game  {
             clearRow();
             held = false;
             swapTetriminos();
+        } else if (currentTetrimino != null) {
+            messageCol = currentTetrimino.getNodes()[0].col;
         }
 
         updateArray();
@@ -90,13 +95,14 @@ public class MyGame extends Game  {
             }
             
             pen.setFont(new Font("comicsansms", 0, 20));
-            pen.setColor(Color.BLACK);
+            pen.setColor(Color.WHITE);
             pen.drawString("Lines: " + lines, 0, 20);
             pen.drawString("Score: " + score, 0, 40);
             pen.drawString("Level: " + level, 0, 60);
             pen.drawString("Next", 0, 80);
             pen.drawString("Hold", 0, 220);
-            pen.drawString(lineString, 0, 700);
+            message.draw(pen);
+            levelMessage.draw(pen);
     
             if (alive) {
                 TetriminoNode[] nodes = nextTetrimino.getNodes();
@@ -342,6 +348,9 @@ public class MyGame extends Game  {
                 lines++;
                 linesCleared++;
 
+                message.x = messageCol * 25 + offset;
+                message.y = r * 25 + offset;
+
                 speedCalculation();
 
                 for (int i = r; i > 0; i--) {
@@ -362,28 +371,28 @@ public class MyGame extends Game  {
         switch (linesCleared) {
             case 1:
                 score += 100;
-                lineString = "+100 Single!";
+                message.contents = "+100 Single!";
                 break;
 
             case 2:
                 score += 400;
-                lineString = "+400 Double!";
+                message.contents = "+400 Double!";
                 break;
 
             case 3:
                 score += 800;
-                lineString = "+800 Triple!";
+                message.contents = "+800 Triple!";
                 break;
 
             case 4:
                 score += 1600;
-                lineString = "+1600 Tetris!";
+                message.contents = "+1600 Tetris!";
                 break;
         }
 
         timer.schedule(new TimerTask() {
             public void run() {
-                lineString = "";
+                message.contents = "";
             }
         }, (long)750);
     }
@@ -468,6 +477,8 @@ public class MyGame extends Game  {
             }
         }
 
+        if (nextTetrimino == null) return;
+
         switch (nextTetrimino.getType()) {
             case "IPiece":
                 currentTetrimino = pieces.new IPiece();
@@ -507,11 +518,11 @@ public class MyGame extends Game  {
     public void speedCalculation() {
         if (lines % 10 == 0) {
             level++;
-            lineString = "Level Up!";
+            levelMessage.contents = "Level Up!";
 
             timer.schedule(new TimerTask() {
                 public void run() {
-                    lineString = "";
+                    levelMessage.contents = "";
                 }
             }, (long)750);
 
