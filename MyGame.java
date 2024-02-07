@@ -45,7 +45,7 @@ public class MyGame extends Game  {
         alive = true;
         menu = null;
         board = new TetriminoNode[20][10];
-        offset = 100;
+        offset = 125;
         pieces = new Tetriminos();
 
         timer = new Timer();
@@ -96,11 +96,11 @@ public class MyGame extends Game  {
             
             pen.setFont(new Font("comicsansms", 0, 20));
             pen.setColor(Color.WHITE);
-            pen.drawString("Lines: " + lines, 0, 20);
-            pen.drawString("Score: " + score, 0, 40);
-            pen.drawString("Level: " + level, 0, 60);
-            pen.drawString("Next", 0, 80);
-            pen.drawString("Hold", 0, 220);
+            pen.drawString("Lines: " + lines, offset + board[0].length * 25 + 8, offset - 24);
+            pen.drawString("Score: " + score, offset + board[0].length * 25 + 8, offset);
+            pen.drawString("Level: " + level, 32, 60);
+            pen.drawString("Next", offset + board[0].length * 25 + 48, offset + 40);
+            pen.drawString("Hold", 32, offset + 40);
             message.draw(pen);
             levelMessage.draw(pen);
     
@@ -111,9 +111,9 @@ public class MyGame extends Game  {
                     TetriminoNode node = nodes[i];
                     node.updateColor();
                     pen.setColor(node.getColor());
-                    pen.fillRect(node.row * 25 + 20, node.col * 25 + 35, 25, 25);
+                    pen.fillRect(node.col * 25 + (offset + board[0].length * 25 - 25), node.row * 25 + offset + 60, 25, 25);
                     pen.setColor(node.getDarkColor());
-                    pen.drawRect(node.row * 25 + 20, node.col * 25 + 35, 25, 25);
+                    pen.drawRect(node.col * 25 + (offset + board[0].length * 25 - 25), node.row * 25 + offset + 60, 25, 25);
                 }
 
                 if (heldTetrimino != null) {
@@ -123,9 +123,9 @@ public class MyGame extends Game  {
                         TetriminoNode node = nodes[i];
                         node.updateColor();
                         pen.setColor(node.getColor());
-                        pen.fillRect(node.row * 25 + 20, node.col * 25 + 175, 25, 25);
+                        pen.fillRect(node.col * 25 - 40, node.row * 25 + 175, 25, 25);
                         pen.setColor(node.getDarkColor());
-                        pen.drawRect(node.row * 25 + 20, node.col * 25 + 175, 25, 25);
+                        pen.drawRect(node.col * 25 - 40, node.row * 25 + 175, 25, 25);
                     }
                 }
             }
