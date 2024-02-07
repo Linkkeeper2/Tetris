@@ -103,8 +103,7 @@ public class MyGame extends Game  {
     
                 for (int i = 0; i < nodes.length; i++) {
                     TetriminoNode node = nodes[i];
-                    //node.updateColor();
-                    System.out.println(node.getColor());
+                    node.updateColor();
                     pen.setColor(node.getColor());
                     pen.fillRect(node.row * 25 + 20, node.col * 25 + 35, 25, 25);
                     pen.setColor(node.getDarkColor());
@@ -116,7 +115,7 @@ public class MyGame extends Game  {
 
                     for (int i = 0; i < nodes.length; i++) {
                         TetriminoNode node = nodes[i];
-                        //node.updateColor();
+                        node.updateColor();
                         pen.setColor(node.getColor());
                         pen.fillRect(node.row * 25 + 20, node.col * 25 + 175, 25, 25);
                         pen.setColor(node.getDarkColor());
@@ -386,7 +385,7 @@ public class MyGame extends Game  {
             public void run() {
                 lineString = "";
             }
-        }, (long)500);
+        }, (long)750);
     }
 
     public void hardDrop() {
@@ -508,6 +507,14 @@ public class MyGame extends Game  {
     public void speedCalculation() {
         if (lines % 10 == 0) {
             level++;
+            lineString = "Level Up!";
+
+            timer.schedule(new TimerTask() {
+                public void run() {
+                    lineString = "";
+                }
+            }, (long)750);
+
             if (palette.currentPalette < palette.getColors().length - 1) palette.currentPalette++;
             else palette.currentPalette = 0;
 
@@ -628,6 +635,10 @@ public class MyGame extends Game  {
     @Override
     public void keyPressed(KeyEvent ke) {
         switch (ke.getKeyCode()) {
+            case 27: // ESCAPE Key
+                if (!alive && menu == null) menu = menus.new MainMenu();
+                break;
+
             case 32: // SPACE
                 hardDrop();
                 break;
