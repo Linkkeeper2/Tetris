@@ -32,6 +32,9 @@ public class MyGame extends Game  {
     public static ColorPalette palette;
     private int messageCol; // Column to display line clear messages
     private int messageDirection; // Direction to move message when clearing lines
+    private boolean[] arrows = new boolean[2]; // Determines whether or not to repeated left or right movement
+    private int direction = 0; // -1 = Left, 1 = Right, 0 = None
+    private long inputDelay = 200; // Delay for repeating directional inputs
 
     public MyGame() {
         // initialize variables here
@@ -69,6 +72,10 @@ public class MyGame extends Game  {
             swapTetriminos();
         } else if (currentTetrimino != null) {
             messageCol = currentTetrimino.getNodes()[0].col;
+
+            if (direction != 0) {
+                move(direction);
+            }
         }
 
         updateArray();
@@ -700,6 +707,14 @@ public class MyGame extends Game  {
                 break;
 
             case 37: // Left Arrow Key
+                arrows[0] = true;
+
+                timer.schedule(new TimerTask() {
+                    public void run() {
+                        if (arrows[0]) direction = -1;
+                    }
+                }, inputDelay);
+
                 move(-1);
                 break;
 
@@ -708,6 +723,14 @@ public class MyGame extends Game  {
                 break;
 
             case 39: // Right Arrow Key
+                arrows[1] = true;
+
+                timer.schedule(new TimerTask() {
+                    public void run() {
+                        if (arrows[1]) direction = 1;
+                    }
+                }, inputDelay);
+                
                 move(1);
                 break;
 
@@ -726,7 +749,20 @@ public class MyGame extends Game  {
     }
 
     @Override
-    public void keyReleased(KeyEvent ke) {}
+    public void keyReleased(KeyEvent ke) {
+        switch (ke.getKeyCode()) {
+            case 37: // Left Arrow Key
+                arrows[0] = false;
+                direction = 0;
+                break;
+
+
+            case 39: // Right Arrow Key
+                arrows[1] = false;
+                direction = 0;
+                break;
+        }
+    }
 
     @Override
     public void mouseClicked(MouseEvent ke) {
