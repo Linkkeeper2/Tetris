@@ -58,6 +58,7 @@ public class MyGame extends Game  {
         score = 0;
         level = 1;
         speed = 1000;
+        palette.currentPalette = 0;
         alive = true;
         menu = null;
         board = new TetriminoNode[20][10];
@@ -770,11 +771,13 @@ public class MyGame extends Game  {
             case 27: // ESCAPE Key
                 if (menu == null) menu = menus.new MainMenu();
                 else {
-                    try {
-                        client.output.close();
-                        client.input.close();
-                    } catch (IOException e) {
-                        System.out.println(e);
+                    if (client != null && client.output != null && client.input != null) {
+                        try {
+                            client.output.close();
+                            client.input.close();
+                        } catch (IOException e) {
+                            System.out.println(e);
+                        }
                     }
                     
                     this.running = false;
