@@ -23,8 +23,8 @@ public class Client {
 			Scanner scanner = new Scanner(System.in);
 
             if (name.equals("")) {
-                System.out.println("Enter your name: ");
-			    this.name = scanner.nextLine();
+                System.out.println("Enter your name (Anything after a space will be deprecated): ");
+			    this.name = scanner.nextLine().split(" ")[0];
                 scanner.close();
             }
 
