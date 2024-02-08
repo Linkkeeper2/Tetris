@@ -723,39 +723,40 @@ public class MyGame extends Game  {
 
     public static void sendLines(int lines) {
         // Sends lines to the other players when a lines are cleared
-        int row = board.length - 1;
+        if (menu == null && alive) {
+            int row = board.length - 1;
 
-        for (int i = 0; i < lines; i++) {
-            for (int r = 0; r < board.length - 1; r++) {
-                for (int c = 0; c < board[r].length; c++) {
-                    if (board[r + 1][c] != null) {
-                        boolean shift = true; // Prevents the falling Tetrimino from shifting
+            for (int i = 0; i < lines; i++) {
+                for (int r = 2; r < board.length - 1; r++) {
+                    for (int c = 0; c < board[r].length; c++) {
+                        if (board[r + 1][c] != null) {
+                            boolean shift = true; // Prevents the falling Tetrimino from shifting
 
-                        if (currentTetrimino != null) {
-                            TetriminoNode[] nodes = currentTetrimino.getNodes();
-                            for (int k = 0; k < nodes.length; k++) {
-                                if (board[r + 1][c].equals(nodes[i])) {
-                                    System.out.println("Hey");
-                                    shift = false;
+                            if (currentTetrimino != null) {
+                                TetriminoNode[] nodes = currentTetrimino.getNodes();
+                                for (int k = 0; k < nodes.length; k++) {
+                                    if (board[r + 1][c].equals(nodes[i])) {
+                                        shift = false;
+                                    }
                                 }
                             }
-                        }
 
-                        if (shift) {
-                            board[r][c] = board[r + 1][c];
-                            board[r + 1][c] = null;
-                            board[r][c].row--;
-                            row = board[r][c].row + 1;
+                            if (shift) {
+                                board[r][c] = board[r + 1][c];
+                                board[r + 1][c] = null;
+                                board[r][c].row--;
+                                row = board[r][c].row + 1;
+                            }
                         }
                     }
                 }
             }
-        }
 
-        for (int r = row; r < board.length; r++) {
-            int stop = (int)(Math.random() * board[r].length);
-            for (int c = 0; c < board[r].length; c++) {
-                if (c != stop) board[r][c] = new TetriminoNode(Color.DARK_GRAY, r, c, -1);
+            for (int r = row; r < board.length; r++) {
+                int stop = (int)(Math.random() * board[r].length);
+                for (int c = 0; c < board[r].length; c++) {
+                    if (c != stop) board[r][c] = new TetriminoNode(Color.DARK_GRAY, r, c, -1);
+                }
             }
         }
     }

@@ -24,6 +24,8 @@ public class ButtonActions {
 
     public class Connect implements ButtonAction {
         public void action() {
+            if (MyGame.server != null) return;
+            
             Scanner scanner = new Scanner(System.in);
             System.out.println("Enter the host address: ");
             String host = scanner.nextLine();

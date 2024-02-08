@@ -38,7 +38,7 @@ public class ServerThread extends Thread {
 
         for (ServerThread sT: threadList) {
             sT.output.println(outputString);
-            
+
             Client client = MyGame.client;
             
             if (sendLines) {
