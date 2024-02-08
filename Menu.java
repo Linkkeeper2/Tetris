@@ -1,5 +1,7 @@
 import java.awt.Rectangle;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.FontMetrics;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
@@ -33,13 +35,15 @@ public class Menu {
         private Color defaultColor;
         private Color hoverColor;
         private String contents;
+        private ButtonAction action;
 
-        public Button(int x, int y, int width, int height, Color color, Color hoverColor, String contents) {
+        public Button(int x, int y, int width, int height, Color color, Color hoverColor, String contents, ButtonAction action) {
             rect = new Rectangle(x, y, width, height);
             this.color = color;
             this.defaultColor = color;
             this.hoverColor = hoverColor;
             this.contents = contents;
+            this.action = action;
         }
 
         public void draw(Graphics pen) {
@@ -47,7 +51,19 @@ public class Menu {
             pen.fillRect(rect.x, rect.y, rect.width, rect.height);
             pen.setColor(Color.WHITE);
             pen.setFont(new Font("comicsansms", 0, 20));
-            pen.drawString(contents, rect.x + rect.width / 3, rect.y + rect.height / 2 + 5);
+
+            Graphics2D g2d = (Graphics2D) pen;
+            FontMetrics fm = g2d.getFontMetrics();
+
+            int sum = 0;
+
+            for (int i = 0; i < contents.length(); i++) {
+                sum += fm.charWidth(contents.charAt(i));
+            }
+
+            int x = rect.x + ((int)rect.getWidth() - (int) rect.getWidth() / 2) - sum / 2;
+            int y = rect.y + ((int)rect.getHeight() - (int) rect.getHeight() / 2) + fm.getAscent() / 2 - 4;
+            g2d.drawString(contents, x, y);
         }
     
         public void hover(MouseEvent me) {
@@ -58,9 +74,13 @@ public class Menu {
         public void click(MouseEvent me) {
             if (rect.intersects(new Rectangle(me.getX() - 8, me.getY() - 32, 1, 1))) {
                 color = hoverColor;
-                MyGame.startGame();
+                this.action.action();
             }
             else color = defaultColor;
+        }
+
+        public void action() {
+
         }
     } 
 

@@ -36,12 +36,14 @@ public class MyGame extends Game  {
     private boolean[] arrows = new boolean[2]; // Determines whether or not to repeated left or right movement
     private int direction = 0; // -1 = Left, 1 = Right, 0 = None
     private long inputDelay = 340; // Delay for repeating directional inputs
-    private Client client; // Client to communicate with server
     private int prevLinesCleared = 0; // Previous amount of lines cleared to score Back-to-Back Tetrises
+
+    // Client data
+    public static Server server;
+    public static Client client;
 
     public MyGame() {
         // initialize variables here
-        client = new Client("127.0.0.1", 5000);
         menus = new Menus();
         menu = menus.new MainMenu();
         message = new Menu().new Text("", 0, 0, Color.WHITE);
@@ -457,10 +459,10 @@ public class MyGame extends Game  {
                 break;
         }
 
-        try {
-            if (client != null && client.out != null) client.out.writeUTF(linesCleared + "");
-        } catch (IOException i) {
-            System.out.println(i);
+        if (client != null && client.output != null) {
+            if (linesCleared > 0) {
+                client.output.println(client.name + " sent " + linesCleared + " lines!");
+            }
         }
 
         messageDirection = (int)(Math.random() * 2);
@@ -723,7 +725,16 @@ public class MyGame extends Game  {
         switch (ke.getKeyCode()) {
             case 27: // ESCAPE Key
                 if (menu == null) menu = menus.new MainMenu();
-                else this.running = false;
+                else {
+                    try {
+                        client.output.close();
+                        client.input.close();
+                    } catch (IOException e) {
+                        System.out.println(e);
+                    }
+                    
+                    this.running = false;
+                }
                 break;
 
             case 32: // SPACE

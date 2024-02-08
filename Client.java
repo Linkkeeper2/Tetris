@@ -1,54 +1,35 @@
-// A Java program for a ClientSide
 import java.io.*;
 import java.net.*;
+import java.util.Scanner;
 
 public class Client {
-	// initialize socket and input output streams
-	private Socket socket = null;
-	private DataInputStream input = null;
 	public DataOutputStream out = null;
-
-	// constructor to put ip address and port
-	public Client(String address, int port)
+	public PrintWriter output;
+	public BufferedReader input;
+	public String name = "";
+	public Socket socket = null;
+	
+	public Client(String host, int port)
 	{
-
-		// establish a connection
 		try {
-			socket = new Socket(address, port);
+			socket = new Socket(host, port);
+			input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			output = new PrintWriter(socket.getOutputStream(), true);
+			ClientThread clientThread = new ClientThread(socket);
 
-			System.out.println("Connected");
+			clientThread.start();
+			
+			Scanner scanner = new Scanner(System.in);
 
-			// takes input from terminal
-			input = new DataInputStream(System.in);
+            if (name.equals("")) {
+                System.out.println("Enter your name: ");
+			    this.name = scanner.nextLine();
+                scanner.close();
+            }
 
-			// sends output to the socket
-			out = new DataOutputStream(
-				socket.getOutputStream());
-		}
-
-		catch (UnknownHostException u) {
-			System.out.println(u);
-		}
-
-		catch (IOException i) {
-			System.out.println(i);
-		}
-	}
-
-	public void close() {
-		// close the connection
-		try {
-
-			input.close();
-
-			out.close();
-
-			socket.close();
-		}
-
-		catch (IOException i) {
-
-			System.out.println(i);
+			scanner.close();
+		} catch (Exception e) {
+			System.out.println("Exception occured in client: " + e.getStackTrace());
 		}
 	}
 }
