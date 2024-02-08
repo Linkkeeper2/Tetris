@@ -17,6 +17,19 @@ public class ClientThread extends Thread {
         try {
             while (true) {
                 String response = input.readLine();
+
+                int start = 0;
+
+                for (int i = 0; i < response.length(); i++) {
+                    String s = response.charAt(i) + "";
+                    if (i < response.length() - 5 && s.equals(" ") && s.substring(i + 1, i + 5).equals("sent")) {
+                        start = i + 1;
+                        break;
+                    }
+                }
+
+                MyGame.sendLines(Integer.parseInt(response.substring(start + 6, start + 7)));
+
                 System.out.println(response);
             }
         } catch (IOException e) {
