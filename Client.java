@@ -14,6 +14,7 @@ public class Client {
 		try {
 			socket = new Socket(host, port);
 			input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			out = new DataOutputStream(socket.getOutputStream());
 			output = new PrintWriter(socket.getOutputStream(), true);
 			ClientThread clientThread = new ClientThread(socket);
 

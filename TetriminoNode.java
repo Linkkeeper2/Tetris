@@ -41,6 +41,6 @@ public class TetriminoNode {
     }
 
     public void updateColor() {
-        this.color = MyGame.palette.getColors()[MyGame.palette.currentPalette][colorIndex];
+        if (this.colorIndex != -1) this.color = MyGame.palette.getColors()[MyGame.palette.currentPalette][colorIndex];
     }
 }
