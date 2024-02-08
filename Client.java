@@ -1,6 +1,6 @@
 import java.io.*;
-import java.net.*;
 import java.util.Scanner;
+import java.net.Socket;
 
 public class Client {
 	public DataOutputStream out = null;
@@ -28,12 +28,16 @@ public class Client {
                 scanner.close();
             }
 
-			System.out.println("Connected to game on port '2500' -> 'localhost'.");
+			System.out.println("Connected to game on port '2500' -> " + host);
 
 			scanner.close();
 		} catch (Exception e) {
 			System.out.println("Could not connect to server.");
 		}
+	}
+
+	public void recieveLines(int lines) {
+		MyGame.sendLines(lines);
 	}
 }
 

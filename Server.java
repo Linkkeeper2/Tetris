@@ -1,13 +1,20 @@
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
+import java.net.Socket;
 
-public class Server {
+public class Server extends Thread {
+	private int port;
+
 	public Server(int port)
 	{
+		this.port = port;
+	}
+
+	@Override
+	public void run() {
 		ArrayList<ServerThread> threadList = new ArrayList<>();
 
-		try (ServerSocket serverSocket = new ServerSocket(2500)) {
+		try (ServerSocket serverSocket = new ServerSocket(port)) {
 			while (true) {
 				Socket socket = serverSocket.accept();
 				ServerThread serverThread = new ServerThread(socket, threadList);
@@ -17,10 +24,6 @@ public class Server {
 		} catch (Exception e) {
 			System.out.println("Client disconnected");
 		}
-	}
-
-	public static void main(String[] args) {
-		Server server = new Server(2500);
 	}
 }
 

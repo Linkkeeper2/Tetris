@@ -21,8 +21,8 @@ public class MyGame extends Game  {
     private static int tNum = 0; // Number of Tetriminos used (Keeps track of ID for each Tetrimino)
     private static boolean hardDropping = false; // Determines whether or not the regular drop interval should occur (prevents Tetrimino clipping while Hard Dropping)
     private static int speed = 1000; // The millisecond delay between automatic Tetrimino movement
-    private int lines = 0; // The number of lines cleared
-    private int score = 0; // The total score of the player
+    private static int lines = 0; // The number of lines cleared
+    private static int score = 0; // The total score of the player
     public static int level = 1; // The level (speed) of the game
     private static boolean alive = false;
     private static boolean held = false; // Has the player held a piece on the current turn?
@@ -40,6 +40,7 @@ public class MyGame extends Game  {
 
     // Client data
     public static Client client;
+    public static Server server;
 
     public MyGame() {
         // initialize variables here
@@ -53,6 +54,10 @@ public class MyGame extends Game  {
     }
 
     public static void startGame() {
+        lines = 0;
+        score = 0;
+        level = 1;
+        speed = 1000;
         alive = true;
         menu = null;
         board = new TetriminoNode[20][10];
@@ -716,7 +721,7 @@ public class MyGame extends Game  {
         held = true;
     }
 
-    public void sendLines(int lines) {
+    public static void sendLines(int lines) {
         // Sends lines to the other players when a lines are cleared
         int row = board.length - 1;
 
@@ -724,10 +729,24 @@ public class MyGame extends Game  {
             for (int r = 0; r < board.length - 1; r++) {
                 for (int c = 0; c < board[r].length; c++) {
                     if (board[r + 1][c] != null) {
-                        board[r][c] = board[r + 1][c];
-                        board[r + 1][c] = null;
-                        board[r][c].row--;
-                        row = board[r][c].row + 1;
+                        boolean shift = true; // Prevents the falling Tetrimino from shifting
+
+                        if (currentTetrimino != null) {
+                            TetriminoNode[] nodes = currentTetrimino.getNodes();
+                            for (int k = 0; k < nodes.length; k++) {
+                                if (board[r + 1][c].equals(nodes[i])) {
+                                    System.out.println("Hey");
+                                    shift = false;
+                                }
+                            }
+                        }
+
+                        if (shift) {
+                            board[r][c] = board[r + 1][c];
+                            board[r + 1][c] = null;
+                            board[r][c].row--;
+                            row = board[r][c].row + 1;
+                        }
                     }
                 }
             }

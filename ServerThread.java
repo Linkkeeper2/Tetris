@@ -25,7 +25,7 @@ public class ServerThread extends Thread {
                 if (outputString.equals("Exit")) break;
 
                 printToAllClients(outputString);
-                System.out.println("Server received: " + outputString);
+                System.out.println(outputString);
             }
 
         } catch (Exception e) {
@@ -34,8 +34,20 @@ public class ServerThread extends Thread {
     }
 
     private void printToAllClients(String outputString) {
+        boolean sendLines = false;
+
         for (ServerThread sT: threadList) {
             sT.output.println(outputString);
+            
+            Client client = MyGame.client;
+            
+            if (sendLines) {
+                client.recieveLines(Integer.parseInt(outputString.substring(client.name.length() + 6, client.name.length() + 7)));
+            }
+
+            if (outputString.substring(0, client.name.length()).equals(client.name)) {
+                sendLines = true;
+            }
         }
     }
 }
