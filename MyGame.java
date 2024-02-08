@@ -39,7 +39,6 @@ public class MyGame extends Game  {
     private int prevLinesCleared = 0; // Previous amount of lines cleared to score Back-to-Back Tetrises
 
     // Client data
-    public static Server server;
     public static Client client;
 
     public MyGame() {

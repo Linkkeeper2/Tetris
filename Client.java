@@ -27,9 +27,11 @@ public class Client {
                 scanner.close();
             }
 
+			System.out.println("Connected to game on port '2500' -> 'localhost'.");
+
 			scanner.close();
 		} catch (Exception e) {
-			System.out.println("Exception occured in client: " + e.getStackTrace());
+			System.out.println("Could not connect to server.");
 		}
 	}
 }
