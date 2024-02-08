@@ -4,6 +4,7 @@ import java.net.Socket;
 
 public class Server extends Thread {
 	private int port;
+	private ArrayList<ServerThread> threadList;
 
 	public Server(int port)
 	{
@@ -12,7 +13,7 @@ public class Server extends Thread {
 
 	@Override
 	public void run() {
-		ArrayList<ServerThread> threadList = new ArrayList<>();
+		threadList = new ArrayList<>();
 
 		try (ServerSocket serverSocket = new ServerSocket(port)) {
 			while (true) {
@@ -26,4 +27,3 @@ public class Server extends Thread {
 		}
 	}
 }
-

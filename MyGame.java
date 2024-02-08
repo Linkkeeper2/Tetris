@@ -465,7 +465,7 @@ public class MyGame extends Game  {
 
         if (client != null && client.output != null) {
             if (linesCleared > 0) {
-                client.output.println(client.name + " sent " + linesCleared + " lines!");
+                client.output.println(client.name + " sent " + linesCleared + " lines.");
             }
         }
 

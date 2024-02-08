@@ -35,9 +35,4 @@ public class Client {
 			System.out.println("Could not connect to server.");
 		}
 	}
-
-	public void recieveLines(int lines) {
-		MyGame.sendLines(lines);
-	}
 }
-
