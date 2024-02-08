@@ -11,7 +11,6 @@ public class Server {
 	// constructor with port
 	public Server(int port)
 	{
-
 		// starts server and waits for a connection
 		try {
 			server = new ServerSocket(port);
@@ -35,14 +34,12 @@ public class Server {
 			while (!line.equals("End")) {
 
 				try {
-
 					line = in.readUTF();
 
 					System.out.println(line);
 				}
 
 				catch (IOException i) {
-
 					System.out.println(i);
 				}
 			}
@@ -56,7 +53,6 @@ public class Server {
 		}
 
 		catch (IOException i) {
-
 			System.out.println(i);
 		}
 	}

@@ -35,8 +35,9 @@ public class MyGame extends Game  {
     private int messageDirection; // Direction to move message when clearing lines
     private boolean[] arrows = new boolean[2]; // Determines whether or not to repeated left or right movement
     private int direction = 0; // -1 = Left, 1 = Right, 0 = None
-    private long inputDelay = 200; // Delay for repeating directional inputs
+    private long inputDelay = 340; // Delay for repeating directional inputs
     private Client client; // Client to communicate with server
+    private int prevLinesCleared = 0; // Previous amount of lines cleared to score Back-to-Back Tetrises
 
     public MyGame() {
         // initialize variables here
@@ -46,6 +47,8 @@ public class MyGame extends Game  {
         message = new Menu().new Text("", 0, 0, Color.WHITE);
         levelMessage = new Menu().new Text("", 0, 700, Color.WHITE);
         palette = new ColorPalette();
+        timer = new Timer();
+        pieces = new Tetriminos();
     }
 
     public static void startGame() {
@@ -53,9 +56,7 @@ public class MyGame extends Game  {
         menu = null;
         board = new TetriminoNode[20][10];
         offset = 125;
-        pieces = new Tetriminos();
 
-        timer = new Timer();
         timer.schedule(new TimerTask() {
             public void run() {
                 automaticMove();
@@ -421,6 +422,14 @@ public class MyGame extends Game  {
             }
         }
 
+        if (prevLinesCleared == 4 && linesCleared == 4) {
+            prevLinesCleared = linesCleared;
+            linesCleared++;
+        } else {
+            if (linesCleared > 0) prevLinesCleared = linesCleared;
+        }
+        
+
         switch (linesCleared) {
             case 1:
                 score += 100;
@@ -441,10 +450,15 @@ public class MyGame extends Game  {
                 score += 1600;
                 message.contents = "+1600 Tetris!";
                 break;
+
+            case 5:
+                score += 2000;
+                message.contents = "+2000 Back-to-Back Tetris!";
+                break;
         }
 
         try {
-            client.out.writeUTF(linesCleared + "");
+            if (client != null && client.out != null) client.out.writeUTF(linesCleared + "");
         } catch (IOException i) {
             System.out.println(i);
         }
