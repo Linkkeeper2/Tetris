@@ -46,8 +46,14 @@ public class ServerStatus {
 
     public void draw(Graphics pen) {
         for (int i = 0; i < messages.size(); i++) {
-            if (MyGame.menu == null) messages.get(i).y = MyGame.offset + 180 + (i * 25);
-            else messages.get(i).y = 200 + (i * 25);
+            if (MyGame.menu == null) {
+                messages.get(i).x = MyGame.offset + 10 * 25 + 25;
+                messages.get(i).y = MyGame.offset + 180 + (i * 25);
+            }
+            else {
+                messages.get(i).x = MyGame.SCREEN_WIDTH / 2 + 88;
+                messages.get(i).y = 200 + (i * 25);
+            }
             messages.get(i).draw(pen);
         }
     }

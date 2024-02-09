@@ -25,6 +25,7 @@ public class TextActions {
                 System.out.print("");
             }
             MyGame.client.name = MyGame.prompt.send;
+            MyGame.client.addPlayer(MyGame.client.name);
 
             try {
                 MyGame.status.addMessage("Hosting game on port '2500' -> " + InetAddress.getLocalHost().getHostAddress(), 3000);
@@ -55,6 +56,7 @@ public class TextActions {
 
             MyGame.client = new Client(host, 2500);
             MyGame.client.name = name;
+            MyGame.client.addPlayer(MyGame.client.name);
 
             MyGame.client.output.println(MyGame.client.name + " has connected.");
             MyGame.status.addMessage("Connected to host.");

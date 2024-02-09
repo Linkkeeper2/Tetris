@@ -204,6 +204,7 @@ public class MyGame extends Game  {
 
         status.draw(pen);
         if (prompt != null) prompt.draw(pen);
+        if (client != null) client.drawLobby(pen);
     }
 
     public static void moveTetriminos() {

@@ -3,6 +3,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.SocketException;
+import java.util.ArrayList;
 
 public class ClientThread extends Thread {
     private Socket socket;
@@ -24,6 +25,21 @@ public class ClientThread extends Thread {
                     if (!s[1].equals("Started")) {
                         if (response.endsWith("connected.")) {
                             MyGame.status.addMessage(response);
+                            MyGame.client.addPlayer(s[0]);
+                            MyGame.client.output.println(MyGame.client.name + " has added.");
+                        } else if (response.endsWith("added."))  {
+                            boolean addPlayer = true;
+
+                            ArrayList<Menu.Text> lobby = MyGame.client.lobby;
+
+                            for (int i = 0; i < lobby.size(); i++) {
+                                if (lobby.get(i).contents.equals(s[0])) {
+                                    addPlayer = false;
+                                }
+                            }
+
+                            if (addPlayer)
+                                MyGame.client.addPlayer(s[0]);
                         } else {
                             MyGame.recieveLines(Integer.parseInt(s[2]));
                             MyGame.status.addMessage(response);
@@ -36,7 +52,6 @@ public class ClientThread extends Thread {
             }
         } catch (SocketException e) {
             MyGame.status.addMessage("Disconnected from host.");
-            System.out.println("Disconnected.");
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

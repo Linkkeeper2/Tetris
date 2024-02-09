@@ -25,7 +25,6 @@ public class ServerThread extends Thread {
                 if (outputString.equals("Exit")) break;
 
                 printToAllClients(outputString);
-                System.out.println(outputString);
             }
         } catch (Exception e) {
             MyGame.status.addMessage("Client has Disconnected");
