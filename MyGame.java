@@ -784,8 +784,13 @@ public class MyGame extends Game  {
         if (client != null && client.output != null) {
             if (linesToSend >= timesCleared) {
                 if (linesCleared > 0) {
-                    client.output.println(client.name + " sent " + linesCleared + " lines.");
-                    status.addMessage("Sent " + linesCleared + " lines.");
+                    String recieve = client.lobby.get((int)(Math.random() * client.lobby.size())).contents;
+                    while (recieve.equals(client.name) || recieve.equals("Lobby")) {
+                        recieve = client.lobby.get((int)(Math.random() * client.lobby.size())).contents;
+                    }
+                    
+                    client.output.println(client.name + " sent " + linesCleared + " lines to " + recieve);
+                    status.addMessage("Sent " + linesCleared + " lines to " + recieve + ".");
                     linesToSend = 0;
                     timesCleared = (int)(Math.random() * 4) + 1;
                 }
@@ -812,6 +817,8 @@ public class MyGame extends Game  {
                     if (server != null) {
                         exitToMenu();
                         client.output.println("Game Ended.");
+                    } else {
+                        if (client == null) exitToMenu();
                     }
                 } else {
                     if (client != null && client.output != null && client.input != null) {

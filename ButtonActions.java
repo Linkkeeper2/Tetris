@@ -7,10 +7,12 @@ public class ButtonActions {
             Client client = MyGame.client;
             if (client == null) MyGame.startGame();
             else {
-                if (MyGame.server != null) {
+                if (MyGame.server != null && client.lobby.size() > 2) {
                     MyGame.startGame();
                     MyGame.client.output.println(MyGame.client.name + " Started the Game!");
                     MyGame.status.addMessage(MyGame.client.name + " Started the Game!");
+                } else {
+                    MyGame.status.addMessage("Game cannot start with 1 player.");
                 }
             }
         }
