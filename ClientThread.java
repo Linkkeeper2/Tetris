@@ -40,6 +40,17 @@ public class ClientThread extends Thread {
 
                             if (addPlayer)
                                 MyGame.client.addPlayer(s[0]);
+                        } else if (response.endsWith("left.")) {
+                            Menu.Text t = null;
+                            ArrayList<Menu.Text> lobby = MyGame.client.lobby;
+
+                            for (int i = 0; i < lobby.size(); i++) {
+                                if (lobby.get(i).contents.equals(s[0])) {
+                                    t = lobby.get(i);
+                                }
+                            }
+
+                            if (t != null) MyGame.client.removePlayer(t);
                         } else if (response.equals("Game Ended.")) {
                             MyGame.menu = MyGame.menus.new MainMenu();
                             MyGame.status.addMessage("Game Ended by Host.");

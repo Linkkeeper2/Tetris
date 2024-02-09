@@ -46,4 +46,8 @@ public class Client {
 	public void addPlayer(String s) {
 		lobby.add(new Menu().new Text(s, 0, 0, Color.WHITE));
 	}
+
+	public void removePlayer(Menu.Text t) {
+		lobby.remove(t);
+	}
 }

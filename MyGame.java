@@ -804,6 +804,8 @@ public class MyGame extends Game  {
                 }
                 else {
                     if (client != null && client.output != null && client.input != null) {
+                        client.output.println(client.name + " has left.");
+                        
                         try {
                             client.output.close();
                             client.input.close();
