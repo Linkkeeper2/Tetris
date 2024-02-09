@@ -26,7 +26,7 @@ public class Client {
 
 			clientThread.start();
 		} catch (Exception e) {
-			System.out.println("Could not connect to server.");
+			MyGame.status.addMessage("Could not connect to server.");
 		}
 	}
 

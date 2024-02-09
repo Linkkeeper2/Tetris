@@ -22,8 +22,6 @@ public class Server extends Thread {
 				threadList.add(serverThread);
 				serverThread.start();
 			}
-		} catch (Exception e) {
-			MyGame.status.addMessage("Server has Disconnected");
-		}
+		} catch (Exception e) {}
 	}
 }

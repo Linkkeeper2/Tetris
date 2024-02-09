@@ -43,6 +43,7 @@ public class MyGame extends Game  {
     public static Server server;
     public static ServerStatus status; // Status messages to display in game
     public static TextBox prompt;
+    public static Menu.Button disconnect;
     private int timesCleared = 3; // The amount of times the player has cleared lines in order to send lines to other clients
     private int linesToSend; // Amount of lines to send to other clients when a threshold is reached
 
@@ -806,6 +807,25 @@ public class MyGame extends Game  {
         menu = menus.new MainMenu();
     }
 
+    public static void leaveGame() {
+        if (client != null && client.output != null && client.input != null) {
+            client.output.println(client.name + " has left.");
+
+            try {
+                client.output.close();
+                client.input.close();
+            } catch (IOException e) {
+                status.addMessage(e.toString());
+            }
+
+            client = null;
+            server = null;
+            prompt = null;
+            menu.buttons.remove(disconnect);
+            disconnect = null;
+        }
+    }
+
     @Override
     public void keyTyped(KeyEvent ke) {
     }
@@ -823,16 +843,7 @@ public class MyGame extends Game  {
                         if (client == null) exitToMenu();
                     }
                 } else {
-                    if (client != null && client.output != null && client.input != null) {
-                        client.output.println(client.name + " has left.");
-
-                        try {
-                            client.output.close();
-                            client.input.close();
-                        } catch (IOException e) {
-                            System.out.println(e);
-                        }
-                    }
+                    leaveGame();
                     
                     this.running = false;
                 }

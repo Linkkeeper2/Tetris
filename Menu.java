@@ -5,27 +5,28 @@ import java.awt.FontMetrics;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 public class Menu {
-    protected Button[] buttons;
-    protected Text[] text;
+    protected ArrayList<Button> buttons;
+    protected ArrayList<Text> text;
 
     public Menu() {}
 
     public void draw(Graphics pen) {
-        for (int i = 0; i < buttons.length; i++) {
-            buttons[i].draw(pen);
+        for (int i = 0; i < buttons.size(); i++) {
+            buttons.get(i).draw(pen);
         }
 
-        for (int i = 0; i < text.length; i++) {
-            text[i].draw(pen);
+        for (int i = 0; i < text.size(); i++) {
+            text.get(i).draw(pen);
         }
     }
 
     public void buttonInteractions(MouseEvent me) {
-        for (int i = 0; i < buttons.length; i++) {
-            buttons[i].hover(me);
-            buttons[i].click(me);
+        for (int i = 0; i < buttons.size(); i++) {
+            buttons.get(i).hover(me);
+            buttons.get(i).click(me);
         }
     }
 
@@ -77,10 +78,6 @@ public class Menu {
                 this.action.action();
             }
             else color = defaultColor;
-        }
-
-        public void action() {
-
         }
     } 
 
