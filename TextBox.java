@@ -2,14 +2,17 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import java.awt.Color;
 
 public class TextBox {
     private String title;
     private String contents;
+    public String send; // The value sent when the user is done typing
 
     public TextBox(String title) {
         this.title = title;
         this.contents = "";
+        this.send = "";
     }
 
     public void draw(Graphics pen) {
@@ -34,14 +37,24 @@ public class TextBox {
         x = (width / 2 - 75) + ((int)150 - (int) 150 / 2) - sum / 2;
 
         g2d.drawString(contents, x, y + 30);
+        pen.setColor(Color.GRAY);
+        pen.fillRect(x, y + 30, sum, fm.getAscent());
     }
 
     public void type(KeyEvent ke) {
-        String charac = ke.getKeyChar() + "";
-        if (charac.equals(" ")) {
-            if (contents.length() > 0) contents = contents.substring(0, contents.length() - 1);
-        } else {
-            contents += charac + "";
+        switch (ke.getKeyCode()) {
+            case 8: // BACKSPACE
+                if (contents.length() > 0) contents = contents.substring(0, contents.length() - 1);
+                break;
+
+            case 10: // Enter
+                send = contents;
+                break;
+        }
+
+        // Alphanumeric Characters
+        if (ke.getKeyCode() >= 44 && ke.getKeyCode() <= 111) {
+            contents += ke.getKeyChar() + "";
         }
     }
 }

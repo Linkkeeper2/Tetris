@@ -1,5 +1,4 @@
 import java.io.*;
-import java.util.Scanner;
 import java.net.Socket;
 
 public class Client {
@@ -19,18 +18,6 @@ public class Client {
 			ClientThread clientThread = new ClientThread(socket);
 
 			clientThread.start();
-			
-			Scanner scanner = new Scanner(System.in);
-
-            if (name.equals("")) {
-                System.out.println("Enter your name (Anything after a space will be deprecated): ");
-			    this.name = scanner.nextLine().split(" ")[0];
-                scanner.close();
-            }
-
-			System.out.println("Connected to game on port '2500' -> " + host);
-
-			scanner.close();
 		} catch (Exception e) {
 			System.out.println("Could not connect to server.");
 		}

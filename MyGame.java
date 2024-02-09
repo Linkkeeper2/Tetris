@@ -48,7 +48,6 @@ public class MyGame extends Game  {
 
     public MyGame() {
         // initialize variables here
-        prompt = new TextBox("Enter Your Name");
         status = new ServerStatus();
         menus = new Menus();
         menu = menus.new MainMenu();
@@ -627,6 +626,8 @@ public class MyGame extends Game  {
     }
 
     public static void hold() {
+        if (menu != null) return;
+
         for (int i = 0; i < currentTetrimino.nodes.length; i++) {
             board[currentTetrimino.nodes[i].row][currentTetrimino.nodes[i].col] = null;
         }
@@ -785,11 +786,11 @@ public class MyGame extends Game  {
 
     @Override
     public void keyTyped(KeyEvent ke) {
-        if (prompt != null) prompt.type(ke);
     }
 
     @Override
     public void keyPressed(KeyEvent ke) {
+        if (prompt != null) prompt.type(ke);
         switch (ke.getKeyCode()) {
             case 27: // ESCAPE Key
                 if (menu == null) menu = menus.new MainMenu();
