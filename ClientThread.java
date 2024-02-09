@@ -55,7 +55,7 @@ public class ClientThread extends Thread {
                                 MyGame.status.addMessage(s[0] + " has left.");
                             }
                         } else if (response.equals("Game Ended.")) {
-                            MyGame.menu = MyGame.menus.new MainMenu();
+                            MyGame.exitToMenu();
                             MyGame.status.addMessage("Game Ended by Host.");
                         } else {
                             MyGame.recieveLines(Integer.parseInt(s[2]));

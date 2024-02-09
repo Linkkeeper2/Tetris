@@ -56,6 +56,12 @@ public class MyGame extends Game  {
         palette = new ColorPalette();
         timer = new Timer();
         pieces = new Tetriminos();
+
+        timer.schedule(new TimerTask() {
+            public void run() {
+                automaticMove();
+            }
+        }, (long)speed);
     }
 
     public static void startGame() {
@@ -70,11 +76,6 @@ public class MyGame extends Game  {
         if (client != null) recieveLines(0);
         offset = 125;
 
-        timer.schedule(new TimerTask() {
-            public void run() {
-                automaticMove();
-            }
-        }, (long)speed);
         currentTetrimino = getTetrimino();
         nextTetrimino = getNextTetrimino();
         heldTetrimino = null;
@@ -548,7 +549,14 @@ public class MyGame extends Game  {
 
     public static void automaticMove() {
         // Used for automatic Tetrimino movement to reschedule the task
-        if (!alive) return;
+        if (!alive) {
+            timer.schedule(new TimerTask() {
+                public void run() {
+                    automaticMove();
+                }
+            }, (long)speed);
+            return;
+        }
 
         moveTetriminos();
         timer.schedule(new TimerTask() {
@@ -787,6 +795,10 @@ public class MyGame extends Game  {
         }
     }
 
+    public static void exitToMenu() {
+        menu = menus.new MainMenu();
+    }
+
     @Override
     public void keyTyped(KeyEvent ke) {
     }
@@ -798,7 +810,7 @@ public class MyGame extends Game  {
             case 27: // ESCAPE Key
                 if (menu == null) {
                     if (server != null) {
-                        menu = menus.new MainMenu();
+                        exitToMenu();
                         client.output.println("Game Ended.");
                     }
                 } else {
@@ -824,11 +836,13 @@ public class MyGame extends Game  {
             case 37: // Left Arrow Key
                 arrows[0] = true;
 
-                timer.schedule(new TimerTask() {
-                    public void run() {
-                        if (arrows[0]) direction = -1;
-                    }
-                }, inputDelay);
+                if (timer != null) {
+                    timer.schedule(new TimerTask() {
+                        public void run() {
+                            if (arrows[0]) direction = -1;
+                        }
+                    }, inputDelay);
+                }
 
                 move(-1);
                 break;
@@ -840,11 +854,13 @@ public class MyGame extends Game  {
             case 39: // Right Arrow Key
                 arrows[1] = true;
 
-                timer.schedule(new TimerTask() {
-                    public void run() {
-                        if (arrows[1]) direction = 1;
-                    }
-                }, inputDelay);
+                if (timer != null) {
+                    timer.schedule(new TimerTask() {
+                        public void run() {
+                            if (arrows[1]) direction = 1;
+                        }
+                    }, inputDelay);
+                }
                 
                 move(1);
                 break;
