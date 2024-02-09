@@ -42,11 +42,13 @@ public class MyGame extends Game  {
     public static Client client;
     public static Server server;
     public static ServerStatus status; // Status messages to display in game
+    public static TextBox prompt;
     private int timesCleared = 3; // The amount of times the player has cleared lines in order to send lines to other clients
     private int linesToSend; // Amount of lines to send to other clients when a threshold is reached
 
     public MyGame() {
         // initialize variables here
+        prompt = new TextBox("Enter Your Name");
         status = new ServerStatus();
         menus = new Menus();
         menu = menus.new MainMenu();
@@ -202,6 +204,7 @@ public class MyGame extends Game  {
         }
 
         status.draw(pen);
+        if (prompt != null) prompt.draw(pen);
     }
 
     public static void moveTetriminos() {
@@ -781,7 +784,9 @@ public class MyGame extends Game  {
     }
 
     @Override
-    public void keyTyped(KeyEvent ke) {}
+    public void keyTyped(KeyEvent ke) {
+        if (prompt != null) prompt.type(ke);
+    }
 
     @Override
     public void keyPressed(KeyEvent ke) {
