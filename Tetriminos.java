@@ -14,6 +14,7 @@ public class Tetriminos {
 
             this.nodes = nodes;
             createRotations();
+            setNodesParent();
         }
 
         public IPiece(boolean add) {
@@ -71,6 +72,7 @@ public class Tetriminos {
 
             this.nodes = nodes;
             createRotations();
+            setNodesParent();
         }
 
         public TPiece(boolean add) {
@@ -135,6 +137,7 @@ public class Tetriminos {
 
             this.nodes = nodes;
             createRotations();
+            setNodesParent();
         }
 
         public ZPiece(boolean add) {
@@ -198,6 +201,7 @@ public class Tetriminos {
 
             this.nodes = nodes;
             createRotations();
+            setNodesParent();
         }
 
         public SPiece(boolean add) {
@@ -261,6 +265,7 @@ public class Tetriminos {
 
             this.nodes = nodes;
             this.direction = -1;
+            setNodesParent();
         }
 
         public OPiece(boolean add) {
@@ -300,6 +305,7 @@ public class Tetriminos {
 
             this.nodes = nodes;
             createRotations();
+            setNodesParent();
         }
 
         public LPiece(boolean add) {
@@ -363,6 +369,7 @@ public class Tetriminos {
 
             this.nodes = nodes;
             createRotations();
+            setNodesParent();
         }
 
         public JPiece(boolean add) {

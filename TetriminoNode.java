@@ -6,6 +6,7 @@ public class TetriminoNode {
     public int row;
     public int col;
     public int colorIndex;
+    public Tetrimino parent;
 
     public TetriminoNode(Color c, int row, int col, int colorIndex) {
         this.colorIndex = colorIndex;
@@ -42,5 +43,10 @@ public class TetriminoNode {
 
     public void updateColor() {
         if (this.colorIndex != -1) this.color = MyGame.palette.getColors()[MyGame.palette.currentPalette][colorIndex];
+    }
+
+    public void updateID() {
+        // For the stray nodes
+        this.id = -1;
     }
 }

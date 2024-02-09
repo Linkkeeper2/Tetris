@@ -41,6 +41,8 @@ public class MyGame extends Game  {
     // Client data
     public static Client client;
     public static Server server;
+    private int timesCleared = 3; // The amount of times the player has cleared lines in order to send lines to other clients
+    private int linesToSend; // Amount of lines to send to other clients when a threshold is reached
 
     public MyGame() {
         // initialize variables here
@@ -62,6 +64,7 @@ public class MyGame extends Game  {
         alive = true;
         menu = null;
         board = new TetriminoNode[20][10];
+        if (client != null) recieveLines(0);
         offset = 125;
 
         timer.schedule(new TimerTask() {
@@ -73,6 +76,7 @@ public class MyGame extends Game  {
         nextTetrimino = getNextTetrimino();
 
         updateArray();
+        move(1);
     }
     
     public void update() {
@@ -81,6 +85,7 @@ public class MyGame extends Game  {
             clearRow();
             held = false;
             swapTetriminos();
+            move(1);
         } else if (currentTetrimino != null) {
             messageCol = currentTetrimino.getNodes()[0].col;
 
@@ -196,7 +201,7 @@ public class MyGame extends Game  {
     }
 
     public static void moveTetriminos() {
-        if (!alive) return;
+        if (!alive || menu != null) return;
 
         if (currentTetrimino == null) return;
 
@@ -258,7 +263,7 @@ public class MyGame extends Game  {
         }
     }
 
-    public void move(int direction) {
+    public static void move(int direction) {
         if (!alive) return;
 
         if (currentTetrimino == null) return;
@@ -464,11 +469,7 @@ public class MyGame extends Game  {
                 break;
         }
 
-        if (client != null && client.output != null) {
-            if (linesCleared > 0) {
-                client.output.println(client.name + " sent " + linesCleared + " lines.");
-            }
-        }
+        sendLines(linesCleared);
 
         messageDirection = (int)(Math.random() * 2);
 
@@ -722,7 +723,7 @@ public class MyGame extends Game  {
         held = true;
     }
 
-    public static void sendLines(int lines) {
+    public static void recieveLines(int lines) {
         // Sends lines to the other players when a lines are cleared
         if (menu == null && alive) {
             int row = board.length - 1;
@@ -734,12 +735,7 @@ public class MyGame extends Game  {
                             boolean shift = true; // Prevents the falling Tetrimino from shifting
 
                             if (currentTetrimino != null) {
-                                TetriminoNode[] nodes = currentTetrimino.getNodes();
-                                for (int k = 0; k < nodes.length; k++) {
-                                    if (board[r + 1][c].equals(nodes[i])) {
-                                        shift = false;
-                                    }
-                                }
+                                if (board[r + 1][c].parent != null && board[r + 1][c].parent.equals(currentTetrimino)) shift = false;
                             }
 
                             if (shift) {
@@ -756,8 +752,26 @@ public class MyGame extends Game  {
             for (int r = row; r < board.length; r++) {
                 int stop = (int)(Math.random() * board[r].length);
                 for (int c = 0; c < board[r].length; c++) {
-                    if (c != stop) board[r][c] = new TetriminoNode(Color.DARK_GRAY, r, c, -1);
+                    if (c != stop) {
+                        board[r][c] = new TetriminoNode(Color.DARK_GRAY, r, c, -1);
+                        board[r][c].updateID();
+                        updateArray();
+                    }
                 }
+            }
+        }
+    }
+
+    public void sendLines(int linesCleared) {
+        if (client != null && client.output != null) {
+            if (linesToSend >= timesCleared) {
+                if (linesCleared > 0) {
+                    client.output.println(client.name + " sent " + linesToSend + " lines.");
+                    linesToSend = 0;
+                    timesCleared = (int)(Math.random() * 4) + 1;
+                }
+            } else {
+                if (linesToSend < 5) linesToSend++;
             }
         }
     }

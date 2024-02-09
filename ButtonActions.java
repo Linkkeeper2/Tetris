@@ -5,7 +5,14 @@ import java.util.Scanner;
 public class ButtonActions {
     public class Start implements ButtonAction {
         public void action() {
-            MyGame.startGame();
+            Client client = MyGame.client;
+            if (client == null) MyGame.startGame();
+            else {
+                if (MyGame.server != null) {
+                    MyGame.startGame();
+                    client.output.println("Starting Game!");
+                }
+            }
         }
     }
 

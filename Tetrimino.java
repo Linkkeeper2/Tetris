@@ -76,5 +76,18 @@ public class Tetrimino {
         return "Default";
     }
 
-    
+    protected void setNodesParent() {
+        // Sets the nodes parent Tetrimino
+        for (int i = 0; i < nodes.length; i++) {
+            nodes[i].parent = this;
+        }
+
+        if (rotations == null) return;
+        
+        for (int i = 0; i < rotations.length; i++) {
+            for (int k = 0; k < rotations[i].length; k++) {
+                rotations[i][k].parent = this;
+            }
+        }
+    }
 }
