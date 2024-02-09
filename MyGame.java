@@ -106,6 +106,11 @@ public class MyGame extends Game  {
             message.y--;
             message.x += messageDirection == 0 ? 1 : -1;
         }
+
+        if (menu == null && !alive && client != null) {
+            client.output.println(client.name + " has topped out.");
+            startGame();
+        }
     }
     
     public void draw(Graphics pen) {

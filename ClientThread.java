@@ -38,8 +38,6 @@ public class ClientThread extends Thread {
                                         addPlayer = false;
                                     }
                                 }
-
-                                if (MyGame.client.name.equals("Linkk2")) System.out.println(addPlayer);
     
                                 if (addPlayer)
                                     MyGame.client.addPlayer(s[0]);
@@ -62,6 +60,8 @@ public class ClientThread extends Thread {
                                         MyGame.menu.buttons.remove(MyGame.disconnect);
                                     }
                                 }
+                            } else if (response.endsWith("out."))  {
+                                MyGame.status.addMessage(response);
                             } else if (response.equals("Game Ended.")) {
                                 MyGame.exitToMenu();
                                 MyGame.status.addMessage("Game Ended by Host.");
