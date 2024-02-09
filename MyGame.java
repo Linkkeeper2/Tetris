@@ -77,6 +77,7 @@ public class MyGame extends Game  {
         }, (long)speed);
         currentTetrimino = getTetrimino();
         nextTetrimino = getNextTetrimino();
+        heldTetrimino = null;
 
         updateArray();
         move(1);
@@ -796,16 +797,14 @@ public class MyGame extends Game  {
         switch (ke.getKeyCode()) {
             case 27: // ESCAPE Key
                 if (menu == null) {
-                    menu = menus.new MainMenu();
-
                     if (server != null) {
+                        menu = menus.new MainMenu();
                         client.output.println("Game Ended.");
                     }
-                }
-                else {
+                } else {
                     if (client != null && client.output != null && client.input != null) {
                         client.output.println(client.name + " has left.");
-                        
+
                         try {
                             client.output.close();
                             client.input.close();

@@ -18,6 +18,8 @@ public class ButtonActions {
 
     public class Host implements ButtonAction {
         public void action() {
+            if (MyGame.client != null) return;
+
             MyGame.server = new Server(2500);
             MyGame.server.start();
 
@@ -32,7 +34,7 @@ public class ButtonActions {
 
     public class Connect implements ButtonAction {
         public void action() {
-            if (MyGame.server != null) return;
+            if (MyGame.server != null || MyGame.client != null) return;
             new TextActions().new ConnectClient().action();
         }
     }

@@ -26,9 +26,7 @@ public class ServerThread extends Thread {
 
                 printToAllClients(outputString);
             }
-        } catch (Exception e) {
-            MyGame.status.addMessage("Client has Disconnected");
-        }
+        } catch (Exception e) {}
     }
 
     private void printToAllClients(String outputString) {
