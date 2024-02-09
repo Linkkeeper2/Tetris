@@ -589,10 +589,12 @@ public class MyGame extends Game  {
 
             case "ZPiece":
                 currentTetrimino = pieces.new ZPiece();
+                currentTetrimino.rotate(1);
                 break;
 
             case "SPiece":
                 currentTetrimino = pieces.new SPiece();
+                currentTetrimino.rotate(1);
                 break;
 
             case "OPiece":
