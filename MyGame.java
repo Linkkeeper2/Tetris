@@ -15,7 +15,7 @@ public class MyGame extends Game  {
     // declare variables here
     public static TetriminoNode[][] board;
     public static int offset;
-    private static Timer timer;
+    public static Timer timer;
     private static Tetriminos pieces;
     private static Tetrimino currentTetrimino, nextTetrimino, heldTetrimino;
     private static int tNum = 0; // Number of Tetriminos used (Keeps track of ID for each Tetrimino)
@@ -41,11 +41,13 @@ public class MyGame extends Game  {
     // Client data
     public static Client client;
     public static Server server;
+    public static ServerStatus status; // Status messages to display in game
     private int timesCleared = 3; // The amount of times the player has cleared lines in order to send lines to other clients
     private int linesToSend; // Amount of lines to send to other clients when a threshold is reached
 
     public MyGame() {
         // initialize variables here
+        status = new ServerStatus();
         menus = new Menus();
         menu = menus.new MainMenu();
         message = new Menu().new Text("", 0, 0, Color.WHITE);
@@ -167,6 +169,7 @@ public class MyGame extends Game  {
             pen.drawString("Hold", 32, offset + 40);
             message.draw(pen);
             levelMessage.draw(pen);
+            status.draw(pen);
     
             if (alive) {
                 TetriminoNode[] nodes = nextTetrimino.getNodes();
