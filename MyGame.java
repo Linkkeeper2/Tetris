@@ -9,7 +9,7 @@ import java.util.TimerTask;
 
 public class MyGame extends Game  {
     public static final String TITLE = "Tetris";
-    public static final int SCREEN_WIDTH = 600;
+    public static final int SCREEN_WIDTH = 1000;
     public static final int SCREEN_HEIGHT = 800;
 
     // declare variables here
@@ -27,7 +27,7 @@ public class MyGame extends Game  {
     private static boolean alive = false;
     private static boolean held = false; // Has the player held a piece on the current turn?
     private Menus menus;
-    private static Menu menu;
+    public static Menu menu;
     private Menu.Text message; // Message for line clears
     private Menu.Text levelMessage; // Message for level ups
     public static ColorPalette palette;
@@ -169,7 +169,6 @@ public class MyGame extends Game  {
             pen.drawString("Hold", 32, offset + 40);
             message.draw(pen);
             levelMessage.draw(pen);
-            status.draw(pen);
     
             if (alive) {
                 TetriminoNode[] nodes = nextTetrimino.getNodes();
@@ -201,6 +200,8 @@ public class MyGame extends Game  {
         } else {
             menu.draw(pen);
         }
+
+        status.draw(pen);
     }
 
     public static void moveTetriminos() {

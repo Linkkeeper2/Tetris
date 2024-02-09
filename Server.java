@@ -23,7 +23,7 @@ public class Server extends Thread {
 				serverThread.start();
 			}
 		} catch (Exception e) {
-			System.out.println("Client disconnected");
+			MyGame.status.addMessage("Server has Disconnected");
 		}
 	}
 }

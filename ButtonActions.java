@@ -10,7 +10,8 @@ public class ButtonActions {
             else {
                 if (MyGame.server != null) {
                     MyGame.startGame();
-                    client.output.println("Starting Game!");
+                    MyGame.client.output.println(MyGame.client.name + " Started the Game!");
+                    MyGame.status.addMessage(MyGame.client.name + " Started the Game!");
                 }
             }
         }
@@ -23,8 +24,9 @@ public class ButtonActions {
 
             try {
                 MyGame.client = new Client(InetAddress.getLocalHost().getHostAddress(), 2500);
+                MyGame.status.addMessage("Hosting game on port '2500' -> " + InetAddress.getLocalHost().getHostAddress(), 3000);
             } catch (UnknownHostException e) {
-                System.out.println("Failed to connect to server");
+                MyGame.status.addMessage("Failed to connect to server");
             }
         }
     }
@@ -37,6 +39,8 @@ public class ButtonActions {
             System.out.println("Enter the host address: ");
             String host = scanner.nextLine();
             MyGame.client = new Client(host, 2500);
+            MyGame.client.output.println(MyGame.client.name + " has connected.");
+            MyGame.status.addMessage("Connected to host.");
             scanner.close();
         }
     }

@@ -21,15 +21,21 @@ public class ClientThread extends Thread {
                 String[] s = response.split(" ");
 
                 if (!s[0].equals(MyGame.client.name)) {
-                    if (!response.equals("Starting Game!")) {
-                        MyGame.recieveLines(Integer.parseInt(s[2]));
-                        MyGame.status.addMessage(response);
+                    if (!s[1].equals("Started")) {
+                        if (response.endsWith("connected.")) {
+                            MyGame.status.addMessage(response);
+                        } else {
+                            MyGame.recieveLines(Integer.parseInt(s[2]));
+                            MyGame.status.addMessage(response);
+                        }
                     } else {
                         MyGame.startGame();
+                        MyGame.status.addMessage(response);
                     }
                 }
             }
         } catch (SocketException e) {
+            MyGame.status.addMessage("Disconnected from host.");
             System.out.println("Disconnected.");
         } catch (IOException e) {
             e.printStackTrace();
