@@ -27,7 +27,7 @@ public class ClientThread extends Thread {
                             MyGame.status.addMessage(response);
                             MyGame.client.addPlayer(s[0]);
                             MyGame.client.output.println(MyGame.client.name + " has added.");
-                        } else if (response.endsWith("added."))  {
+                        } else if (response.endsWith("added.")) {
                             boolean addPlayer = true;
 
                             ArrayList<Menu.Text> lobby = MyGame.client.lobby;
@@ -40,6 +40,9 @@ public class ClientThread extends Thread {
 
                             if (addPlayer)
                                 MyGame.client.addPlayer(s[0]);
+                        } else if (response.equals("Game Ended.")) {
+                            MyGame.menu = MyGame.menus.new MainMenu();
+                            MyGame.status.addMessage("Game Ended by Host.");
                         } else {
                             MyGame.recieveLines(Integer.parseInt(s[2]));
                             MyGame.status.addMessage(response);
@@ -52,6 +55,7 @@ public class ClientThread extends Thread {
             }
         } catch (SocketException e) {
             MyGame.status.addMessage("Disconnected from host.");
+            MyGame.client = null;
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

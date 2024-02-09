@@ -26,7 +26,7 @@ public class MyGame extends Game  {
     public static int level = 1; // The level (speed) of the game
     private static boolean alive = false;
     private static boolean held = false; // Has the player held a piece on the current turn?
-    private Menus menus;
+    public static Menus menus;
     public static Menu menu;
     private Menu.Text message; // Message for line clears
     private Menu.Text levelMessage; // Message for level ups
@@ -776,6 +776,7 @@ public class MyGame extends Game  {
             if (linesToSend >= timesCleared) {
                 if (linesCleared > 0) {
                     client.output.println(client.name + " sent " + linesCleared + " lines.");
+                    status.addMessage("Sent " + linesCleared + " lines.");
                     linesToSend = 0;
                     timesCleared = (int)(Math.random() * 4) + 1;
                 }
@@ -794,7 +795,13 @@ public class MyGame extends Game  {
         if (prompt != null) prompt.type(ke);
         switch (ke.getKeyCode()) {
             case 27: // ESCAPE Key
-                if (menu == null) menu = menus.new MainMenu();
+                if (menu == null) {
+                    menu = menus.new MainMenu();
+
+                    if (server != null) {
+                        client.output.println("Game Ended.");
+                    }
+                }
                 else {
                     if (client != null && client.output != null && client.input != null) {
                         try {
