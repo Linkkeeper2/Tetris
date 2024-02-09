@@ -774,7 +774,7 @@ public class MyGame extends Game  {
         if (client != null && client.output != null) {
             if (linesToSend >= timesCleared) {
                 if (linesCleared > 0) {
-                    client.output.println(client.name + " sent " + linesToSend + " lines.");
+                    client.output.println(client.name + " sent " + linesCleared + " lines.");
                     linesToSend = 0;
                     timesCleared = (int)(Math.random() * 4) + 1;
                 }
