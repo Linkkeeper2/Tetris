@@ -6,7 +6,7 @@ public class ButtonActions {
     public class Start implements ButtonAction {
         public void action() {
             Client client = MyGame.client;
-            if (client == null) MyGame.startGame();
+            if (client == null && MyGame.prompt == null) MyGame.startGame();
             else {
                 if (MyGame.server != null && client.lobby.size() > 2) {
                     MyGame.startGame();
@@ -33,6 +33,7 @@ public class ButtonActions {
                 MyGame.menu.buttons.add(MyGame.disconnect);
             } catch (UnknownHostException e) {
                 MyGame.status.addMessage("Failed to connect to server");
+                MyGame.menu.buttons.remove(MyGame.disconnect);
             }
         }
     }
