@@ -18,6 +18,14 @@ public class TextActions {
         }
     }
 
+    public class Chat implements TextAction {
+        public void action() {
+            MyGame.prompt = new TextBox("Enter your chat message");
+            Thread t = new ChatThread();
+            t.start();
+        }
+    }
+
     public class NameHostThread extends Thread {
         @Override
         public void run() {
@@ -27,7 +35,7 @@ public class TextActions {
 
             if (MyGame.prompt == null) return;
 
-            MyGame.client.name = MyGame.prompt.send;
+            MyGame.client.name = MyGame.prompt.send.split(" ")[0];
             MyGame.client.addPlayer(MyGame.client.name);
 
             try {
@@ -75,6 +83,22 @@ public class TextActions {
                 return;
             }
             
+            MyGame.prompt = null;
+        }
+    }
+
+    public class ChatThread extends Thread {
+        @Override
+        public void run() {
+            while (MyGame.prompt != null && MyGame.prompt.send.length() == 0) {
+                System.out.print("");
+            }
+
+            if (MyGame.prompt == null) return;
+
+            MyGame.client.output.println(MyGame.client.name + ": " + MyGame.prompt.send);
+            
+            MyGame.chat.bubble = null;
             MyGame.prompt = null;
         }
     }

@@ -27,6 +27,7 @@ public class TextBox {
         int width = MyGame.SCREEN_WIDTH;
         int x = (width / 2 - 75) + ((int)150 - (int) 150 / 2) - sum / 2;
         int y = MyGame.SCREEN_HEIGHT - 150;
+        pen.setColor(Color.WHITE);
         g2d.drawString(title, x, y);
         
         // Contents
@@ -49,6 +50,10 @@ public class TextBox {
 
             case 10: // Enter
                 send = contents;
+                break;
+
+            case 32:
+                contents += " ";
                 break;
         }
 

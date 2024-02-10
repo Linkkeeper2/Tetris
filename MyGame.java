@@ -42,6 +42,7 @@ public class MyGame extends Game  {
     public static Client client;
     public static Server server;
     public static ServerStatus status; // Status messages to display in game
+    public static Chat chat; // Chat between players
     public static TextBox prompt;
     public static Menu.Button disconnect;
     private int timesCleared = 3; // The amount of times the player has cleared lines in order to send lines to other clients
@@ -49,6 +50,7 @@ public class MyGame extends Game  {
 
     public MyGame() {
         // initialize variables here
+        chat = new Chat();
         status = new ServerStatus();
         menus = new Menus();
         menu = menus.new MainMenu();
@@ -212,7 +214,10 @@ public class MyGame extends Game  {
 
         status.draw(pen);
         if (prompt != null) prompt.draw(pen);
-        if (client != null) client.drawLobby(pen);
+        if (client != null) {
+            client.drawLobby(pen);
+            chat.draw(pen);
+        }
     }
 
     public static void moveTetriminos() {
@@ -892,6 +897,10 @@ public class MyGame extends Game  {
 
             case 40: // Down Arrow Key
                 moveTetriminos();
+                break;
+
+            case 47: // Slash key
+                chat.openChat();
                 break;
 
             case 67: // C Key (Holding)
