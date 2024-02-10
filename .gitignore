@@ -39,6 +39,8 @@ Client.class
 /Tetriminos$ZPiece.class
 /Tetriminos.class
 /TextAction.class
+/TextActions$Chat.class
+/TextActions$ChatThread.class
 /TextActions$ConnectClient.class
 /TextActions$ConnectClientThread.class
 /TextActions$EnterName.class

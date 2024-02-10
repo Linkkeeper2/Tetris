@@ -66,8 +66,8 @@ public class ClientThread extends Thread {
                                 MyGame.exitToMenu();
                                 MyGame.status.addMessage("Game Ended by Host.");
                             } else {
-                                if (s.length < 5) {
-                                    if (!s[0].equals(MyGame.client.name)) MyGame.chat.addMessage(response);
+                                if (response.endsWith("chat.")) {
+                                    if (!s[0].equals(MyGame.client.name)) MyGame.chat.addMessage(response.substring(0, response.length() - 6));
                                 } else {
                                     if (s[5].equals(MyGame.client.name)) {
                                         MyGame.recieveLines(Integer.parseInt(s[2]));

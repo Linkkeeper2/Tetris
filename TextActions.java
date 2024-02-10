@@ -96,7 +96,7 @@ public class TextActions {
 
             if (MyGame.prompt == null) return;
 
-            MyGame.client.output.println(MyGame.client.name + ": " + MyGame.prompt.send);
+            MyGame.client.output.println(MyGame.client.name + ": " + MyGame.prompt.send + " chat.");
             
             MyGame.chat.bubble = null;
             MyGame.prompt = null;

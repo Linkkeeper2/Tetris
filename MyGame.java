@@ -860,7 +860,7 @@ public class MyGame extends Game  {
                 break;
 
             case 32: // SPACE
-                hardDrop();
+                if (prompt == null) hardDrop();
                 break;
 
             case 37: // Left Arrow Key
