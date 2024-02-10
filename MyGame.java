@@ -37,6 +37,8 @@ public class MyGame extends Game  {
     private int direction = 0; // -1 = Left, 1 = Right, 0 = None
     private long inputDelay = 340; // Delay for repeating directional inputs
     private int prevLinesCleared = 0; // Previous amount of lines cleared to score Back-to-Back Tetrises
+    private static int pity = 0; // Pity to getting an IPiece
+    private static int nextPity = 5; // Value that pity needs to surpass the get an IPiece
 
     // Client data
     public static Client client;
@@ -72,6 +74,8 @@ public class MyGame extends Game  {
         score = 0;
         level = 1;
         speed = 1000;
+        pity = 0;
+        nextPity = 5;
         palette.currentPalette = 0;
         alive = true;
         menu = null;
@@ -379,9 +383,16 @@ public class MyGame extends Game  {
         int num = (int)(Math.random() * 7);
         Tetrimino t = null;
 
+        if (pity >= nextPity) {
+            pity = 0;
+            nextPity = (int)(Math.random() * 5) + 5;
+            num = 0;
+        }
+
         switch (num) {
             case 0:
                 t = pieces.new IPiece(false);
+                pity = 0;
                 break;
 
             case 1:
@@ -390,22 +401,27 @@ public class MyGame extends Game  {
 
             case 2:
                 t = pieces.new ZPiece(false);
+                pity++;
                 break;
 
             case 3:
                 t = pieces.new SPiece(false);
+                pity++;
                 break;
 
             case 4:
                 t = pieces.new OPiece(false);
+                pity++;
                 break;
 
             case 5:
                 t = pieces.new LPiece(false);
+                pity++;
                 break;
 
             case 6:
                 t = pieces.new JPiece(false);
+                pity++;
                 break;
         }
 
