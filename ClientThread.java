@@ -23,6 +23,24 @@ public class ClientThread extends Thread {
                 String[] s = response.split(" ");
 
                 if (MyGame.client != null) {
+                    if (s.length >= 5) {
+                        if (s[0].startsWith("Bot") && s[5].equals(MyGame.client.name) && !s[5].startsWith("Bot")) {
+                                for (int i = 0; i < MyGame.bots.size(); i++) {
+                                    if (MyGame.bots.get(i).name.equals(s[0])) {
+                                        if (MyGame.bots.get(i) != null)
+                                            MyGame.recieveLines(MyGame.bots.get(i).linesToSend);
+                                    }
+                                }
+                        } else if (s[5].startsWith("Bot")) {
+                            for (int i = 0; i < MyGame.bots.size(); i++) {
+                                if (MyGame.bots.get(i).name.equals(s[5])) {
+                                    if (MyGame.bots.get(i) != null)
+                                        MyGame.bots.get(i).topRow -= Integer.parseInt(s[2]);
+                                }
+                            }
+                        }
+                    }
+
                     if (!s[0].equals(MyGame.client.name)) {
                         if (!s[1].equals("Started")) {
                             if (response.endsWith("connected.")) {

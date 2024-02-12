@@ -30,11 +30,14 @@ public class ButtonActions {
             try {
                 MyGame.client = new Client(InetAddress.getLocalHost().getHostAddress(), 2500);
                 new TextActions().new EnterName().action();
-                MyGame.disconnect = MyGame.menu.new Button(MyGame.SCREEN_WIDTH / 2 - 75, 425, 150, 50, Color.GRAY, Color.DARK_GRAY, "Disconnect", new ButtonActions().new DisConnect());
+                MyGame.disconnect = MyGame.menu.new Button(MyGame.SCREEN_WIDTH / 2 - 75, (75 * MyGame.menu.buttons.size()) + 200, 150, 50, Color.GRAY, Color.DARK_GRAY, "Disconnect", new ButtonActions().new DisConnect());
                 MyGame.menu.buttons.add(MyGame.disconnect);
+                MyGame.addBot = MyGame.menu.new Button(MyGame.SCREEN_WIDTH / 2 - 75, (75 * MyGame.menu.buttons.size()) + 200, 150, 50, Color.GRAY, Color.DARK_GRAY, "Add Bot", new ButtonActions().new AddBot());
+                MyGame.menu.buttons.add(MyGame.addBot);
             } catch (UnknownHostException e) {
                 MyGame.status.addMessage("Failed to connect to server");
                 MyGame.menu.buttons.remove(MyGame.disconnect);
+                MyGame.menu.buttons.remove(MyGame.addBot);
             }
         }
     }
@@ -57,6 +60,12 @@ public class ButtonActions {
     public class BackToMenu implements ButtonAction {
         public void action() {
             MyGame.menu = new Menus().new MainMenu();
+        }
+    }
+
+    public class AddBot implements ButtonAction {
+        public void action() {
+            MyGame.bots.add(new Bot());
         }
     }
 }

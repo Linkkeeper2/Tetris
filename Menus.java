@@ -12,7 +12,10 @@ public class Menus {
             buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 275, 150, 50, Color.GRAY, Color.DARK_GRAY, "Host Game", new ButtonActions().new Host()));
             buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 350, 150, 50, Color.GRAY, Color.DARK_GRAY, "Connect", new ButtonActions().new Connect()));
         
-            if (MyGame.client != null) buttons.add(MyGame.disconnect);
+            if (MyGame.client != null) {
+                buttons.add(MyGame.disconnect);
+                buttons.add(MyGame.addBot);
+            }
         }
     }
 

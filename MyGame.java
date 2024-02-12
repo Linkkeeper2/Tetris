@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.ArrayList;
 
 public class MyGame extends Game  {
     public static final String TITLE = "Tetris";
@@ -47,6 +48,8 @@ public class MyGame extends Game  {
     public static Chat chat; // Chat between players
     public static TextBox prompt;
     public static Menu.Button disconnect;
+    public static Menu.Button addBot;
+    public static ArrayList<Bot> bots;
     private int timesCleared = 3; // The amount of times the player has cleared lines in order to send lines to other clients
     private int linesToSend; // Amount of lines to send to other clients when a threshold is reached
     private static int clock = 10; // Clock for multiplayer games
@@ -62,6 +65,7 @@ public class MyGame extends Game  {
         palette = new ColorPalette();
         timer = new Timer();
         pieces = new Tetriminos();
+        bots = new ArrayList<>();
 
         timer.schedule(new TimerTask() {
             public void run() {
@@ -874,7 +878,7 @@ public class MyGame extends Game  {
                             boolean shift = true; // Prevents the falling Tetrimino from shifting
 
                             if (currentTetrimino != null) {
-                                if (board[r + 1][c].parent != null && board[r + 1][c].parent.equals(currentTetrimino)) shift = false;
+                                if (board[r + 1][c] != null && board[r + 1][c].parent != null && board[r + 1][c].parent.equals(currentTetrimino)) shift = false;
                             }
 
                             if (shift) {
@@ -914,6 +918,15 @@ public class MyGame extends Game  {
                     
                     client.output.println(client.name + " sent " + linesCleared + " lines to " + recieve);
                     status.addMessage("Sent " + linesCleared + " lines to " + recieve + ".");
+
+                    if (recieve.startsWith("Bot")) {
+                        for (int i = 0; i < bots.size(); i++) {
+                            if (bots.get(i).name.equals(recieve)) {
+                                bots.get(i).topRow -= linesCleared;
+                            }
+                        }
+                    }
+
                     linesToSend = 0;
                     timesCleared = (int)(Math.random() * 4) + 1;
                 }
@@ -943,6 +956,8 @@ public class MyGame extends Game  {
             server = null;
             prompt = null;
             menu.buttons.remove(disconnect);
+            menu.buttons.remove(addBot);
+            bots.clear();
             disconnect = null;
         }
 
