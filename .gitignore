@@ -6,6 +6,7 @@ Client.class
 /ButtonActions$DisConnect.class
 /ButtonActions$Host.class
 /ButtonActions$Start.class
+/ButtonActions$BackToMenu.class
 /ButtonActions.class
 /ClientThread.class
 /ColorPalette.class
@@ -15,6 +16,7 @@ Client.class
 /Menu$Text.class
 /Menu.class
 /Menus$MainMenu.class
+/Menus$ResultsMenu.class
 /Menus.class
 /MyGame$1.class
 /MyGame$2.class

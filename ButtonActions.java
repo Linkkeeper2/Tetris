@@ -13,7 +13,8 @@ public class ButtonActions {
                     MyGame.client.output.println(MyGame.client.name + " Started the Game!");
                     MyGame.status.addMessage(MyGame.client.name + " Started the Game!");
                 } else {
-                    MyGame.status.addMessage("Game cannot start with 1 player.");
+                    if (MyGame.server != null) MyGame.status.addMessage("Game cannot start with 1 player.");
+                    else MyGame.status.addMessage("Only the host can start the game..");
                 }
             }
         }
@@ -50,6 +51,12 @@ public class ButtonActions {
     public class DisConnect implements ButtonAction {
         public void action() {
             MyGame.leaveGame();
+        }
+    }
+
+    public class BackToMenu implements ButtonAction {
+        public void action() {
+            MyGame.menu = new Menus().new MainMenu();
         }
     }
 }

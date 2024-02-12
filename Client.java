@@ -11,6 +11,7 @@ public class Client {
 	public String name = "";
 	public Socket socket = null;
 	public ArrayList<Menu.Text> lobby;
+	public int deaths = 0;
 	
 	public Client(String host, int port)
 	{

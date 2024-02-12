@@ -49,7 +49,7 @@ public class MyGame extends Game  {
     public static Menu.Button disconnect;
     private int timesCleared = 3; // The amount of times the player has cleared lines in order to send lines to other clients
     private int linesToSend; // Amount of lines to send to other clients when a threshold is reached
-    private static int clock = 0; // Clock for multiplayer games
+    private static int clock = 10; // Clock for multiplayer games
 
     public MyGame() {
         // initialize variables here
@@ -71,8 +71,20 @@ public class MyGame extends Game  {
 
         timer.schedule(new TimerTask() {
             public void run() {
-                if (clock > 0) {
+                if (clock > 0 && menu == null) {
                     clock--;
+                }
+
+                switch (clock) {
+                    case 150:
+                        SoundManager.stopAllSounds();
+                        SoundManager.playSound("sfx/BattleHalf.wav", false);
+                        break;
+
+                    case 60:
+                        SoundManager.stopAllSounds();
+                        SoundManager.playSound("sfx/BattleMinute.wav", false);
+                        break;
                 }
             }
         }, (long)1000, 1000);
@@ -100,11 +112,12 @@ public class MyGame extends Game  {
         move(1);
         if (client == null) {
             SoundManager.playSound("sfx/Music.wav", true);
-            clock = 0;
+            clock = 10;
         }
         else {
             SoundManager.playSound("sfx/Battle.wav", false);
             clock = 300;
+            MyGame.client.deaths = 0;
         }
     }
 
@@ -128,6 +141,8 @@ public class MyGame extends Game  {
 
         updateArray();
         move(1);
+
+        if (MyGame.client != null) MyGame.client.deaths++;
     }
     
     public void update() {
@@ -156,6 +171,11 @@ public class MyGame extends Game  {
             client.output.println(client.name + " has topped out.");
             reset();
             SoundManager.playSound("sfx/KO.wav", false);
+        }
+
+        if (clock <= 0 && server != null && menu == null) {
+            client.output.println("... ... ... ... ... ... ... Game over.");
+            endGame();
         }
     }
     
@@ -640,12 +660,18 @@ public class MyGame extends Game  {
 
     public static void automaticMove() {
         // Used for automatic Tetrimino movement to reschedule the task
+        int time = speed;
+        if (client != null) {
+            if (clock <= 60) time /= 5;
+            else if (clock <= 150) time /= 2;
+        }
+
         if (!alive) {
             timer.schedule(new TimerTask() {
                 public void run() {
                     automaticMove();
                 }
-            }, (long)speed);
+            }, (long)time);
             return;
         }
 
@@ -654,7 +680,7 @@ public class MyGame extends Game  {
             public void run() {
                 automaticMove();
             }
-        }, (long)speed);
+        }, (long)time);
     }
 
     public void swapTetriminos() {
@@ -921,6 +947,13 @@ public class MyGame extends Game  {
         }
 
         SoundManager.stopAllSounds();
+    }
+
+    public static void endGame() {
+        SoundManager.stopAllSounds();
+        menu = new Menus().new ResultsMenu();
+        clock = 10;
+        client.output.println(client.name + " " + client.deaths + " ... ... ... ... deaths.");
     }
 
     @Override

@@ -39,7 +39,7 @@ public class SoundManager {
 
     public static void stopAllSounds() {
         for (int i = 0; i < audios.size(); i++) {
-            AudioPlayer.player.stop(audios.get(i));
+            if (i < audios.size()) AudioPlayer.player.stop(audios.get(i));
         }
 
         music.clear();
