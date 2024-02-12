@@ -60,6 +60,7 @@ public class Tetrimino {
         }
         
         MyGame.updateArray();
+        SoundManager.playSound("sfx/Rotate.wav", false);
     }
 
     protected void createRotations() {}

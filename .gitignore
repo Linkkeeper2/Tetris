@@ -48,3 +48,5 @@ Client.class
 /TextActions.class
 /TextBox.class
 /Chat.class
+/SoundManager.class
+/SoundManager$1.class

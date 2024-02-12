@@ -89,6 +89,8 @@ public class MyGame extends Game  {
 
         updateArray();
         move(1);
+        if (client == null) SoundManager.playSound("sfx/Music.wav", true);
+        else SoundManager.playSound("sfx/Battle.wav", false);
     }
     
     public void update() {
@@ -116,6 +118,7 @@ public class MyGame extends Game  {
         if (menu == null && !alive && client != null) {
             client.output.println(client.name + " has topped out.");
             startGame();
+            SoundManager.playSound("sfx/KO.wav", false);
         }
     }
     
@@ -186,20 +189,22 @@ public class MyGame extends Game  {
             levelMessage.draw(pen);
     
             if (alive) {
-                TetriminoNode[] nodes = nextTetrimino.getNodes();
+                if (nextTetrimino != null) {
+                    TetriminoNode[] nodes = nextTetrimino.getNodes();
                 
-                // Draws the next Tetrimino
-                for (int i = 0; i < nodes.length; i++) {
-                    TetriminoNode node = nodes[i];
-                    node.updateColor();
-                    pen.setColor(node.getColor());
-                    pen.fillRect(node.col * 25 + (offset + board[0].length * 25 - 25), node.row * 25 + offset + 60, 25, 25);
-                    pen.setColor(node.getDarkColor());
-                    pen.drawRect(node.col * 25 + (offset + board[0].length * 25 - 25), node.row * 25 + offset + 60, 25, 25);
+                    // Draws the next Tetrimino
+                    for (int i = 0; i < nodes.length; i++) {
+                        TetriminoNode node = nodes[i];
+                        node.updateColor();
+                        pen.setColor(node.getColor());
+                        pen.fillRect(node.col * 25 + (offset + board[0].length * 25 - 25), node.row * 25 + offset + 60, 25, 25);
+                        pen.setColor(node.getDarkColor());
+                        pen.drawRect(node.col * 25 + (offset + board[0].length * 25 - 25), node.row * 25 + offset + 60, 25, 25);
+                    }
                 }
 
                 if (heldTetrimino != null) {
-                    nodes = heldTetrimino.getNodes();
+                    TetriminoNode[] nodes = heldTetrimino.getNodes();
 
                     // Draws the held Tetrimino
                     for (int i = 0; i < nodes.length; i++) {
@@ -332,6 +337,7 @@ public class MyGame extends Game  {
         }
 
         updateArray();
+        SoundManager.playSound("sfx/Move.wav", false);
     }
 
     public static Tetrimino getTetrimino() {
@@ -482,26 +488,31 @@ public class MyGame extends Game  {
             case 1:
                 score += 100;
                 message.contents = "+100 Single!";
+                SoundManager.playSound("sfx/Single.wav", false);
                 break;
 
             case 2:
                 score += 400;
                 message.contents = "+400 Double!";
+                SoundManager.playSound("sfx/Double.wav", false);
                 break;
 
             case 3:
                 score += 800;
                 message.contents = "+800 Triple!";
+                SoundManager.playSound("sfx/Triple.wav", false);
                 break;
 
             case 4:
                 score += 1600;
                 message.contents = "+1600 Tetris!";
+                SoundManager.playSound("sfx/Tetris.wav", false);
                 break;
 
             case 5:
                 score += 2000;
                 message.contents = "+2000 Back-to-Back Tetris!";
+                SoundManager.playSound("sfx/Tetris.wav", false);
                 break;
         }
 
@@ -572,6 +583,7 @@ public class MyGame extends Game  {
 
         hardDropping = false;
         held = false;
+        SoundManager.playSound("sfx/Harddrop.wav", false);
     }
 
     public static void automaticMove() {
@@ -647,6 +659,7 @@ public class MyGame extends Game  {
         if (lines % 10 == 0) {
             level++;
             levelMessage.contents = "Level Up!";
+            SoundManager.playSound("sfx/LUp.wav", false);
 
             timer.schedule(new TimerTask() {
                 public void run() {
@@ -768,6 +781,7 @@ public class MyGame extends Game  {
         }
 
         held = true;
+        SoundManager.playSound("sfx/Hold.wav", false);
     }
 
     public static void recieveLines(int lines) {
@@ -806,6 +820,8 @@ public class MyGame extends Game  {
                     }
                 }
             }
+
+            SoundManager.playSound("sfx/Alert.wav", false);
         }
     }
 
@@ -831,6 +847,7 @@ public class MyGame extends Game  {
 
     public static void exitToMenu() {
         menu = menus.new MainMenu();
+        SoundManager.stopAllSounds();
     }
 
     public static void leaveGame() {
@@ -850,6 +867,8 @@ public class MyGame extends Game  {
             menu.buttons.remove(disconnect);
             disconnect = null;
         }
+
+        SoundManager.stopAllSounds();
     }
 
     @Override
@@ -913,6 +932,7 @@ public class MyGame extends Game  {
 
             case 40: // Down Arrow Key
                 moveTetriminos();
+                SoundManager.playSound("sfx/Softdrop.wav", false);
                 break;
 
             case 47: // Slash key

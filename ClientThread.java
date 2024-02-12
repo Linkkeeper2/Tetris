@@ -62,12 +62,14 @@ public class ClientThread extends Thread {
                                 }
                             } else if (response.endsWith("out."))  {
                                 MyGame.status.addMessage(response);
+                                SoundManager.playSound("sfx/KO.wav", false);
                             } else if (response.equals("Game Ended.")) {
                                 MyGame.exitToMenu();
                                 MyGame.status.addMessage("Game Ended by Host.");
                             } else {
                                 if (response.endsWith("chat.")) {
                                     if (!s[0].equals(MyGame.client.name)) MyGame.chat.addMessage(response.substring(0, response.length() - 6));
+                                    SoundManager.playSound("sfx/Msg.wav", false);
                                 } else {
                                     if (s[5].equals(MyGame.client.name)) {
                                         MyGame.recieveLines(Integer.parseInt(s[2]));
