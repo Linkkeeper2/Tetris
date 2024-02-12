@@ -49,6 +49,7 @@ public class MyGame extends Game  {
     public static Menu.Button disconnect;
     private int timesCleared = 3; // The amount of times the player has cleared lines in order to send lines to other clients
     private int linesToSend; // Amount of lines to send to other clients when a threshold is reached
+    private static int clock = 0; // Clock for multiplayer games
 
     public MyGame() {
         // initialize variables here
@@ -67,9 +68,18 @@ public class MyGame extends Game  {
                 automaticMove();
             }
         }, (long)speed);
+
+        timer.schedule(new TimerTask() {
+            public void run() {
+                if (clock > 0) {
+                    clock--;
+                }
+            }
+        }, (long)1000, 1000);
     }
 
     public static void startGame() {
+        alive = true;
         lines = 0;
         score = 0;
         level = 1;
@@ -77,7 +87,6 @@ public class MyGame extends Game  {
         pity = 0;
         nextPity = 5;
         palette.currentPalette = 0;
-        alive = true;
         menu = null;
         board = new TetriminoNode[20][10];
         if (client != null) recieveLines(0);
@@ -89,8 +98,36 @@ public class MyGame extends Game  {
 
         updateArray();
         move(1);
-        if (client == null) SoundManager.playSound("sfx/Music.wav", true);
-        else SoundManager.playSound("sfx/Battle.wav", false);
+        if (client == null) {
+            SoundManager.playSound("sfx/Music.wav", true);
+            clock = 0;
+        }
+        else {
+            SoundManager.playSound("sfx/Battle.wav", false);
+            clock = 300;
+        }
+    }
+
+    public static void reset() {
+        alive = true;
+        lines = 0;
+        score = 0;
+        level = 1;
+        speed = 1000;
+        pity = 0;
+        nextPity = 5;
+        palette.currentPalette = 0;
+        menu = null;
+        board = new TetriminoNode[20][10];
+        if (client != null) recieveLines(0);
+        offset = 125;
+
+        currentTetrimino = getTetrimino();
+        nextTetrimino = getNextTetrimino();
+        heldTetrimino = null;
+
+        updateArray();
+        move(1);
     }
     
     public void update() {
@@ -117,7 +154,7 @@ public class MyGame extends Game  {
 
         if (menu == null && !alive && client != null) {
             client.output.println(client.name + " has topped out.");
-            startGame();
+            reset();
             SoundManager.playSound("sfx/KO.wav", false);
         }
     }
@@ -185,6 +222,9 @@ public class MyGame extends Game  {
             pen.drawString("Level: " + level, 32, 60);
             pen.drawString("Next", offset + board[0].length * 25 + 48, offset + 40);
             pen.drawString("Hold", 32, offset + 40);
+            
+            if (client != null) drawClock(pen);
+            
             message.draw(pen);
             levelMessage.draw(pen);
     
@@ -227,6 +267,18 @@ public class MyGame extends Game  {
             client.drawLobby(pen);
             chat.draw(pen);
         }
+    }
+
+    public void drawClock(Graphics pen) {
+        int c = clock;
+        String s = clock / 60 + ":";
+        c -= clock / 60 * 60;
+        
+        if (c < 10) s += "0" + c;
+        else s += c;
+
+        pen.setColor(Color.WHITE);
+        pen.drawString("Time Left " + s, offset + board[0].length * 25 + 8, offset - 48);
     }
 
     public static void moveTetriminos() {
@@ -872,8 +924,7 @@ public class MyGame extends Game  {
     }
 
     @Override
-    public void keyTyped(KeyEvent ke) {
-    }
+    public void keyTyped(KeyEvent ke) {}
 
     @Override
     public void keyPressed(KeyEvent ke) {
