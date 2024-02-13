@@ -13,6 +13,7 @@ public class SoundManager {
     private static ArrayList<AudioStream> audios = new ArrayList<>();
     private static ArrayList<String> paths = new ArrayList<>();
     private static AudioStream audioLoop;
+    public static long loopTime = (4 * 60 + 52) * 1000;
 
     public static void playSound(String path, boolean loop) {
         try {
@@ -21,7 +22,6 @@ public class SoundManager {
             audios.add(new AudioStream(music.get(music.size() - 1)));
 
             if (loop) {
-                long loopTime = 83 * 1000;
                 audioLoop = audios.get(audios.size() - 1);
 
                 MyGame.timer.schedule(new TimerTask() {
@@ -55,23 +55,20 @@ public class SoundManager {
 
     private static void loopSound() {
         if (MyGame.menu != null) return;
-        AudioPlayer.player.stop(audioLoop);
 
         try {
+            AudioPlayer.player.stop(audioLoop);
             music.add(new FileInputStream(new File(paths.get(audios.indexOf(audioLoop)))));
             audios.remove(audioLoop);
             audios.add(new AudioStream(music.get(music.size() - 1)));
+            AudioPlayer.player.start(audios.get(audios.size() - 1));
+            audioLoop = audios.get(audios.size() - 1);
+
+            MyGame.timer.schedule(new TimerTask() {
+                public void run() {
+                    loopSound();
+                }
+            }, loopTime);
         } catch (Exception e) {}
-
-        AudioPlayer.player.start(audios.get(audios.size() - 1));
-
-        long loopTime = 83 * 1000;
-        audioLoop = audios.get(audios.size() - 1);
-
-        MyGame.timer.schedule(new TimerTask() {
-            public void run() {
-                loopSound();
-            }
-        }, loopTime);
     }
 }

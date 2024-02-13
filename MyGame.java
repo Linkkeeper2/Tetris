@@ -115,7 +115,7 @@ public class MyGame extends Game  {
         updateArray();
         move(1);
         if (client == null) {
-            SoundManager.playSound("sfx/Music.wav", true);
+            SoundManager.playSound("sfx/Battle.wav", true);
             clock = 10;
         }
         else {
@@ -741,6 +741,13 @@ public class MyGame extends Game  {
         if (lines % 10 == 0) {
             level++;
             levelMessage.contents = "Level Up!";
+
+            if (level == 7) {
+                SoundManager.stopAllSounds();
+                SoundManager.loopTime = (2 * 60 + 50) * 1000;
+                SoundManager.playSound("sfx/BattleHalf.wav", true);
+            }
+
             SoundManager.playSound("sfx/LUp.wav", false);
 
             timer.schedule(new TimerTask() {
