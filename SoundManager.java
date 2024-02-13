@@ -64,5 +64,14 @@ public class SoundManager {
         } catch (Exception e) {}
 
         AudioPlayer.player.start(audios.get(audios.size() - 1));
+
+        long loopTime = 83 * 1000;
+        audioLoop = audios.get(audios.size() - 1);
+
+        MyGame.timer.schedule(new TimerTask() {
+            public void run() {
+                loopSound();
+            }
+        }, loopTime);
     }
 }
