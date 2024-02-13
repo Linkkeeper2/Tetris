@@ -33,11 +33,11 @@ public class ButtonActions {
                 MyGame.disconnect = MyGame.menu.new Button(MyGame.SCREEN_WIDTH / 2 - 75, (75 * MyGame.menu.buttons.size()) + 200, 150, 50, Color.GRAY, Color.DARK_GRAY, "Disconnect", new ButtonActions().new DisConnect());
                 MyGame.menu.buttons.add(MyGame.disconnect);
                 MyGame.addBot = MyGame.menu.new Button(MyGame.SCREEN_WIDTH / 2 - 75, (75 * MyGame.menu.buttons.size()) + 200, 150, 50, Color.GRAY, Color.DARK_GRAY, "Add Bot", new ButtonActions().new AddBot());
-                MyGame.menu.buttons.add(MyGame.addBot);
+                //MyGame.menu.buttons.add(MyGame.addBot);
             } catch (UnknownHostException e) {
                 MyGame.status.addMessage("Failed to connect to server");
                 MyGame.menu.buttons.remove(MyGame.disconnect);
-                MyGame.menu.buttons.remove(MyGame.addBot);
+                //MyGame.menu.buttons.remove(MyGame.addBot);
             }
         }
     }

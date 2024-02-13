@@ -956,7 +956,7 @@ public class MyGame extends Game  {
             server = null;
             prompt = null;
             menu.buttons.remove(disconnect);
-            menu.buttons.remove(addBot);
+            //menu.buttons.remove(addBot);
             bots.clear();
             disconnect = null;
         }
