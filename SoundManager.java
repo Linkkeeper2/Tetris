@@ -14,6 +14,7 @@ public class SoundManager {
     private static ArrayList<String> paths = new ArrayList<>();
     private static AudioStream audioLoop;
     public static long loopTime = (4 * 60 + 52) * 1000;
+    private static ArrayList<Long> loopTimes = new ArrayList<>();
 
     public static void playSound(String path, boolean loop) {
         try {
@@ -23,6 +24,7 @@ public class SoundManager {
 
             if (loop) {
                 audioLoop = audios.get(audios.size() - 1);
+                loopTimes.add(loopTime);
 
                 MyGame.timer.schedule(new TimerTask() {
                     public void run() {
@@ -59,12 +61,18 @@ public class SoundManager {
         if (MyGame.menu != null) return;
 
         try {
+            if (loopTimes.get(0) != loopTime) {
+                loopTimes.remove(0);
+                return;
+            }
+
             AudioPlayer.player.stop(audioLoop);
             music.add(new FileInputStream(new File(paths.get(audios.indexOf(audioLoop)))));
             audios.remove(audioLoop);
             audios.add(new AudioStream(music.get(music.size() - 1)));
             AudioPlayer.player.start(audios.get(audios.size() - 1));
             audioLoop = audios.get(audios.size() - 1);
+            loopTimes.remove(0);
 
             MyGame.timer.schedule(new TimerTask() {
                 public void run() {
