@@ -507,9 +507,6 @@ public class MyGame extends Game  {
                 break;
         }
 
-        t.setID(tNum);
-        tNum++;
-
         return t;
     }
 

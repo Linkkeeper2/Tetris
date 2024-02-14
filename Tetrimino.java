@@ -4,7 +4,7 @@ public class Tetrimino {
     protected TetriminoNode[] nodes;
     protected TetriminoNode[][] rotations;
     protected int id; // The current Tetrimino ID (First Tetrimino in game = 0, next one is 1, etc.)
-    protected int direction = 1; // The current rotation direction of the Tetrimino
+    protected int direction = 0; // The current rotation direction of the Tetrimino
     protected Color color;
     protected int colorIndex; // Label for which color in the Palette the Tetrimino uses
 
@@ -34,87 +34,113 @@ public class Tetrimino {
     public void rotate(int factor) {
         boolean wallKick = false;
 
-        for (int i = 0; i < rotations[this.direction].length; i++) {
-            TetriminoNode node = rotations[this.direction][i];
+        int nextDirection = this.direction + 1 * factor;
+        if (nextDirection < 0) nextDirection = 3;
+        else if (nextDirection > 3) nextDirection = 0;
+
+        for (int i = 0; i < rotations[nextDirection].length; i++) {
+            TetriminoNode node = rotations[nextDirection][i];
 
             if (!canRotate(node.row, node.col)) wallKick = true;
         }
 
         if (wallKick) {
-            wallKick(factor);
+            wallKick(factor, nextDirection);
         } else {
             updateRotations(factor);
         }
     }
 
-    private void wallKick(int factor) {
-        int[][] offsets;
+    private void wallKick(int factor, int nextDirection) {
+        int[][] offsets = new int[][] {{0, 0}, {0, 0}, {0, 0}, {0, 0}};
         if (getType().equals("IPiece"))
             switch (this.direction) {
+                // 0
                 case 0:
+                    // 0 -> R
+                    if (factor == 1) {
+                        offsets = new int[][] {{-2, 0}, {1, 0}, {-2, -1}, {1, 2}};
+                    } else { // 0 -> L
+                        offsets = new int[][] {{-1, 0}, {2, 0}, {-1, 2}, {2, -1}};
+                    }
+                    break;
+                
+                // R
+                case 1:
+                    // R -> 2
+                    if (factor == 1) {
+                        offsets = new int[][] {{-1, 0}, {2, 0}, {-1, 2}, {2, -1}};
+                    } else { // R -> 0
+                        offsets = new int[][] {{2, 0}, {-1, 0}, {2, 1}, {-1, -2}};
+                    }
+                    break;
+                
+                // 2
+                case 2:
+                    // 2 -> L
                     if (factor == 1) {
                         offsets = new int[][] {{2, 0}, {-1, 0}, {2, 1}, {-1, -2}};
-                    } else {
+                    } else { // 2 -> R
                         offsets = new int[][] {{1, 0}, {-2, 0}, {1, -2}, {-2, 1}};
                     }
-
-                    checkOffsets(offsets, factor);
                     break;
-
-                case 1:
+                
+                // L
+                case 3:
+                    // L -> 0
                     if (factor == 1) {
-                        offsets = new int[][] {{-2, 0}, {1, 0}, {-2, -1}, {1, 2}};
-                    } else {
-                        offsets = new int[][] {{-1, 0}, {2, 0}, {-1, 2}, {2, -1}};
-                    }
-
-                    checkOffsets(offsets, factor);
-                    break;
-
-                case 2:
-                    if (factor == 1) {
-                        offsets = new int[][] {{-1, 0}, {2, 0}, {-1, 2}, {2, -1}};
-                    } else {
+                        offsets = new int[][] {{1, 0}, {-2, 0}, {1, -2}, {-2, 1}};
+                    } else { // L -> 2
                         offsets = new int[][] {{-2, 0}, {1, 0}, {-2, -1}, {1, 2}};
                     }
-
-                    checkOffsets(offsets, factor);
                     break;
             }
 
         else {
             switch (this.direction) {
+                // 0
                 case 0:
-                    if (factor == 1) {
-                        offsets = new int[][] {{1, 0}, {1, -1}, {0, 2}, {1, 2}};
-                    } else {
-                        offsets = new int[][] {{-1, 0}, {-1, -1}, {0, 2}, {-1, 2}};
-                    }
-                    
-                    checkOffsets(offsets, factor);
-                    break;
-
-                case 1:
+                    // 0 -> R
                     if (factor == 1) {
                         offsets = new int[][] {{-1, 0}, {-1, 1}, {0, -2}, {-1, -2}};
-                    } else {
+                    } else { // 0 -> L
                         offsets = new int[][] {{1, 0}, {1, 1}, {0, -2}, {1, -2}};
                     }
-                    
-                    checkOffsets(offsets, factor);
                     break;
 
-                case 2:
+                // R
+                case 1:
+                    // R -> 2
                     if (factor == 1) {
                         offsets = new int[][] {{1, 0}, {1, -1}, {0, 2}, {1, 2}};
-                    } else {
+                    } else { // R -> 0
+                        offsets = new int[][] {{1, 0}, {1, -1}, {0, 2}, {1, 2}};
+                    }
+                    break;
+                
+                // 2
+                case 2:
+                    // 2 -> L
+                    if (factor == 1) {
+                        offsets = new int[][] {{1, 0}, {1, 1}, {0, -2}, {1, -2}};
+                    } else { // 2 -> R
+                        offsets = new int[][] {{-1, 0}, {-1, 1}, {0, -2}, {-1, -2}};
+                    }
+                    break;
+
+                // L
+                case 3:
+                    // L -> 0
+                    if (factor == 1) {
+                        offsets = new int[][] {{-1, 0}, {-1, -1}, {0, 2}, {-1, 2}};
+                    } else { // L -> 2
                         offsets = new int[][] {{-1, 0}, {-1, -1}, {0, 2}, {-1, 2}};
                     }
-
-                    checkOffsets(offsets, factor);
                     break;
             }
         }
+
+        checkOffsets(offsets, factor, nextDirection);
     }
 
     private void updateRotations(int factor) {
@@ -122,8 +148,6 @@ public class Tetrimino {
             TetriminoNode node = nodes[i];
             MyGame.board[node.row][node.col] = null;
         }
-
-        nodes = rotations[this.direction];
 
         // Yes there is a more efficient way to do this, but for some reason it works better this way (Looping rotation)
         if (factor == 1) {
@@ -134,6 +158,8 @@ public class Tetrimino {
             else this.direction = 3;
         }
 
+        nodes = rotations[this.direction];
+
         for (int i = 0; i < nodes.length; i++) {
             TetriminoNode node = nodes[i];
             MyGame.board[node.row][node.col] = node;
@@ -143,15 +169,15 @@ public class Tetrimino {
         //SoundManager.playSound("sfx/Rotate.wav", false);
     }
 
-    private void checkOffsets(int[][] offsets, int factor) {
+    private void checkOffsets(int[][] offsets, int factor, int nextDirection) {
         boolean rotate;
         for (int r = 0; r < offsets.length; r++) {
             rotate = true;
 
-            for (int i = 0; i < rotations[this.direction].length; i++) {
-                TetriminoNode node = rotations[this.direction][i];
+            for (int i = 0; i < rotations[nextDirection].length; i++) {
+                TetriminoNode node = rotations[nextDirection][i];
     
-                if (!canRotate(node.row + offsets[r][1], node.col + offsets[r][0])) {
+                if (!canRotate(node.row + offsets[r][1] * -1, node.col + offsets[r][0])) {
                     rotate = false;
                     break;
                 }
@@ -163,12 +189,13 @@ public class Tetrimino {
                 for (int i = 0; i < rotations[k].length; i++) {
                     TetriminoNode node = rotations[k][i];
     
-                    node.row += offsets[r][1];
+                    node.row += offsets[r][1] * -1;
                     node.col += offsets[r][0];
                 }
             }
 
             updateRotations(factor);
+            break;
         }
     }
 
