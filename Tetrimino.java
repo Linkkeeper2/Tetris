@@ -32,12 +32,92 @@ public class Tetrimino {
     }
 
     public void rotate(int factor) {
+        boolean wallKick = false;
+
         for (int i = 0; i < rotations[this.direction].length; i++) {
             TetriminoNode node = rotations[this.direction][i];
 
-            if (!canRotate(node.row, node.col)) return;
+            if (!canRotate(node.row, node.col)) wallKick = true;
         }
 
+        if (wallKick) {
+            wallKick(factor);
+        } else {
+            updateRotations(factor);
+        }
+    }
+
+    private void wallKick(int factor) {
+        int[][] offsets;
+        if (getType().equals("IPiece"))
+            switch (this.direction) {
+                case 0:
+                    if (factor == 1) {
+                        offsets = new int[][] {{2, 0}, {-1, 0}, {2, 1}, {-1, -2}};
+                    } else {
+                        offsets = new int[][] {{1, 0}, {-2, 0}, {1, -2}, {-2, 1}};
+                    }
+
+                    checkOffsets(offsets, factor);
+                    break;
+
+                case 1:
+                    if (factor == 1) {
+                        offsets = new int[][] {{-2, 0}, {1, 0}, {-2, -1}, {1, 2}};
+                    } else {
+                        offsets = new int[][] {{-1, 0}, {2, 0}, {-1, 2}, {2, -1}};
+                    }
+
+                    checkOffsets(offsets, factor);
+                    break;
+
+                case 2:
+                    if (factor == 1) {
+                        offsets = new int[][] {{-1, 0}, {2, 0}, {-1, 2}, {2, -1}};
+                    } else {
+                        offsets = new int[][] {{-2, 0}, {1, 0}, {-2, -1}, {1, 2}};
+                    }
+
+                    checkOffsets(offsets, factor);
+                    break;
+            }
+
+        else {
+            switch (this.direction) {
+                case 0:
+                    if (factor == 1) {
+                        offsets = new int[][] {{1, 0}, {1, -1}, {0, 2}, {1, 2}};
+                    } else {
+                        offsets = new int[][] {{-1, 0}, {-1, -1}, {0, 2}, {-1, 2}};
+                    }
+                    
+                    checkOffsets(offsets, factor);
+                    break;
+
+                case 1:
+                    if (factor == 1) {
+                        offsets = new int[][] {{-1, 0}, {-1, 1}, {0, -2}, {-1, -2}};
+                    } else {
+                        offsets = new int[][] {{1, 0}, {1, 1}, {0, -2}, {1, -2}};
+                    }
+                    
+                    checkOffsets(offsets, factor);
+                    break;
+
+                case 2:
+                    if (factor == 1) {
+                        offsets = new int[][] {{1, 0}, {1, -1}, {0, 2}, {1, 2}};
+                    } else {
+                        offsets = new int[][] {{-1, 0}, {-1, -1}, {0, 2}, {-1, 2}};
+                    }
+
+                    checkOffsets(offsets, factor);
+                    break;
+            }
+        }
+    }
+
+    private void updateRotations(int factor) {
         for (int i = 0; i < nodes.length; i++) {
             TetriminoNode node = nodes[i];
             MyGame.board[node.row][node.col] = null;
@@ -58,9 +138,38 @@ public class Tetrimino {
             TetriminoNode node = nodes[i];
             MyGame.board[node.row][node.col] = node;
         }
-        
+
         MyGame.updateArray();
-        SoundManager.playSound("sfx/Rotate.wav", false);
+        //SoundManager.playSound("sfx/Rotate.wav", false);
+    }
+
+    private void checkOffsets(int[][] offsets, int factor) {
+        boolean rotate;
+        for (int r = 0; r < offsets.length; r++) {
+            rotate = true;
+
+            for (int i = 0; i < rotations[this.direction].length; i++) {
+                TetriminoNode node = rotations[this.direction][i];
+    
+                if (!canRotate(node.row + offsets[r][1], node.col + offsets[r][0])) {
+                    rotate = false;
+                    break;
+                }
+            }
+
+            if (!rotate) continue;
+
+            for (int k = 0; k < rotations.length; k++) {
+                for (int i = 0; i < rotations[k].length; i++) {
+                    TetriminoNode node = rotations[k][i];
+    
+                    node.row += offsets[r][1];
+                    node.col += offsets[r][0];
+                }
+            }
+
+            updateRotations(factor);
+        }
     }
 
     protected void createRotations() {}

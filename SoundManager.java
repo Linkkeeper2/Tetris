@@ -33,18 +33,20 @@ public class SoundManager {
 
             AudioPlayer.player.start(audios.get(audios.size() - 1));
         } catch (Exception e) {
-            e.getStackTrace();
+            //e.getStackTrace();
         }
     }
 
     public static void stopAllSounds() {
-        for (int i = 0; i < audios.size(); i++) {
-            if (i < audios.size()) AudioPlayer.player.stop(audios.get(i));
-        }
-
-        music.clear();
-        audios.clear();
-        paths.clear();
+        try {
+            for (int i = 0; i < audios.size(); i++) {
+                if (i < audios.size()) AudioPlayer.player.stop(audios.get(i));
+            }
+    
+            music.clear();
+            audios.clear();
+            paths.clear();
+        } catch (Exception e) {}
     }
 
     public static void stopSound(String path) {

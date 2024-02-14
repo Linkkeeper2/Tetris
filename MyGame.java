@@ -81,13 +81,13 @@ public class MyGame extends Game  {
 
                 switch (clock) {
                     case 150:
-                        SoundManager.stopAllSounds();
-                        SoundManager.playSound("sfx/BattleHalf.wav", false);
+                        //SoundManager.stopAllSounds();
+                        //SoundManager.playSound("sfx/BattleHalf.wav", false);
                         break;
 
                     case 60:
-                        SoundManager.stopAllSounds();
-                        SoundManager.playSound("sfx/BattleMinute.wav", false);
+                        //SoundManager.stopAllSounds();
+                        //SoundManager.playSound("sfx/BattleMinute.wav", false);
                         break;
                 }
             }
@@ -115,11 +115,11 @@ public class MyGame extends Game  {
         updateArray();
         move(1);
         if (client == null) {
-            SoundManager.playSound("sfx/Battle.wav", true);
+            //SoundManager.playSound("sfx/Battle.wav", true);
             clock = 10;
         }
         else {
-            SoundManager.playSound("sfx/Battle.wav", false);
+            //SoundManager.playSound("sfx/Battle.wav", false);
             clock = 300;
             MyGame.client.deaths = 0;
         }
@@ -174,7 +174,7 @@ public class MyGame extends Game  {
         if (menu == null && !alive && client != null) {
             client.output.println(client.name + " has topped out.");
             reset();
-            SoundManager.playSound("sfx/KO.wav", false);
+            //SoundManager.playSound("sfx/KO.wav", false);
         }
 
         if (clock <= 0 && server != null && menu == null) {
@@ -413,7 +413,7 @@ public class MyGame extends Game  {
         }
 
         updateArray();
-        SoundManager.playSound("sfx/Move.wav", false);
+        //SoundManager.playSound("sfx/Move.wav", false);
     }
 
     public static Tetrimino getTetrimino() {
@@ -564,31 +564,31 @@ public class MyGame extends Game  {
             case 1:
                 score += 100;
                 message.contents = "+100 Single!";
-                SoundManager.playSound("sfx/Single.wav", false);
+                //SoundManager.playSound("sfx/Single.wav", false);
                 break;
 
             case 2:
                 score += 400;
                 message.contents = "+400 Double!";
-                SoundManager.playSound("sfx/Double.wav", false);
+                //SoundManager.playSound("sfx/Double.wav", false);
                 break;
 
             case 3:
                 score += 800;
                 message.contents = "+800 Triple!";
-                SoundManager.playSound("sfx/Triple.wav", false);
+                //SoundManager.playSound("sfx/Triple.wav", false);
                 break;
 
             case 4:
                 score += 1600;
                 message.contents = "+1600 Tetris!";
-                SoundManager.playSound("sfx/Tetris.wav", false);
+                //SoundManager.playSound("sfx/Tetris.wav", false);
                 break;
 
             case 5:
                 score += 2000;
                 message.contents = "+2000 Back-to-Back Tetris!";
-                SoundManager.playSound("sfx/Tetris.wav", false);
+                //SoundManager.playSound("sfx/Tetris.wav", false);
                 break;
         }
 
@@ -659,7 +659,7 @@ public class MyGame extends Game  {
 
         hardDropping = false;
         held = false;
-        SoundManager.playSound("sfx/Harddrop.wav", false);
+        //SoundManager.playSound("sfx/Harddrop.wav", false);
     }
 
     public static void automaticMove() {
@@ -747,12 +747,12 @@ public class MyGame extends Game  {
             levelMessage.contents = "Level Up!";
 
             if (level == 7) {
-                SoundManager.stopAllSounds();
-                SoundManager.loopTime = (2 * 60 + 50) * 1000;
-                SoundManager.playSound("sfx/BattleHalf.wav", true);
+                //SoundManager.stopAllSounds();
+                //SoundManager.loopTime = (2 * 60 + 50) * 1000;
+                //SoundManager.playSound("sfx/BattleHalf.wav", true);
             }
 
-            SoundManager.playSound("sfx/LUp.wav", false);
+            //SoundManager.playSound("sfx/LUp.wav", false);
 
             timer.schedule(new TimerTask() {
                 public void run() {
@@ -874,7 +874,7 @@ public class MyGame extends Game  {
         }
 
         held = true;
-        SoundManager.playSound("sfx/Hold.wav", false);
+        //SoundManager.playSound("sfx/Hold.wav", false);
     }
 
     public static void recieveLines(int lines) {
@@ -914,7 +914,7 @@ public class MyGame extends Game  {
                 }
             }
 
-            SoundManager.playSound("sfx/Alert.wav", false);
+            //SoundManager.playSound("sfx/Alert.wav", false);
         }
     }
 
@@ -949,7 +949,7 @@ public class MyGame extends Game  {
 
     public static void exitToMenu() {
         menu = menus.new MainMenu();
-        SoundManager.stopAllSounds();
+        //SoundManager.stopAllSounds();
     }
 
     public static void leaveGame() {
@@ -972,11 +972,11 @@ public class MyGame extends Game  {
             disconnect = null;
         }
 
-        SoundManager.stopAllSounds();
+        //SoundManager.stopAllSounds();
     }
 
     public static void endGame() {
-        SoundManager.stopAllSounds();
+        //SoundManager.stopAllSounds();
         menu = new Menus().new ResultsMenu();
         clock = 10;
         client.output.println(client.name + " " + client.deaths + " ... ... ... ... deaths.");
@@ -1042,7 +1042,7 @@ public class MyGame extends Game  {
 
             case 40: // Down Arrow Key
                 moveTetriminos();
-                SoundManager.playSound("sfx/Softdrop.wav", false);
+                //SoundManager.playSound("sfx/Softdrop.wav", false);
                 break;
 
             case 47: // Slash key
