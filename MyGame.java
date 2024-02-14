@@ -755,7 +755,7 @@ public class MyGame extends Game  {
             level++;
             levelMessage.contents = "Level Up!";
 
-            if (level == 7) {
+            if (level == 7 && client == null) {
                 SoundManager.stopAllSounds();
                 SoundManager.loopTime = (2 * 60 + 50) * 1000;
                 SoundManager.playSound("sfx/BattleHalf.wav", true);
