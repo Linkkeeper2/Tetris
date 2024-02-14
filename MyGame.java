@@ -29,10 +29,11 @@ public class MyGame extends Game  {
     private static boolean held = false; // Has the player held a piece on the current turn?
     public static Menus menus;
     public static Menu menu;
-    private Menu.Text message; // Message for line clears
+    private ArrayList<Message> messages; // Message for line clears
     private Menu.Text levelMessage; // Message for level ups
     public static ColorPalette palette;
     private int messageCol; // Column to display line clear messages
+    private int messageRow; // Row to display line clear messages
     private int messageDirection; // Direction to move message when clearing lines
     private boolean[] arrows = new boolean[2]; // Determines whether or not to repeated left or right movement
     private int direction = 0; // -1 = Left, 1 = Right, 0 = None
@@ -61,7 +62,7 @@ public class MyGame extends Game  {
         status = new ServerStatus();
         menus = new Menus();
         menu = menus.new MainMenu();
-        message = new Menu().new Text("", 0, 0, Color.WHITE);
+        messages = new ArrayList<>();
         levelMessage = new Menu().new Text("", 0, 700, Color.WHITE);
         palette = new ColorPalette();
         timer = new Timer();
@@ -159,6 +160,7 @@ public class MyGame extends Game  {
             move(1);
         } else if (currentTetrimino != null) {
             messageCol = currentTetrimino.getNodes()[0].col;
+            messageRow = currentTetrimino.getNodes()[0].row;
 
             if (direction != 0) {
                 move(direction);
@@ -167,9 +169,10 @@ public class MyGame extends Game  {
 
         updateArray();
 
-        if (!message.contents.equals("")) {
-            message.y--;
-            message.x += messageDirection == 0 ? 1 : -1;
+        for (int i = 0; i < messages.size(); i++) {
+            messages.get(i).y--;
+            messages.get(i).x += messageDirection == 0 ? 1 : -1;
+            messages.get(i).updatePosition();
         }
 
         if (menu == null && !alive && client != null) {
@@ -250,7 +253,10 @@ public class MyGame extends Game  {
             
             if (client != null) drawClock(pen);
             
-            message.draw(pen);
+            for (int i = 0; i < messages.size(); i++) {
+                messages.get(i).draw(pen);
+            }
+
             levelMessage.draw(pen);
     
             if (alive) {
@@ -530,8 +536,7 @@ public class MyGame extends Game  {
                 lines++;
                 linesCleared++;
 
-                message.x = messageCol * 25 + offset;
-                message.y = r * 25 + offset;
+                messageRow = r;
 
                 speedCalculation();
 
@@ -561,31 +566,31 @@ public class MyGame extends Game  {
         switch (linesCleared) {
             case 1:
                 score += 100;
-                message.contents = "+100 Single!";
+                messages.add(new Message("+100 Single!"));
                 SoundManager.playSound("sfx/Single.wav", false);
                 break;
 
             case 2:
                 score += 400;
-                message.contents = "+400 Double!";
+                messages.add(new Message("+400 Double!"));
                 SoundManager.playSound("sfx/Double.wav", false);
                 break;
 
             case 3:
                 score += 800;
-                message.contents = "+800 Triple!";
+                messages.add(new Message("+800 Triple!"));
                 SoundManager.playSound("sfx/Triple.wav", false);
                 break;
 
             case 4:
                 score += 1600;
-                message.contents = "+1600 Tetris!";
+                messages.add(new Message("+1600 Tetris!"));
                 SoundManager.playSound("sfx/Tetris.wav", false);
                 break;
 
             case 5:
                 score += 2000;
-                message.contents = "+2000 Back-to-Back Tetris!";
+                messages.add(new Message("+2000 Back-to-Back Tetris!"));
                 SoundManager.playSound("sfx/Tetris.wav", false);
                 break;
         }
@@ -594,11 +599,17 @@ public class MyGame extends Game  {
 
         messageDirection = (int)(Math.random() * 2);
 
-        timer.schedule(new TimerTask() {
-            public void run() {
-                message.contents = "";
-            }
-        }, (long)750);
+        if (messages.size() > 0) {
+            Message msg = messages.get(messages.size() - 1);
+            msg.x = messageCol * 25 + offset;
+            msg.y = messageRow * 25 + offset;
+
+            timer.schedule(new TimerTask() {
+                public void run() {
+                    messages.remove(msg);
+                }
+            }, (long)750);
+        }
     }
 
     public void hardDrop() {
