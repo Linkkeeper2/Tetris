@@ -36,7 +36,7 @@ public class MyGame extends Game  {
     private int messageDirection; // Direction to move message when clearing lines
     private boolean[] arrows = new boolean[2]; // Determines whether or not to repeated left or right movement
     private int direction = 0; // -1 = Left, 1 = Right, 0 = None
-    private long inputDelay = 340; // Delay for repeating directional inputs
+    private long inputDelay = 400; // Delay for repeating directional inputs
     private int prevLinesCleared = 0; // Previous amount of lines cleared to score Back-to-Back Tetrises
     private static int pity = 0; // Pity to getting an IPiece
     private static int nextPity = 5; // Value that pity needs to surpass the get an IPiece
