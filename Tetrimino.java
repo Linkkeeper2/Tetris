@@ -1,5 +1,4 @@
 import java.awt.Color;
-import java.util.TimerTask;
 
 public class Tetrimino {
     protected TetriminoNode[] nodes;

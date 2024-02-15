@@ -24,7 +24,7 @@ public class MyGame extends Game  {
     private static int speed = 1000; // The millisecond delay between automatic Tetrimino movement
     private static int lines = 0; // The number of lines cleared
     private static int score = 0; // The total score of the player
-    public static int level = 1; // The level (speed) of the game
+    public static short level = 0; // The level (speed) of the game
     private static boolean alive = false;
     private static boolean held = false; // Has the player held a piece on the current turn?
     public static Menus menus;
@@ -101,8 +101,7 @@ public class MyGame extends Game  {
         alive = true;
         lines = 0;
         score = 0;
-        level = 1;
-        speed = 1000;
+        level = 0;
         pity = 0;
         nextPity = 5;
         palette.currentPalette = 0;
@@ -132,8 +131,7 @@ public class MyGame extends Game  {
         alive = true;
         lines = 0;
         score = 0;
-        level = 1;
-        speed = 1000;
+        level = 0;
         pity = 0;
         nextPity = 5;
         palette.currentPalette = 0;
@@ -186,8 +184,21 @@ public class MyGame extends Game  {
             client.output.println("... ... ... ... ... ... ... Game over.");
             endGame();
         }
+
+        updateState();
     }
     
+    public void updateState() {
+        // Updates the speed of the game and color palette
+        if (speed > 100) speed = 1000 - (level * 100);
+        else {
+            if (speed > 20) speed = 100 - ((level - 9) * 5);
+            if (speed < 20) speed = 20;
+        }
+
+        palette.currentPalette = level % palette.getColors().length;
+    }
+
     public void draw(Graphics pen) {
         if (menu == null) {
             // Draws the Board Tiles
@@ -785,14 +796,6 @@ public class MyGame extends Game  {
                     levelMessage.contents = "";
                 }
             }, (long)750);
-
-            if (palette.currentPalette < palette.getColors().length - 1) palette.currentPalette++;
-            else palette.currentPalette = 0;
-
-            if (speed > 100) speed -= 100;
-            else {
-                if (speed > 20) speed -= 5;
-            }
         }
     }
 
