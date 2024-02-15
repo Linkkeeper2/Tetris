@@ -43,6 +43,7 @@ public class MyGame extends Game  {
     private static int nextPity = 5; // Value that pity needs to surpass the get an IPiece
     public static boolean notMove = false; // Used to delay Tetrimino downwards movement when a key is pressed
     public static boolean tSpin = false; // Determines if a T-Spin should occur
+    public static boolean doActions = true; // Prevents Tetrimino movement if an action is being processed
 
     // Client data
     public static Client client;
@@ -390,7 +391,7 @@ public class MyGame extends Game  {
     }
 
     public static void move(int direction) {
-        if (!alive) return;
+        if (!alive || !doActions) return;
 
         if (currentTetrimino == null) return;
 
@@ -711,7 +712,7 @@ public class MyGame extends Game  {
             else if (clock <= 225) time /= 2;
         }
 
-        if (!alive) {
+        if (!alive || !doActions) {
             timer.schedule(new TimerTask() {
                 public void run() {
                     automaticMove();

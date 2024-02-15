@@ -33,6 +33,7 @@ public class Tetrimino {
 
     public void rotate(int factor) {
         boolean wallKick = false;
+        MyGame.doActions = false;
 
         int nextDirection = this.direction + 1 * factor;
         if (nextDirection < 0) nextDirection = 3;
@@ -49,6 +50,8 @@ public class Tetrimino {
         } else {
             updateRotations(factor);
         }
+
+        MyGame.doActions = true;
     }
 
     private void wallKick(int factor, int nextDirection) {
