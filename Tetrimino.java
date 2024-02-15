@@ -168,6 +168,8 @@ public class Tetrimino {
         MyGame.updateArray();
         if (this.getType().equals("TPiece"))
             MyGame.tSpin = true;
+
+        MyGame.notMove = true;
         //SoundManager.playSound("sfx/Rotate.wav", false);
     }
 

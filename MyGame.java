@@ -41,7 +41,7 @@ public class MyGame extends Game  {
     private int prevLinesCleared = 0; // Previous amount of lines cleared to score Back-to-Back Tetrises
     private static int pity = 0; // Pity to getting an IPiece
     private static int nextPity = 5; // Value that pity needs to surpass the get an IPiece
-    private static boolean notMove = false; // Used to delay Tetrimino downwards movement when a key is pressed
+    public static boolean notMove = false; // Used to delay Tetrimino downwards movement when a key is pressed
     public static boolean tSpin = false; // Determines if a T-Spin should occur
 
     // Client data
