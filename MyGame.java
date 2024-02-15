@@ -35,7 +35,7 @@ public class MyGame extends Game  {
     private int messageCol; // Column to display line clear messages
     private int messageRow; // Row to display line clear messages
     private int messageDirection; // Direction to move message when clearing lines
-    private boolean[] arrows = new boolean[2]; // Determines whether or not to repeated left or right movement
+    private boolean[] arrows = new boolean[4]; // Determines whether or not to repeated left or right movement
     private int direction = 0; // -1 = Left, 1 = Right, 0 = None
     private long inputDelay = 400; // Delay for repeating directional inputs
     private int prevLinesCleared = 0; // Previous amount of lines cleared to score Back-to-Back Tetrises
@@ -83,13 +83,13 @@ public class MyGame extends Game  {
 
                 switch (clock) {
                     case 150:
-                        SoundManager.stopAllSounds();
-                        SoundManager.playSound("sfx/BattleHalf.wav", false);
+                        //SoundManager.stopAllSounds();
+                        //SoundManager.playSound("sfx/BattleHalf.wav", false);
                         break;
 
                     case 60:
-                        SoundManager.stopAllSounds();
-                        SoundManager.playSound("sfx/BattleMinute.wav", false);
+                        //SoundManager.stopAllSounds();
+                        //SoundManager.playSound("sfx/BattleMinute.wav", false);
                         break;
                 }
             }
@@ -117,11 +117,11 @@ public class MyGame extends Game  {
         updateArray();
         move(1);
         if (client == null) {
-            SoundManager.playSound("sfx/Battle.wav", true);
+            //SoundManager.playSound("sfx/Battle.wav", true);
             clock = 10;
         }
         else {
-            SoundManager.playSound("sfx/Battle.wav", false);
+            //SoundManager.playSound("sfx/Battle.wav", false);
             clock = 300;
             MyGame.client.deaths = 0;
         }
@@ -178,7 +178,7 @@ public class MyGame extends Game  {
         if (menu == null && !alive && client != null) {
             client.output.println(client.name + " has topped out.");
             reset();
-            SoundManager.playSound("sfx/KO.wav", false);
+            //SoundManager.playSound("sfx/KO.wav", false);
         }
 
         if (clock <= 0 && server != null && menu == null) {
@@ -420,7 +420,7 @@ public class MyGame extends Game  {
         }
 
         updateArray();
-        SoundManager.playSound("sfx/Move.wav", false);
+        //SoundManager.playSound("sfx/Move.wav", false);
     }
 
     public static Tetrimino getTetrimino() {
@@ -567,31 +567,31 @@ public class MyGame extends Game  {
             case 1:
                 score += 100;
                 messages.add(new Message("+100 Single!"));
-                SoundManager.playSound("sfx/Single.wav", false);
+                //SoundManager.playSound("sfx/Single.wav", false);
                 break;
 
             case 2:
                 score += 400;
                 messages.add(new Message("+400 Double!"));
-                SoundManager.playSound("sfx/Double.wav", false);
+                //SoundManager.playSound("sfx/Double.wav", false);
                 break;
 
             case 3:
                 score += 800;
                 messages.add(new Message("+800 Triple!"));
-                SoundManager.playSound("sfx/Triple.wav", false);
+                //SoundManager.playSound("sfx/Triple.wav", false);
                 break;
 
             case 4:
                 score += 1600;
                 messages.add(new Message("+1600 Tetris!"));
-                SoundManager.playSound("sfx/Tetris.wav", false);
+                //SoundManager.playSound("sfx/Tetris.wav", false);
                 break;
 
             case 5:
                 score += 2000;
                 messages.add(new Message("+2000 Back-to-Back Tetris!"));
-                SoundManager.playSound("sfx/Tetris.wav", false);
+                //SoundManager.playSound("sfx/Tetris.wav", false);
                 break;
         }
 
@@ -668,7 +668,7 @@ public class MyGame extends Game  {
 
         hardDropping = false;
         held = false;
-        SoundManager.playSound("sfx/Harddrop.wav", false);
+        //SoundManager.playSound("sfx/Harddrop.wav", false);
     }
 
     public static void automaticMove() {
@@ -756,12 +756,12 @@ public class MyGame extends Game  {
             levelMessage.contents = "Level Up!";
 
             if (level == 7 && client == null) {
-                SoundManager.stopAllSounds();
-                SoundManager.loopTime = (2 * 60 + 50) * 1000;
-                SoundManager.playSound("sfx/BattleHalf.wav", true);
+                //SoundManager.stopAllSounds();
+                //SoundManager.loopTime = (2 * 60 + 50) * 1000;
+                //SoundManager.playSound("sfx/BattleHalf.wav", true);
             }
 
-            SoundManager.playSound("sfx/LUp.wav", false);
+            //SoundManager.playSound("sfx/LUp.wav", false);
 
             timer.schedule(new TimerTask() {
                 public void run() {
@@ -883,7 +883,7 @@ public class MyGame extends Game  {
         }
 
         held = true;
-        SoundManager.playSound("sfx/Hold.wav", false);
+        //SoundManager.playSound("sfx/Hold.wav", false);
     }
 
     public static void recieveLines(int lines) {
@@ -923,7 +923,7 @@ public class MyGame extends Game  {
                 }
             }
 
-            SoundManager.playSound("sfx/Alert.wav", false);
+            //SoundManager.playSound("sfx/Alert.wav", false);
         }
     }
 
@@ -958,7 +958,7 @@ public class MyGame extends Game  {
 
     public static void exitToMenu() {
         menu = menus.new MainMenu();
-        SoundManager.stopAllSounds();
+        //SoundManager.stopAllSounds();
     }
 
     public static void leaveGame() {
@@ -981,11 +981,11 @@ public class MyGame extends Game  {
             disconnect = null;
         }
 
-        SoundManager.stopAllSounds();
+        //SoundManager.stopAllSounds();
     }
 
     public static void endGame() {
-        SoundManager.stopAllSounds();
+        //SoundManager.stopAllSounds();
         menu = new Menus().new ResultsMenu();
         clock = 10;
         client.output.println(client.name + " " + client.deaths + " ... ... ... ... deaths.");
@@ -1019,11 +1019,12 @@ public class MyGame extends Game  {
 
             case 37: // Left Arrow Key
                 arrows[0] = true;
+                arrows[2] = false;
 
                 if (timer != null) {
                     timer.schedule(new TimerTask() {
                         public void run() {
-                            if (arrows[0]) direction = -1;
+                            if (arrows[0] && !arrows[2]) direction = -1;
                         }
                     }, inputDelay);
                 }
@@ -1037,11 +1038,12 @@ public class MyGame extends Game  {
 
             case 39: // Right Arrow Key
                 arrows[1] = true;
+                arrows[3] = false;
 
                 if (timer != null) {
                     timer.schedule(new TimerTask() {
                         public void run() {
-                            if (arrows[1]) direction = 1;
+                            if (arrows[1] && !arrows[3]) direction = 1;
                         }
                     }, inputDelay);
                 }
@@ -1051,7 +1053,7 @@ public class MyGame extends Game  {
 
             case 40: // Down Arrow Key
                 moveTetriminos();
-                SoundManager.playSound("sfx/Softdrop.wav", false);
+                //SoundManager.playSound("sfx/Softdrop.wav", false);
                 break;
 
             case 47: // Slash key
@@ -1075,12 +1077,14 @@ public class MyGame extends Game  {
         switch (ke.getKeyCode()) {
             case 37: // Left Arrow Key
                 arrows[0] = false;
+                arrows[2] = true;
                 direction = 0;
                 break;
 
 
             case 39: // Right Arrow Key
                 arrows[1] = false;
+                arrows[3] = true;
                 direction = 0;
                 break;
         }
