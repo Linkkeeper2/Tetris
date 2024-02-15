@@ -42,6 +42,7 @@ public class MyGame extends Game  {
     private static int pity = 0; // Pity to getting an IPiece
     private static int nextPity = 5; // Value that pity needs to surpass the get an IPiece
     private static boolean notMove = false; // Used to delay Tetrimino downwards movement when a key is pressed
+    public static boolean tSpin = false; // Determines if a T-Spin should occur
 
     // Client data
     public static Client client;
@@ -329,6 +330,8 @@ public class MyGame extends Game  {
             }
         }
 
+        tSpin = false;
+
         if (!hardDropping) {
             for (int i = 0; i < nodes.length; i++) {
                 nodes[i].row++;
@@ -566,19 +569,31 @@ public class MyGame extends Game  {
         switch (linesCleared) {
             case 1:
                 score += 100;
-                messages.add(new Message("+100 Single!"));
+                if (!tSpin) messages.add(new Message("+100 Single!"));
+                else {
+                    messages.add(new Message("+200 T-Spin Single!"));
+                    score += 100;
+                }
                 //SoundManager.playSound("sfx/Single.wav", false);
                 break;
 
             case 2:
                 score += 400;
-                messages.add(new Message("+400 Double!"));
+                if (!tSpin) messages.add(new Message("+400 Double!"));
+                else {
+                    messages.add(new Message("+600 T-Spin Double!"));
+                    score += 200;
+                }
                 //SoundManager.playSound("sfx/Double.wav", false);
                 break;
 
             case 3:
                 score += 800;
-                messages.add(new Message("+800 Triple!"));
+                if (!tSpin) messages.add(new Message("+800 Triple!"));
+                else {
+                    messages.add(new Message("+1000 T-Spin Triple!"));
+                    score += 1000;
+                }
                 //SoundManager.playSound("sfx/Triple.wav", false);
                 break;
 
@@ -596,6 +611,7 @@ public class MyGame extends Game  {
         }
 
         sendLines(linesCleared);
+        tSpin = false;
 
         messageDirection = (int)(Math.random() * 2);
 
@@ -613,6 +629,7 @@ public class MyGame extends Game  {
     }
 
     public void hardDrop() {
+        tSpin = false;
         if (!alive) return;
 
         hardDropping = true;

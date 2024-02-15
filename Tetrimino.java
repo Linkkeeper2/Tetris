@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.util.TimerTask;
 
 public class Tetrimino {
     protected TetriminoNode[] nodes;
@@ -166,6 +167,8 @@ public class Tetrimino {
         }
 
         MyGame.updateArray();
+        if (this.getType().equals("TPiece"))
+            MyGame.tSpin = true;
         //SoundManager.playSound("sfx/Rotate.wav", false);
     }
 
