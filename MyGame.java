@@ -58,6 +58,8 @@ public class MyGame extends Game  {
     private int linesToSend; // Amount of lines to send to other clients when a threshold is reached
     private static int clock = 10; // Clock for multiplayer games
 
+    public static Save save; // Save file properties for the player
+
     public MyGame() {
         // initialize variables here
         chat = new Chat();
@@ -70,6 +72,7 @@ public class MyGame extends Game  {
         timer = new Timer();
         pieces = new Tetriminos();
         bots = new ArrayList<>();
+        save = new Save();
 
         timer.schedule(new TimerTask() {
             public void run() {
@@ -102,7 +105,8 @@ public class MyGame extends Game  {
         alive = true;
         lines = 0;
         score = 0;
-        level = 0;
+        if (client == null) level = save.startLevel;
+        else level = 0;
         pity = 0;
         nextPity = 5;
         palette.currentPalette = 0;

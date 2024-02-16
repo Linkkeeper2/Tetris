@@ -68,4 +68,26 @@ public class ButtonActions {
             MyGame.bots.add(new Bot());
         }
     }
+
+    public class Settings implements ButtonAction {
+        public void action() {
+            MyGame.menu = new Menus().new SettingsMenu();
+        }
+    }
+
+    public class ChangeLevel implements ButtonAction {
+        private short factor;
+
+        public ChangeLevel(short factor) {
+            this.factor = factor;
+        }
+
+        public void action() {
+            if (MyGame.save.startLevel >= 0) MyGame.save.startLevel += factor;
+            if (MyGame.save.startLevel < 0) MyGame.save.startLevel = 0;
+
+            MyGame.menu.text.remove(MyGame.menu.text.size() - 1);
+            MyGame.menu.text.add(new Menu().new Text("Starting Level: " + MyGame.save.startLevel, MyGame.SCREEN_WIDTH / 2 - 75, 375, Color.WHITE));
+        }
+    }
 }

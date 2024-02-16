@@ -75,7 +75,7 @@ public class Menu {
         public void click(MouseEvent me) {
             if (rect.intersects(new Rectangle(me.getX() - 8, me.getY() - 32, 1, 1))) {
                 color = hoverColor;
-                this.action.action();
+                if (this.action != null) this.action.action();
             }
             else color = defaultColor;
         }

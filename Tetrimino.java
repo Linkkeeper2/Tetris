@@ -48,7 +48,7 @@ public class Tetrimino {
         if (wallKick) {
             wallKick(factor, nextDirection);
         } else {
-            updateRotations(factor);
+            updateRotations(factor, new int[] {0, 0});
         }
 
         MyGame.doActions = true;
@@ -146,10 +146,12 @@ public class Tetrimino {
         checkOffsets(offsets, factor, nextDirection);
     }
 
-    private void updateRotations(int factor) {
+    private void updateRotations(int factor, int[] move) {
         for (int i = 0; i < nodes.length; i++) {
             TetriminoNode node = nodes[i];
             MyGame.board[node.row][node.col] = null;
+            node.row += move[1] * -1;
+            node.col += move[0];
         }
 
         // Yes there is a more efficient way to do this, but for some reason it works better this way (Looping rotation)
@@ -194,6 +196,7 @@ public class Tetrimino {
 
             for (int k = 0; k < rotations.length; k++) {
                 for (int i = 0; i < rotations[k].length; i++) {
+                    if (rotations[k].equals(nodes)) continue;
                     TetriminoNode node = rotations[k][i];
     
                     node.row += offsets[r][1] * -1;
@@ -201,7 +204,7 @@ public class Tetrimino {
                 }
             }
 
-            updateRotations(factor);
+            updateRotations(factor, new int[] {offsets[r][0], offsets[r][1]});
             break;
         }
     }
