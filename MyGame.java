@@ -8,7 +8,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.ArrayList;
 
-public class MyGame extends Game  {
+public class MyGame extends Game {
     public static final String TITLE = "Tetris";
     public static final int SCREEN_WIDTH = 1000;
     public static final int SCREEN_HEIGHT = 800;
@@ -19,7 +19,7 @@ public class MyGame extends Game  {
     public static Timer timer;
     private static Tetriminos pieces;
     private static Tetrimino currentTetrimino, nextTetrimino, heldTetrimino;
-    private static int tNum = 0; // Number of Tetriminos used (Keeps track of ID for each Tetrimino)
+    public static int tNum = 0; // Number of Tetriminos used (Keeps track of ID for each Tetrimino)
     private static boolean hardDropping = false; // Determines whether or not the regular drop interval should occur (prevents Tetrimino clipping while Hard Dropping)
     private static int speed = 1000; // The millisecond delay between automatic Tetrimino movement
     private static int lines = 0; // The number of lines cleared
@@ -44,7 +44,7 @@ public class MyGame extends Game  {
     public static boolean notMove = false; // Used to delay Tetrimino downwards movement when a key is pressed
     public static boolean tSpin = false; // Determines if a T-Spin should occur
     public static boolean doActions = true; // Prevents Tetrimino movement if an action is being processed
-    private int tileSize = 16; // Size of each tile on the board
+    public static int tileSize = 16; // Size of each tile on the board
 
     // Client data
     public static Client client;
@@ -109,8 +109,19 @@ public class MyGame extends Game  {
         alive = true;
         lines = 0;
         score = 0;
-        if (client == null) level = save.startLevel;
-        else level = 0;
+        try {
+            if (client == null) {
+                level = save.startLevel;
+                tileSize = 16;
+                palette.sheet = new SpriteSheetLoader(16, 16, 10, 3);
+            }
+            else {
+                level = 0;
+                tileSize = 25;
+                palette.sheet = new SpriteSheetLoader(25, 25, 10, 3, "gfx/PaletteBattle.png");
+            }
+        } catch (IOException e) {}
+
         pity = 0;
         nextPity = 5;
         palette.currentPalette = 0;
@@ -179,9 +190,14 @@ public class MyGame extends Game  {
         updateArray();
 
         for (int i = 0; i < messages.size(); i++) {
-            if (i < messages.size()) messages.get(i).y--;
-            if (i < messages.size()) messages.get(i).x += messageDirection == 0 ? 1 : -1;
-            if (i < messages.size()) messages.get(i).updatePosition();
+            if (i < messages.size()) {
+                Message m = messages.get(i);
+                if (m != null) {
+                    m.y--;
+                    m.x += messageDirection == 0 ? 1 : -1;
+                    m.updatePosition();
+                }
+            }
         }
 
         if (menu == null && !alive && client != null) {
@@ -206,7 +222,7 @@ public class MyGame extends Game  {
             if (speed < 20) speed = 20;
         }
 
-        if (client == null) palette.currentPalette = level % 10;
+        palette.currentPalette = level % 10;
     }
 
     public void draw(Graphics pen) {
@@ -538,7 +554,7 @@ public class MyGame extends Game  {
     }
 
     public void clearRow() {
-        if (!alive) return;
+        if (!alive || board == null) return;
 
         int linesCleared = 0;
 
@@ -773,6 +789,8 @@ public class MyGame extends Game  {
     }
 
     public void swapTetriminos() {
+        if (board == null) return;
+        
         // Swaps the current Tetrimino with the one in the next box
         for (int i = 0; i < 2; i++) {
             for (int k = 0; k < board[i].length; k++) {

@@ -27,11 +27,11 @@ public class TetriminoNode {
     }
 
     public void draw(Graphics pen) {
-        pen.drawImage(this.sprite, col * 16 + MyGame.offset, row * 16 + MyGame.offset, null);
+        pen.drawImage(this.sprite, col * MyGame.tileSize + MyGame.offset, row * MyGame.tileSize + MyGame.offset, null);
     }
 
     public void updateID() {
         // For the stray nodes
-        this.id = -1;
+        this.id = -MyGame.tNum;
     }
 }
