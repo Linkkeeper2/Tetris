@@ -73,6 +73,7 @@ public class SoundManager {
             AudioPlayer.player.start(audios.get(audios.size() - 1));
             audioLoop = audios.get(audios.size() - 1);
             loopTimes.remove(0);
+            loopTimes.add(loopTime);
 
             MyGame.timer.schedule(new TimerTask() {
                 public void run() {
