@@ -44,6 +44,7 @@ public class MyGame extends Game  {
     public static boolean notMove = false; // Used to delay Tetrimino downwards movement when a key is pressed
     public static boolean tSpin = false; // Determines if a T-Spin should occur
     public static boolean doActions = true; // Prevents Tetrimino movement if an action is being processed
+    private int tileSize = 16; // Size of each tile on the board
 
     // Client data
     public static Client client;
@@ -178,9 +179,9 @@ public class MyGame extends Game  {
         updateArray();
 
         for (int i = 0; i < messages.size(); i++) {
-            messages.get(i).y--;
-            messages.get(i).x += messageDirection == 0 ? 1 : -1;
-            messages.get(i).updatePosition();
+            if (i < messages.size()) messages.get(i).y--;
+            if (i < messages.size()) messages.get(i).x += messageDirection == 0 ? 1 : -1;
+            if (i < messages.size()) messages.get(i).updatePosition();
         }
 
         if (menu == null && !alive && client != null) {
@@ -205,7 +206,7 @@ public class MyGame extends Game  {
             if (speed < 20) speed = 20;
         }
 
-        palette.currentPalette = level % palette.getColors().length;
+        if (client == null) palette.currentPalette = level % 10;
     }
 
     public void draw(Graphics pen) {
@@ -215,9 +216,9 @@ public class MyGame extends Game  {
                 for (int c = 0; c < board[r].length; c++) {
                     if (board[r][c] == null) {
                         pen.setColor(Color.gray);
-                        pen.fillRect(c * 25 + offset, r * 25 + offset, 25, 25);
+                        pen.fillRect(c * tileSize + offset, r * tileSize + offset, tileSize, tileSize);
                         pen.setColor(Color.DARK_GRAY);
-                        pen.drawRect(c * 25 + offset, r * 25 + offset, 25, 25);
+                        pen.drawRect(c * tileSize + offset, r * tileSize + offset, tileSize, tileSize);
                     }
                 }
             }
@@ -230,10 +231,7 @@ public class MyGame extends Game  {
                         
                         // Draws the current node to the board
                         curr.updateColor();
-                        pen.setColor(curr.getColor());
-                        pen.fillRect(curr.col * 25 + offset, curr.row * 25 + offset, 25, 25);
-                        pen.setColor(curr.getDarkColor());
-                        pen.drawRect(curr.col * 25 + offset, curr.row * 25 + offset, 25, 25);
+                        curr.draw(pen);
 
                         if (currentTetrimino != null) {
                             // Determines if the indicator for dropping the Tetrimino should be drawn for the current node
@@ -252,9 +250,9 @@ public class MyGame extends Game  {
                                 for (int i = curr.row + 1; i < board.length; i++) {
                                     if (board[i][c] == null) {
                                         pen.setColor(Color.LIGHT_GRAY);
-                                        pen.fillRect(c * 25 + offset, i * 25 + offset, 25, 25);
+                                        pen.fillRect(c * tileSize + offset, i * tileSize + offset, tileSize, tileSize);
                                         pen.setColor(Color.GRAY);
-                                        pen.drawRect(c * 25 + offset, i * 25 + offset, 25, 25);
+                                        pen.drawRect(c * tileSize + offset, i * tileSize + offset, tileSize, tileSize);
                                     } else break;
                                 }
                             }
@@ -266,10 +264,10 @@ public class MyGame extends Game  {
             // Draws the Text to the screen
             pen.setFont(new Font("comicsansms", 0, 20));
             pen.setColor(Color.WHITE);
-            pen.drawString("Lines: " + lines, offset + board[0].length * 25 + 8, offset - 24);
-            pen.drawString("Score: " + score, offset + board[0].length * 25 + 8, offset);
+            pen.drawString("Lines: " + lines, offset + board[0].length * tileSize + 8, offset - 24);
+            pen.drawString("Score: " + score, offset + board[0].length * tileSize + 8, offset);
             pen.drawString("Level: " + level, 32, 60);
-            pen.drawString("Next", offset + board[0].length * 25 + 48, offset + 40);
+            pen.drawString("Next", offset + board[0].length * tileSize + 48, offset + 40);
             pen.drawString("Hold", 32, offset + 40);
             
             if (client != null) drawClock(pen);
@@ -288,10 +286,7 @@ public class MyGame extends Game  {
                     for (int i = 0; i < nodes.length; i++) {
                         TetriminoNode node = nodes[i];
                         node.updateColor();
-                        pen.setColor(node.getColor());
-                        pen.fillRect(node.col * 25 + (offset + board[0].length * 25 - 25), node.row * 25 + offset + 60, 25, 25);
-                        pen.setColor(node.getDarkColor());
-                        pen.drawRect(node.col * 25 + (offset + board[0].length * 25 - 25), node.row * 25 + offset + 60, 25, 25);
+                        pen.drawImage(node.sprite, node.col * tileSize + (offset + board[0].length * tileSize - tileSize), node.row * tileSize + offset + 60, null);
                     }
                 }
 
@@ -302,10 +297,7 @@ public class MyGame extends Game  {
                     for (int i = 0; i < nodes.length; i++) {
                         TetriminoNode node = nodes[i];
                         node.updateColor();
-                        pen.setColor(node.getColor());
-                        pen.fillRect(node.col * 25 - 40, node.row * 25 + 175, 25, 25);
-                        pen.setColor(node.getDarkColor());
-                        pen.drawRect(node.col * 25 - 40, node.row * 25 + 175, 25, 25);
+                        pen.drawImage(node.sprite, node.col * tileSize - 20, node.row * tileSize + 175, null);
                     }
                 }
             }
@@ -675,8 +667,8 @@ public class MyGame extends Game  {
 
         if (messages.size() > 0) {
             Message msg = messages.get(messages.size() - 1);
-            msg.x = messageCol * 25 + offset;
-            msg.y = messageRow * 25 + offset;
+            msg.x = messageCol * tileSize + offset;
+            msg.y = messageRow * tileSize + offset;
 
             timer.schedule(new TimerTask() {
                 public void run() {
