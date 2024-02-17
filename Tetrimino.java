@@ -175,7 +175,12 @@ public class Tetrimino {
             MyGame.tSpin = true;
 
         MyGame.notMove = true;
-        //SoundManager.playSound("sfx/Rotate.wav", false);
+        if (MyGame.client != null) {
+            SoundManager.playSound("sfx/Rotate.wav", false);
+        }
+        else {
+            SoundManager.playSound("sfx/Action.wav", false);
+        }
     }
 
     private void checkOffsets(int[][] offsets, int factor, int nextDirection) {
