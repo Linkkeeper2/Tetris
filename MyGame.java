@@ -125,7 +125,11 @@ public class MyGame extends Game  {
         updateArray();
         move(1);
         if (client == null) {
-            SoundManager.playSound("sfx/Battle.wav", true);
+            if (level < 7) SoundManager.playSound("sfx/Battle.wav", true);
+            else {
+                SoundManager.loopTime = (2 * 60 + 50) * 1000;
+                SoundManager.playSound("sfx/BattleHalf.wav", true);
+            }
             clock = 10;
         }
         else {
@@ -795,7 +799,7 @@ public class MyGame extends Game  {
     }
 
     public void speedCalculation() {
-        if (lines % 10 == 0) {
+        if ((level + 1) * 10 - lines <= 0) {
             level++;
             levelMessage.contents = "Level Up!";
 
