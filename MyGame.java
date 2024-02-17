@@ -137,7 +137,7 @@ public class MyGame extends Game {
         updateArray();
         move(1);
         if (client == null) {
-            SoundManager.loopTime = (3 * 60) * 1000;
+            SoundManager.loopTime = (3 * 60) * 1000 - 1000;
             SoundManager.playSound("sfx/MusicSolo.wav", true);
             clock = 10;
         }
@@ -216,11 +216,13 @@ public class MyGame extends Game {
     
     public void updateState() {
         // Updates the speed of the game and color palette
-        if (speed > 100) speed = 1000 - (level * 100);
-        else {
-            if (speed > 20) speed = 100 - ((level - 9) * 5);
-            if (speed < 20) speed = 20;
-        }
+        if (level <= 8) speed = (int)(((48 - level * 5) / 60f) * 1000);
+        else if (level == 9) speed = (int)((6 / 60f) * 1000);
+        else if (level >= 10 && level <= 12) speed = (int)((5 / 60f) * 1000);
+        else if (level >= 13 && level <= 15) speed = (int)((4 / 60f) * 1000);
+        else if (level >= 16 && level <= 18) speed = (int)((3 / 60f) * 1000);
+        else if (level >= 19 && level <= 28) speed = (int)((2 / 60f) * 1000);
+        else if (level >= 29) speed = (int)((1 / 60f) * 1000);
 
         palette.currentPalette = level % 10;
     }

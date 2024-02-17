@@ -13,7 +13,7 @@ public class SoundManager {
     private static ArrayList<AudioStream> audios = new ArrayList<>();
     private static ArrayList<String> paths = new ArrayList<>();
     private static AudioStream audioLoop;
-    public static long loopTime = (3 * 60) * 1000;
+    public static long loopTime = (3 * 60) * 1000 - 1000;
     private static ArrayList<Long> loopTimes = new ArrayList<>();
 
     public static void playSound(String path, boolean loop) {
@@ -48,6 +48,7 @@ public class SoundManager {
             music.clear();
             audios.clear();
             paths.clear();
+            loopTimes.clear();
         } catch (Exception e) {}
     }
 
