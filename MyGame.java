@@ -1108,11 +1108,13 @@ public class MyGame extends Game {
                 arrows[2] = false;
 
                 if (timer != null) {
-                    timer.schedule(new TimerTask() {
-                        public void run() {
-                            if (arrows[0] && !arrows[2]) direction = -1;
-                        }
-                    }, inputDelay);
+                    try {
+                        timer.schedule(new TimerTask() {
+                            public void run() {
+                                if (arrows[0] && !arrows[2]) direction = -1;
+                            }
+                        }, inputDelay);
+                    } catch (Exception e) {}
                 }
 
                 move(-1);
@@ -1127,11 +1129,13 @@ public class MyGame extends Game {
                 arrows[3] = false;
 
                 if (timer != null) {
-                    timer.schedule(new TimerTask() {
-                        public void run() {
-                            if (arrows[1] && !arrows[3]) direction = 1;
-                        }
-                    }, inputDelay);
+                    try {
+                        timer.schedule(new TimerTask() {
+                            public void run() {
+                                if (arrows[1] && !arrows[3]) direction = 1;
+                            }
+                        }, inputDelay);
+                    } catch (Exception e) {}
                 }
                 
                 move(1);
