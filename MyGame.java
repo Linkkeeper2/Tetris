@@ -25,7 +25,7 @@ public class MyGame extends Game {
     private static int lines = 0; // The number of lines cleared
     private static int score = 0; // The total score of the player
     public static short level = 0; // The level (speed) of the game
-    private static boolean alive = false;
+    public static boolean alive = false;
     private static boolean held = false; // Has the player held a piece on the current turn?
     public static Menus menus;
     public static Menu menu;
@@ -389,6 +389,7 @@ public class MyGame extends Game {
     }
     
     public static void add(TetriminoNode t, int row, int col) {
+        if (board[row][col] != null) alive = false;
         board[row][col] = t;
     }
 
@@ -790,15 +791,6 @@ public class MyGame extends Game {
 
     public void swapTetriminos() {
         if (board == null) return;
-        
-        // Swaps the current Tetrimino with the one in the next box
-        for (int i = 0; i < 2; i++) {
-            for (int k = 0; k < board[i].length; k++) {
-                if (board[i][k] != null) {
-                    alive = false;
-                }
-            }
-        }
 
         if (nextTetrimino == null) return;
 
