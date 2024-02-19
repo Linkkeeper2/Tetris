@@ -355,7 +355,7 @@ public class MyGame extends Game {
             if (nodes[i].row >= board.length - 1) {
                 if (!notMove) currentTetrimino = null;
                 return;
-            } else if (board[nodes[i].row + 1][nodes[i].col] != null && board[nodes[i].row + 1][nodes[i].col].id != nodes[i].id) {
+            } else if (board[nodes[i].row + 1][nodes[i].col] != null && !board[nodes[i].row + 1][nodes[i].col].parent.equals(nodes[i].parent)) {
                 if (!notMove) currentTetrimino = null;
                 return;
             }
