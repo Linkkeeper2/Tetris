@@ -178,6 +178,7 @@ public class MyGame extends Game {
             held = false;
             swapTetriminos();
             move(1);
+            notMove = false;
         } else if (currentTetrimino != null) {
             messageCol = currentTetrimino.getNodes()[0].col;
             messageRow = currentTetrimino.getNodes()[0].row;
@@ -1095,6 +1096,7 @@ public class MyGame extends Game {
 
             case 32: // SPACE
                 if (prompt == null) hardDrop();
+                notMove = false;
                 break;
 
             case 37: // Left Arrow Key
@@ -1112,10 +1114,12 @@ public class MyGame extends Game {
                 }
 
                 move(-1);
+                notMove = true;
                 break;
 
             case 38: // Up Arrow Key
                 if (currentTetrimino != null && currentTetrimino.direction != -1) currentTetrimino.rotate(1);
+                notMove = true;
                 break;
 
             case 39: // Right Arrow Key
@@ -1133,6 +1137,7 @@ public class MyGame extends Game {
                 }
                 
                 move(1);
+                notMove = true;
                 break;
 
             case 40: // Down Arrow Key
@@ -1155,10 +1160,9 @@ public class MyGame extends Game {
 
             case 90: // Z Key
                 if (currentTetrimino != null && currentTetrimino.direction != -1) currentTetrimino.rotate(-1);
+                notMove = true;
                 break;
         }
-
-        notMove = true;
     }
 
     @Override
