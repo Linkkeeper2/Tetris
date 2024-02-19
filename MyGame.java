@@ -62,6 +62,8 @@ public class MyGame extends Game {
     public static Save save; // Save file properties for the player
     public static Database database;
 
+    private ClearAnimation animation;
+
     public MyGame() {
         // initialize variables here
         chat = new Chat();
@@ -75,6 +77,8 @@ public class MyGame extends Game {
         pieces = new Tetriminos();
         bots = new ArrayList<>();
         save = new Save();
+        animation = new ClearAnimation();
+        animation.start();
 
         timer.schedule(new TimerTask() {
             public void run() {
@@ -173,11 +177,14 @@ public class MyGame extends Game {
     public void update() {
         // updating logic
         if (currentTetrimino == null && alive) {
-            clearRow();
-            held = false;
-            swapTetriminos();
-            move(1);
-            notMove = false;
+            if (animation.rowsToClear.size() == 0) clearRow();
+
+            if (animation.rowsToClear.size() == 0) {
+                held = false;
+                swapTetriminos();
+                move(1);
+                notMove = false;
+            }
         } else if (currentTetrimino != null) {
             messageCol = currentTetrimino.getNodes()[0].col;
             messageRow = currentTetrimino.getNodes()[0].row;
@@ -581,21 +588,9 @@ public class MyGame extends Game {
                 linesCleared++;
 
                 messageRow = r;
+                animation.rowsToClear.add(r);
 
                 speedCalculation();
-
-                for (int i = r; i > 0; i--) {
-                    board[i] = new TetriminoNode[board[0].length];
-                    boolean stop = true;
-                    
-                    for (int k = 0; k < board[i].length; k++) {
-                        if (board[i - 1][k] != null) stop = false;
-                        board[i][k] = board[i - 1][k];
-                        if (board[i][k] != null) board[i][k].row++;
-                    }
-
-                    if (stop) break;
-                }
             }
         }
 
