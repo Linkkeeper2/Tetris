@@ -759,12 +759,6 @@ public class MyGame extends Game {
 
         hardDropping = false;
         held = false;
-        if (client != null) {
-            SoundManager.playSound("sfx/Harddrop.wav", false);
-        }
-        else {
-            SoundManager.playSound("sfx/HarddropSolo.wav", false);
-        }
     }
 
     public static void automaticMove() {
@@ -1099,7 +1093,15 @@ public class MyGame extends Game {
                 break;
 
             case 32: // SPACE
-                if (prompt == null) hardDrop();
+                if (prompt == null) {
+                    hardDrop();
+                    if (client != null) {
+                        SoundManager.playSound("sfx/Harddrop.wav", false);
+                    }
+                    else {
+                        SoundManager.playSound("sfx/HarddropSolo.wav", false);
+                    }
+                }
                 notMove = false;
                 break;
 
