@@ -137,7 +137,6 @@ public class MyGame extends Game {
         updateArray();
         move(1);
         if (client == null) {
-            SoundManager.loopTime = (3 * 60) * 1000 - 1000;
             SoundManager.playSound("sfx/MusicSolo.wav", true);
             clock = 10;
         }
@@ -355,7 +354,12 @@ public class MyGame extends Game {
             if (nodes[i].row >= board.length - 1) {
                 if (!notMove) currentTetrimino = null;
                 return;
-            } else if (board[nodes[i].row + 1][nodes[i].col] != null && !board[nodes[i].row + 1][nodes[i].col].parent.equals(nodes[i].parent)) {
+            }
+            else if (board[nodes[i].row + 1][nodes[i].col] != null && board[nodes[i].row + 1][nodes[i].col].parent == null) {
+                if (!notMove) currentTetrimino = null;
+                return;
+            } 
+            else if (board[nodes[i].row + 1][nodes[i].col] != null && !board[nodes[i].row + 1][nodes[i].col].parent.equals(nodes[i].parent)) {
                 if (!notMove) currentTetrimino = null;
                 return;
             }
