@@ -141,7 +141,9 @@ public class MyGame extends Game {
         updateArray();
         move(1);
         if (client == null) {
-            SoundManager.playSound("sfx/MusicSolo.wav", true);
+            if (level < 9) SoundManager.playSound("sfx/MusicSolo.wav", true);
+            else if (level < 19) SoundManager.playSound("sfx/Level9.wav", true);
+            else SoundManager.playSound("sfx/Level19.wav", true);
             clock = 10;
         }
         else {
@@ -838,6 +840,15 @@ public class MyGame extends Game {
             }
             else {
                 SoundManager.playSound("sfx/LevelUpSolo.wav", false);
+            }
+
+            if (level == 9) {
+                SoundManager.stopAllSounds();
+                SoundManager.playSound("sfx/Level9.wav", true);
+            }
+            else if (level == 19) {
+                SoundManager.stopAllSounds();
+                SoundManager.playSound("sfx/Level19.wav", true);
             }
 
             timer.schedule(new TimerTask() {
