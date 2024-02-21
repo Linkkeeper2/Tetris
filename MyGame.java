@@ -860,7 +860,7 @@ public class MyGame extends Game {
     }
 
     public static void hold() {
-        if (menu != null) return;
+        if (menu != null || currentTetrimino == null) return;
 
         for (int i = 0; i < currentTetrimino.nodes.length; i++) {
             board[currentTetrimino.nodes[i].row][currentTetrimino.nodes[i].col] = null;
