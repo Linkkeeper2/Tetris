@@ -60,7 +60,6 @@ public class MyGame extends Game {
     private static int clock = 10; // Clock for multiplayer games
 
     public static Save save; // Save file properties for the player
-    public static Database database;
 
     private ClearAnimation animation;
 
