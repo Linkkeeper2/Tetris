@@ -17,7 +17,7 @@ public class ClearAnimation extends Thread {
 
     public void clearAnimation() {
         // Clears all the necessary rows as an animation
-        if (rowsToClear.size() == 0 || MyGame.board == null) return;
+        if (rowsToClear.size() == 0 || MyGame.board == null || MyGame.recieving) return;
 
         TetriminoNode[][] board = MyGame.board;
 

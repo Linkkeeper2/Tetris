@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.TimerTask;
 import java.awt.Graphics;
 import java.awt.Color;
 
@@ -12,11 +13,19 @@ public class Client {
 	public Socket socket = null;
 	public ArrayList<Menu.Text> lobby;
 	public int deaths = 0;
+	public ArrayList<TetriminoNode> queue;
+	public int queueTimer = 0;
 	
 	public Client(String host, int port)
 	{
 		lobby = new ArrayList<>();
+		queue = new ArrayList<>();
 		addPlayer("Lobby");
+		MyGame.timer.schedule(new TimerTask() {
+			public void run() {
+				increaseTimer();
+			}
+		}, (long)1500);
 
 		try {
 			socket = new Socket(host, port);
@@ -44,11 +53,63 @@ public class Client {
 		}
 	}
 
+	public void drawQueue(Graphics pen) {
+		for (int i = 0; i < queue.size(); i++) {
+			queue.get(i).row = MyGame.board.length - i - 1;
+			
+			if (queueTimer > queue.size() + 3) queue.get(i).sprite = MyGame.palette.sheet.sprites[14];
+			else if (queueTimer > queue.size()) queue.get(i).sprite = MyGame.palette.sheet.sprites[20];
+			else if (queueTimer > queue.size() / 2) queue.get(i).sprite = MyGame.palette.sheet.sprites[4];
+			else queue.get(i).sprite = MyGame.palette.sheet.sprites[5];
+
+			queue.get(i).updateColor();
+
+			queue.get(i).draw(pen);
+		}
+	}
+
 	public void addPlayer(String s) {
 		lobby.add(new Menu().new Text(s, 0, 0, Color.WHITE));
 	}
 
 	public void removePlayer(Menu.Text t) {
 		lobby.remove(t);
+	}
+
+	public void changeTimer(int value) {
+		queueTimer = value * 3;
+
+		if (queue.size() > 4 && queueTimer < queue.size() / 2) {
+			MyGame.linesToSend = 5;
+			MyGame.sendLines(queue.size() / 2);
+
+			for (int i = 0; i < queue.size() / 2; i++) {
+				queue.remove(i);
+			}
+
+			queueTimer = 0;
+		} else if (queue.size() > 0 && queueTimer < 0) {
+			MyGame.linesToSend = 5;
+			MyGame.sendLines(queue.size());
+			queue.clear();
+			queueTimer = 0;
+		}
+	}
+
+	public void increaseTimer() {
+		// Will increase the queue timer to fully recieve lines
+		if (MyGame.menu == null && queue.size() > 0) queueTimer++;
+		else queueTimer = 0;
+
+		if (queue.size() > 0 && queueTimer > queue.size() + 5) {
+			MyGame.recieveLines(queue.size());
+			queue.clear();
+		}
+
+		MyGame.timer.schedule(new TimerTask() {
+			public void run() {
+				if (MyGame.client != null) increaseTimer();
+			}
+		}, (long)1500);
 	}
 }

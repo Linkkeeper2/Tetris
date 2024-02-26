@@ -91,6 +91,7 @@ public class ClientThread extends Thread {
                                 MyGame.status.addMessage("Game Over.");
                             }
                             else if (response.endsWith("deaths.")) {
+                                MyGame.client.queue.clear();
                                 ArrayList<Menu.Text> text = MyGame.menu.text;
                                 boolean add = true;
 
@@ -110,7 +111,10 @@ public class ClientThread extends Thread {
                                     SoundManager.playSound("sfx/Msg.wav", false);
                                 } else {
                                     if (s[5].equals(MyGame.client.name)) {
-                                        MyGame.recieveLines(Integer.parseInt(s[2]));
+                                        for (int i = 0; i < Integer.parseInt(s[2]); i++) {
+                                            MyGame.client.queue.add(new TetriminoNode(Color.BLUE, 0, -2, -1));
+                                        }
+
                                         MyGame.status.addMessage("Recieved " + s[2] + " lines from " + s[0]);
                                     }
                                 }

@@ -32,6 +32,6 @@ public class TetriminoNode {
 
     public void updateID() {
         // For the stray nodes
-        this.id = -MyGame.tNum;
+        this.id = -MyGame.tNum - 1;
     }
 }
