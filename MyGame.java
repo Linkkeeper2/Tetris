@@ -37,7 +37,7 @@ public class MyGame extends Game {
     private int messageDirection; // Direction to move message when clearing lines
     private boolean[] arrows = new boolean[4]; // Determines whether or not to repeated left or right movement
     private int direction = 0; // -1 = Left, 1 = Right, 0 = None
-    private long inputDelay = 425; // Delay for repeating directional inputs
+    private int inputDelay = 0; // Delay for repeating directional inputs
     private int prevLinesCleared = 0; // Previous amount of lines cleared to score Back-to-Back Tetrises
     private static int pity = 0; // Pity to getting an IPiece
     private static int nextPity = 5; // Value that pity needs to surpass the get an IPiece
@@ -686,9 +686,9 @@ public class MyGame extends Game {
                 break;
         }
 
-        if (linesCleared > 0) {
-            if (MyGame.client.queue.size() == 0) sendLines(linesCleared);
-            else MyGame.client.changeTimer(linesCleared);
+        if (linesCleared > 0 && client != null) {
+            if (client.queue.size() == 0) sendLines(linesCleared);
+            else client.changeTimer(linesCleared);
         }
         
         tSpin = false;
@@ -1095,6 +1095,40 @@ public class MyGame extends Game {
         if (client != null) client.queue.clear();
     }
 
+    public void repeatLeft() {
+        if (arrows[0]) {
+            if (inputDelay >= 150) {
+                direction = -1;
+                inputDelay = 0;
+                return;
+            }
+
+            timer.schedule(new TimerTask() {
+                public void run() {
+                    inputDelay += 10;
+                    repeatLeft();
+                }
+            }, (long)10);
+        }
+    }
+
+    public void repeatRight() {
+        if (arrows[1]) {
+            if (inputDelay >= 150) {
+                direction = 1;
+                inputDelay = 0;
+                return;
+            }
+
+            timer.schedule(new TimerTask() {
+                public void run() {
+                    inputDelay += 10;
+                    repeatRight();
+                }
+            }, (long)10);
+        }
+    }
+
     @Override
     public void keyTyped(KeyEvent ke) {}
 
@@ -1135,13 +1169,7 @@ public class MyGame extends Game {
                 arrows[2] = false;
 
                 if (timer != null) {
-                    try {
-                        timer.schedule(new TimerTask() {
-                            public void run() {
-                                if (arrows[0] && !arrows[2]) direction = -1;
-                            }
-                        }, inputDelay);
-                    } catch (Exception e) {}
+                    repeatLeft();
                 }
 
                 move(-1);
@@ -1158,13 +1186,7 @@ public class MyGame extends Game {
                 arrows[3] = false;
 
                 if (timer != null) {
-                    try {
-                        timer.schedule(new TimerTask() {
-                            public void run() {
-                                if (arrows[1] && !arrows[3]) direction = 1;
-                            }
-                        }, inputDelay);
-                    } catch (Exception e) {}
+                    repeatRight();
                 }
                 
                 move(1);
@@ -1203,6 +1225,7 @@ public class MyGame extends Game {
                 arrows[0] = false;
                 arrows[2] = true;
                 direction = 0;
+                inputDelay = 0;
                 break;
 
 
@@ -1210,6 +1233,7 @@ public class MyGame extends Game {
                 arrows[1] = false;
                 arrows[3] = true;
                 direction = 0;
+                inputDelay = 0;
                 break;
         }
 
