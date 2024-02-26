@@ -77,9 +77,9 @@ public class Client {
 	}
 
 	public void changeTimer(int value) {
-		queueTimer = value * 3;
+		queueTimer -= value * 2;
 
-		if (queue.size() > 4 && queueTimer < queue.size() / 2) {
+		if (queue.size() > 2 && queueTimer < queue.size() / 2) {
 			MyGame.linesToSend = 5;
 			MyGame.sendLines(queue.size() / 2);
 
