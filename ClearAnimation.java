@@ -4,6 +4,7 @@ public class ClearAnimation extends Thread {
     public ArrayList<Integer> rowsToClear = new ArrayList<>();
     private int col1 = 4;
     private int col2 = 5;
+    public boolean clearing = false;
 
     @Override
     public void run() {
@@ -18,6 +19,8 @@ public class ClearAnimation extends Thread {
     public void clearAnimation() {
         // Clears all the necessary rows as an animation
         if (rowsToClear.size() == 0 || MyGame.board == null || MyGame.recieving) return;
+
+        clearing = true;
 
         TetriminoNode[][] board = MyGame.board;
 
@@ -50,6 +53,7 @@ public class ClearAnimation extends Thread {
             col1 = 4;
             col2 = 5;
             rowsToClear.clear();
+            clearing = false;
         }
     }
 }

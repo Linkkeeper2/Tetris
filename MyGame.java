@@ -62,7 +62,7 @@ public class MyGame extends Game {
 
     public static Save save; // Save file properties for the player
 
-    private ClearAnimation animation;
+    private static ClearAnimation animation;
 
     public MyGame() {
         // initialize variables here
@@ -984,8 +984,16 @@ public class MyGame extends Game {
 
     public static void recieveLines(int lines) {
         // Recieves lines in the queue
+        if (animation.clearing) {
+            timer.schedule(new TimerTask() {
+                public void run() {
+                    recieveLines(lines);
+                }
+            }, (long)100);
+            return;
+        } 
+
         if (menu == null && alive) {
-            recieving = true;
             int row = board.length - 1;
 
             for (int i = 0; i < lines; i++) {
