@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -1079,6 +1080,13 @@ public class MyGame extends Game {
             }
 
             client = null;
+
+            if (server != null) {
+                try {
+                    database.closeServer();
+                } catch (UnknownHostException e) {}
+            }
+
             server = null;
             prompt = null;
             menu.buttons.remove(disconnect);

@@ -10,6 +10,20 @@ public class TextActions {
         }
     }
 
+    public class EnterNameClient implements TextAction {
+        private String address;
+
+        public EnterNameClient(String address) {
+            this.address = address;
+        }
+
+        public void action() {
+            MyGame.prompt = new TextBox("Enter Your Name");
+            Thread t = new NameClientThread(address);
+            t.start();
+        }
+    }
+
     public class ConnectClient implements TextAction {
         public void action() {
             MyGame.prompt = new TextBox("Enter the host address");
@@ -43,6 +57,45 @@ public class TextActions {
                 MyGame.database.createServer(InetAddress.getLocalHost().getHostAddress(), MyGame.client.name);
             } catch (UnknownHostException e) {
                 MyGame.status.addMessage("Could not host game.");
+            }
+
+            MyGame.prompt = null;
+        }
+    }
+
+    public class NameClientThread extends Thread {
+        private String address;
+
+        public NameClientThread(String address) {
+            this.address = address;
+        }
+
+        @Override
+        public void run() {
+            while (MyGame.prompt != null && MyGame.prompt.send.length() == 0) {
+                System.out.print("");
+            }
+
+            if (MyGame.prompt == null) return;
+
+            MyGame.client = new Client(address, 2500);
+
+            MyGame.client.name = MyGame.prompt.send.split(" ")[0];
+
+            if (MyGame.client.output != null) {
+                MyGame.client.addPlayer(MyGame.client.name);
+
+                MyGame.client.output.println(MyGame.client.name + " has connected.");
+                MyGame.status.addMessage("Connected to host.");
+                
+                MyGame.menu = new Menus().new MainMenu();
+                MyGame.menu.buttons.add(MyGame.disconnect);
+            } else {
+                MyGame.menu.buttons.remove(MyGame.disconnect);
+                MyGame.client.lobby.clear();
+                MyGame.prompt = null;
+                MyGame.client = null;
+                return;
             }
 
             MyGame.prompt = null;

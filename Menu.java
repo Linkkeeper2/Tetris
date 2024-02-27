@@ -15,18 +15,18 @@ public class Menu {
 
     public void draw(Graphics pen) {
         for (int i = 0; i < buttons.size(); i++) {
-            buttons.get(i).draw(pen);
+            if (buttons.get(i) != null) buttons.get(i).draw(pen);
         }
 
         for (int i = 0; i < text.size(); i++) {
-            text.get(i).draw(pen);
+            if (text.get(i) != null) text.get(i).draw(pen);
         }
     }
 
     public void buttonInteractions(MouseEvent me) {
         for (int i = 0; i < buttons.size(); i++) {
-            buttons.get(i).hover(me);
-            buttons.get(i).click(me);
+            if (buttons.get(i) != null) buttons.get(i).hover(me);
+            if (buttons.get(i) != null) buttons.get(i).click(me);
         }
     }
 

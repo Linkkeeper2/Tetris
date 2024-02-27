@@ -1,6 +1,10 @@
 import java.awt.Color;
 import java.util.ArrayList;
 
+import org.bson.Document;
+
+import com.mongodb.client.FindIterable;
+
 public class Menus {
     public class MainMenu extends Menu {
         public MainMenu() {
@@ -12,7 +16,8 @@ public class Menus {
             buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 275, 150, 50, Color.GRAY, Color.DARK_GRAY, "Settings", new ButtonActions().new Settings()));
             buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 350, 150, 50, Color.GRAY, Color.DARK_GRAY, "Host Game", new ButtonActions().new Host()));
             buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 425, 150, 50, Color.GRAY, Color.DARK_GRAY, "Connect", new ButtonActions().new Connect()));
-        
+            buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 500, 150, 50, Color.GRAY, Color.DARK_GRAY, "Servers", new ButtonActions().new ServerList()));
+
             if (MyGame.client != null) {
                 buttons.add(MyGame.disconnect);
                 //buttons.add(MyGame.addBot);
@@ -42,6 +47,26 @@ public class Menus {
             buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 + 150, 350, 50, 50, Color.GRAY, Color.DARK_GRAY, "-", new ButtonActions().new ChangeLevel((short)-1)));
             buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 + 100, 350, 50, 50, Color.GRAY, Color.DARK_GRAY, "+", new ButtonActions().new ChangeLevel((short)1)));
             buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 425, 150, 50, Color.GRAY, Color.DARK_GRAY, "Back to Menu", new ButtonActions().new BackToMenu()));
+        }
+    }
+
+    public class ServerMenu extends Menu {
+        public ServerMenu() {
+            this.text = new ArrayList<>();
+            text.add(new Text("Server List", MyGame.SCREEN_WIDTH / 2 - 20, 48, Color.WHITE));
+
+            this.buttons = new ArrayList<>();
+
+            ArrayList<Document> servers = new ArrayList<>();
+            FindIterable<Document> iterable = MyGame.database.getServers();
+            iterable.into(servers);
+
+            for (int i = 0; i < servers.size(); i++) {
+                Document doc = servers.get(i);
+                buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 100 + (i * 75), 150, 50, Color.GRAY, Color.DARK_GRAY, doc.getString("name") + "'s Game", new ButtonActions().new JoinServer(doc.getString("address"))));
+            }
+            
+            buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, MyGame.SCREEN_HEIGHT - 100, 150, 50, Color.GRAY, Color.DARK_GRAY, "Back to Menu", new ButtonActions().new BackToMenu()));
         }
     }
 }

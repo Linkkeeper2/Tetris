@@ -83,11 +83,29 @@ public class ButtonActions {
         }
 
         public void action() {
-            if (MyGame.save.startLevel >= 0) MyGame.save.startLevel += factor;
+            if (MyGame.save.startLevel >= 0 && MyGame.save.startLevel < 18) MyGame.save.startLevel += factor;
             if (MyGame.save.startLevel < 0) MyGame.save.startLevel = 0;
 
             MyGame.menu.text.remove(MyGame.menu.text.size() - 1);
             MyGame.menu.text.add(new Menu().new Text("Starting Level: " + MyGame.save.startLevel, MyGame.SCREEN_WIDTH / 2 - 75, 375, Color.WHITE));
+        }
+    }
+
+    public class ServerList implements ButtonAction {
+        public void action() {
+            if (MyGame.client == null) MyGame.menu = new Menus().new ServerMenu();
+        }
+    }
+
+    public class JoinServer implements ButtonAction {
+        private String address;
+
+        public JoinServer(String address) {
+            this.address = address;
+        } 
+
+        public void action() {
+            new TextActions().new EnterNameClient(address).action();
         }
     }
 }
