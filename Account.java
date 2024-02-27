@@ -30,4 +30,15 @@ public class Account {
             reader.close();
         } catch (FileNotFoundException e) {}
     }
+
+    public void addExp(int val) {
+        exp += val;
+        MyGame.status.addMessage("Earned " + exp + " EXP!", 3000);
+
+        while (exp >= 100 + (level * 50)) {
+            exp -= 100 + (level * 50);
+            level++;
+            MyGame.status.addMessage("Leveled up to Level " + level + "!", 3000);
+        }
+    }
 }

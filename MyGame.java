@@ -158,7 +158,7 @@ public class MyGame extends Game {
         }
         else {
             SoundManager.playSound("sfx/Battle.wav", false);
-            clock = 300;
+            clock = 5;
             MyGame.client.deaths = 0;
         }
     }
@@ -1091,10 +1091,9 @@ public class MyGame extends Game {
 
             server = null;
             prompt = null;
-            menu.buttons.remove(disconnect);
+            menu = new Menus().new MainMenu();
             //menu.buttons.remove(addBot);
             bots.clear();
-            disconnect = null;
         }
 
         SoundManager.stopAllSounds();
@@ -1104,6 +1103,25 @@ public class MyGame extends Game {
         SoundManager.stopAllSounds();
         menu = new Menus().new ResultsMenu();
         clock = 10;
+        
+        switch (client.deaths) {
+            case 0:
+                account.addExp((int)((Math.random() * 24) + 75));
+                break;
+
+            case 1:
+                account.addExp((int)((Math.random() * 24) + 50));
+                break;
+
+            case 2:
+                account.addExp((int)((Math.random() * 24) + 25));
+                break;
+
+            default:
+                account.addExp((int)((Math.random() * 24) + 1));
+                break;
+        }
+
         client.output.println(client.name + " " + client.deaths + " ... ... ... ... deaths.");
         if (client != null) client.queue.clear();
     }

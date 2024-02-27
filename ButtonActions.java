@@ -102,6 +102,7 @@ public class ButtonActions {
 
     public class LinkAccount implements ButtonAction {
         public void action() {
+            if (MyGame.client != null) return;
             MyGame.prompt = new TextBox("Enter the Account Name (If you have an account, enter it's name)");
             new TextActions().new AccountThread().start();
         }
@@ -109,7 +110,7 @@ public class ButtonActions {
 
     public class Account implements ButtonAction {
         public void action() {
-            if (MyGame.client == null) MyGame.menu = new Menus().new AccountMenu();
+            MyGame.menu = new Menus().new AccountMenu();
         }
     }
 }

@@ -60,7 +60,7 @@ public class ServerStatus {
                 
                 Menu.Text msg = messages.get(i);
 
-                if (MyGame.menu instanceof Menus.MainMenu) msg.x = MyGame.SCREEN_WIDTH / 2 + 88;
+                if (MyGame.client != null) msg.x = MyGame.SCREEN_WIDTH / 2 + 125;
                 else msg.x = 0;
                 
                 msg.y = 200 + (i * 25);
