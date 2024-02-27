@@ -10,7 +10,6 @@ public class Menus {
         public MainMenu() {
             this.text = new ArrayList<>();
             text.add(new Text("Tetris", MyGame.SCREEN_WIDTH / 2 - 20, 48, Color.WHITE));
-            text.add(new Text(MyGame.account.name, MyGame.SCREEN_WIDTH - 175, MyGame.SCREEN_HEIGHT - 125, Color.WHITE));
 
             this.buttons = new ArrayList<>();
             buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 200, 150, 50, Color.GRAY, Color.DARK_GRAY, "Start", new ButtonActions().new Start()));
@@ -18,7 +17,7 @@ public class Menus {
             buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 350, 150, 50, Color.GRAY, Color.DARK_GRAY, "Host Game", new ButtonActions().new Host()));
             buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 425, 150, 50, Color.GRAY, Color.DARK_GRAY, "Connect", new ButtonActions().new Connect()));
             buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 500, 150, 50, Color.GRAY, Color.DARK_GRAY, "Servers", new ButtonActions().new ServerList()));
-            buttons.add(new Button(MyGame.SCREEN_WIDTH - 175, MyGame.SCREEN_HEIGHT - 100, 150, 50, Color.GRAY, Color.DARK_GRAY, "Link Account", new ButtonActions().new LinkAccount()));
+            buttons.add(new Button(MyGame.SCREEN_WIDTH - 175, MyGame.SCREEN_HEIGHT - 100, 150, 50, Color.GRAY, Color.DARK_GRAY, "Account", new ButtonActions().new Account()));
 
             if (MyGame.client != null) {
                 buttons.add(MyGame.disconnect);
@@ -69,6 +68,20 @@ public class Menus {
             }
             
             buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, MyGame.SCREEN_HEIGHT - 100, 150, 50, Color.GRAY, Color.DARK_GRAY, "Back to Menu", new ButtonActions().new BackToMenu()));
+        }
+    }
+
+    public class AccountMenu extends Menu {
+        public AccountMenu()  {
+            this.text = new ArrayList<>();
+            text.add(new Text("Account", MyGame.SCREEN_WIDTH / 2 - 20, 48, Color.WHITE));
+            text.add(new Text(MyGame.account.name, MyGame.SCREEN_WIDTH - 175, MyGame.SCREEN_HEIGHT - 125, Color.WHITE));
+            text.add(new Text("Level: " + MyGame.account.level, MyGame.SCREEN_WIDTH / 2 - 20, 100, Color.WHITE));
+            text.add(new Text("EXP: " + MyGame.account.exp, MyGame.SCREEN_WIDTH / 2 - 20, 148, Color.WHITE));
+
+            this.buttons = new ArrayList<>();
+            buttons.add(new Button(MyGame.SCREEN_WIDTH - 175, MyGame.SCREEN_HEIGHT - 100, 150, 50, Color.GRAY, Color.DARK_GRAY, "Link Account", new ButtonActions().new LinkAccount()));
+            buttons.add(new Button(25, MyGame.SCREEN_HEIGHT - 100, 150, 50, Color.GRAY, Color.DARK_GRAY, "Back to Menu", new ButtonActions().new BackToMenu()));
         }
     }
 }

@@ -116,4 +116,10 @@ public class ButtonActions {
             new TextActions().new AccountThread().start();
         }
     }
+
+    public class Account implements ButtonAction {
+        public void action() {
+            if (MyGame.client == null) MyGame.menu = new Menus().new AccountMenu();
+        }
+    }
 }

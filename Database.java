@@ -1,3 +1,5 @@
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -89,7 +91,7 @@ public class Database {
             MyGame.account.name = doc.getString("name");
             MyGame.account.level = doc.getInteger("level");
             MyGame.account.exp = doc.getInteger("exp");
-            MyGame.status.addMessage("Account created successfully!");
+            MyGame.status.addMessage("Account created successfully!", 2500);
         } catch (MongoException me) {}
     }
 
@@ -113,11 +115,23 @@ public class Database {
                 MyGame.account.name = name;
                 MyGame.account.level = doc.getInteger("level");
                 MyGame.account.exp = doc.getInteger("exp");
-                MyGame.status.addMessage("Logged in successfully!");
+                MyGame.status.addMessage("Logged in successfully!", 2500);
+
+                try {
+                    FileWriter myWriter = new FileWriter("Account.txt");
+                    myWriter.write(name + "\n" + password);
+                    myWriter.close();
+                } catch (IOException e) {}
                 return;
             }
         }
 
         createAccount(name, password);
+
+        try {
+            FileWriter myWriter = new FileWriter("Account.txt");
+            myWriter.write(name + "\n" + password);
+            myWriter.close();
+        } catch (IOException e) {}
     }
 }

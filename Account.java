@@ -1,3 +1,7 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 public class Account {
     public String name;
     public int level = 0;
@@ -5,5 +9,25 @@ public class Account {
     
     public Account() {
         name = "Guest" + (int)(Math.random() * 10000);
+    }
+
+    public void login() {
+        try {
+            File account = new File("Account.txt");
+            Scanner reader = new Scanner(account);
+            
+            if (reader.hasNext()) {
+                String accName = reader.nextLine();
+                String accPassword = reader.nextLine();
+
+                MyGame.database.linkAccount(accName, accPassword);
+            } else {
+                reader.close();
+                return;
+            }
+            
+
+            reader.close();
+        } catch (FileNotFoundException e) {}
     }
 }

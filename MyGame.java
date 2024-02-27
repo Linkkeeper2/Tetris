@@ -71,6 +71,7 @@ public class MyGame extends Game {
 
     public MyGame() {
         // initialize variables here
+        database = new Database();
         account = new Account();
         chat = new Chat();
         status = new ServerStatus();
@@ -112,7 +113,7 @@ public class MyGame extends Game {
             }
         }, (long)1000, 1000);
 
-        database = new Database();
+        account.login();
     }
 
     public static void startGame() {
@@ -839,7 +840,7 @@ public class MyGame extends Game {
                 break;
         }
 
-        currentTetrimino.setID(tNum);
+        if (currentTetrimino != null) currentTetrimino.setID(tNum);
         tNum++;
 
         nextTetrimino = getNextTetrimino();

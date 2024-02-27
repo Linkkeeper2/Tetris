@@ -53,8 +53,13 @@ public class ServerStatus {
             }
             else {
                 if (messages.get(i) == null) continue;
-                messages.get(i).x = MyGame.SCREEN_WIDTH / 2 + 88;
-                messages.get(i).y = 200 + (i * 25);
+                
+                Menu.Text msg = messages.get(i);
+
+                if (MyGame.menu instanceof Menus.MainMenu) msg.x = MyGame.SCREEN_WIDTH / 2 + 88;
+                else msg.x = 0;
+                
+                msg.y = 200 + (i * 25);
             }
             messages.get(i).draw(pen);
         }

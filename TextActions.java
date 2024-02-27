@@ -118,7 +118,7 @@ public class TextActions {
 
             if (MyGame.prompt == null) return;
 
-            String name = MyGame.prompt.send;
+            String name = MyGame.prompt.send.split(" ")[0];
 
             MyGame.prompt = new TextBox("Enter/Create Your Password");
 
@@ -129,7 +129,7 @@ public class TextActions {
             String password = MyGame.prompt.send;
 
             MyGame.database.linkAccount(name, password);
-            MyGame.menu = new Menus().new MainMenu();
+            MyGame.menu = new Menus().new AccountMenu();
 
             MyGame.prompt = null;
         }
