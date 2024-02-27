@@ -158,7 +158,7 @@ public class MyGame extends Game {
         }
         else {
             SoundManager.playSound("sfx/Battle.wav", false);
-            clock = 5;
+            clock = 300;
             MyGame.client.deaths = 0;
         }
     }
