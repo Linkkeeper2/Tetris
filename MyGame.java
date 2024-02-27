@@ -234,6 +234,8 @@ public class MyGame extends Game {
         }
 
         updateState();
+
+        if (client == null && tileSize == 25) exitToMenu();
     }
     
     public void updateState() {
@@ -430,7 +432,10 @@ public class MyGame extends Game {
                 for (int c = 0; c < board[r].length; c++) {
                     if (board[r][c] != null) {
                         TetriminoNode node = board[r][c];
-                        if (node.row != r || node.col != c) board[r][c] = null;
+
+                        if (node.row != r || node.col != c) {
+                            board[r][c] = null;
+                        }
                     }
                 }
             }
@@ -993,7 +998,7 @@ public class MyGame extends Game {
 
     public static void recieveLines(int lines) {
         // Recieves lines in the queue
-        if (animation.clearing) {
+        if (animation.clearing || hardDropping) {
             timer.schedule(new TimerTask() {
                 public void run() {
                     recieveLines(lines);
@@ -1006,7 +1011,7 @@ public class MyGame extends Game {
             int row = board.length - 1;
 
             for (int i = 0; i < lines; i++) {
-                for (int r = 2; r < board.length - 1; r++) {
+                for (int r = 0; r < board.length - 1; r++) {
                     for (int c = 0; c < board[r].length; c++) {
                         if (board[r + 1][c] != null) {
                             board[r][c] = board[r + 1][c];
@@ -1020,7 +1025,7 @@ public class MyGame extends Game {
                 }
             }
 
-            for (int r = row; r < board.length; r++) {
+            for (int r = row + 1; r < row + 1 + lines; r++) {
                 int stop = (int)(Math.random() * board[r].length);
                 for (int c = 0; c < board[r].length; c++) {
                     if (c != stop) {
@@ -1040,7 +1045,7 @@ public class MyGame extends Game {
     public static void sendLines(int linesCleared) {
         // Sends lines to the other players when a lines are cleared
         if (client != null && client.output != null) {
-            if (linesToSend >= timesCleared) {
+            if (linesToSend >= timesCleared || linesCleared >= 4) {
                 if (linesCleared > 0) {
                     String recieve = client.lobby.get((int)(Math.random() * client.lobby.size())).contents;
                     while (recieve.equals(client.name) || recieve.equals("Lobby")) {
@@ -1049,14 +1054,6 @@ public class MyGame extends Game {
                     
                     client.output.println(client.name + " sent " + linesCleared + " lines to " + recieve);
                     status.addMessage("Sent " + linesCleared + " lines to " + recieve + ".");
-
-                    if (recieve.startsWith("Bot")) {
-                        for (int i = 0; i < bots.size(); i++) {
-                            if (bots.get(i).name.equals(recieve)) {
-                                bots.get(i).topRow -= linesCleared;
-                            }
-                        }
-                    }
 
                     linesToSend = 0;
                     timesCleared = (int)(Math.random() * 4) + 1;
@@ -1224,7 +1221,7 @@ public class MyGame extends Game {
                 break;
 
             case 47: // Slash key
-                chat.openChat();
+                if (prompt == null) chat.openChat();
                 break;
 
             case 67: // C Key (Holding)

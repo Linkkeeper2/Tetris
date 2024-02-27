@@ -12,6 +12,8 @@ public class ServerStatus {
 
     public void addMessage(String val) {
         Menu.Text t;
+        
+
         if (MyGame.menu == null) {
             t = new Menu().new Text(val, MyGame.offset + 10 * 25 + 4, MyGame.offset + 180, Color.WHITE);
         } else {
@@ -20,11 +22,13 @@ public class ServerStatus {
         
         messages.add(0, t);
     
-        MyGame.timer.schedule(new TimerTask() {
-            public void run() {
-                messages.remove(t);
-            }
-        }, (long)1500);
+        try {
+            MyGame.timer.schedule(new TimerTask() {
+                public void run() {
+                    messages.remove(t);
+                }
+            }, (long)1500);
+        } catch (IllegalStateException e) {}
     }
 
     public void addMessage(String val, int timeAlive) {

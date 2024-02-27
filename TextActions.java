@@ -8,7 +8,7 @@ public class TextActions {
             MyGame.client.addPlayer(MyGame.client.name);
 
             try {
-                MyGame.status.addMessage("Hosting game on port '2500' -> " + InetAddress.getLocalHost().getHostAddress(), 5000);
+                MyGame.status.addMessage("Hosted Game Successfully!", 5000);
                 MyGame.database.createServer(InetAddress.getLocalHost().getHostAddress(), MyGame.client.name);
             } catch (UnknownHostException e) {
                 MyGame.status.addMessage("Could not host game.");
