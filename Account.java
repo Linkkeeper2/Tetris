@@ -1,11 +1,9 @@
 public class Account {
-    private String name;
+    public String name;
+    public int level = 0;
+    public int exp = 0;
     
     public Account() {
-        name = "Guest";
-    }
-
-    public void logIn(String userName, String password) {
-        
+        name = "Guest" + (int)(Math.random() * 10000);
     }
 }

@@ -54,6 +54,7 @@ public class ButtonActions {
     public class DisConnect implements ButtonAction {
         public void action() {
             MyGame.leaveGame();
+            MyGame.prompt = null;
         }
     }
 
@@ -106,6 +107,13 @@ public class ButtonActions {
 
         public void action() {
             new TextActions().new EnterNameClient(address).action();
+        }
+    }
+
+    public class LinkAccount implements ButtonAction {
+        public void action() {
+            MyGame.prompt = new TextBox("Enter the Account Name (If you have an account, enter it's name)");
+            new TextActions().new AccountThread().start();
         }
     }
 }

@@ -67,9 +67,11 @@ public class MyGame extends Game {
     private static ClearAnimation animation;
 
     public static Database database;
+    public static Account account;
 
     public MyGame() {
         // initialize variables here
+        account = new Account();
         chat = new Chat();
         status = new ServerStatus();
         menus = new Menus();

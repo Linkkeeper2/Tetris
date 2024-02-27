@@ -10,6 +10,7 @@ public class Menus {
         public MainMenu() {
             this.text = new ArrayList<>();
             text.add(new Text("Tetris", MyGame.SCREEN_WIDTH / 2 - 20, 48, Color.WHITE));
+            text.add(new Text(MyGame.account.name, MyGame.SCREEN_WIDTH - 175, MyGame.SCREEN_HEIGHT - 125, Color.WHITE));
 
             this.buttons = new ArrayList<>();
             buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 200, 150, 50, Color.GRAY, Color.DARK_GRAY, "Start", new ButtonActions().new Start()));
@@ -17,6 +18,7 @@ public class Menus {
             buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 350, 150, 50, Color.GRAY, Color.DARK_GRAY, "Host Game", new ButtonActions().new Host()));
             buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 425, 150, 50, Color.GRAY, Color.DARK_GRAY, "Connect", new ButtonActions().new Connect()));
             buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 500, 150, 50, Color.GRAY, Color.DARK_GRAY, "Servers", new ButtonActions().new ServerList()));
+            buttons.add(new Button(MyGame.SCREEN_WIDTH - 175, MyGame.SCREEN_HEIGHT - 100, 150, 50, Color.GRAY, Color.DARK_GRAY, "Link Account", new ButtonActions().new LinkAccount()));
 
             if (MyGame.client != null) {
                 buttons.add(MyGame.disconnect);

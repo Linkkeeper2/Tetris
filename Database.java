@@ -1,5 +1,6 @@
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -35,13 +36,10 @@ public class Database {
         collection = database.getCollection("Servers");
 
         try {
-            // Inserts a sample document describing a movie into the collection
             collection.insertOne(new Document()
                     .append("_id", new ObjectId())
                     .append("address", address)
                     .append("name", hostName));
-        
-        // Prints a message if any exceptions occur during the operation
         } catch (MongoException me) {}
     }
 
@@ -58,10 +56,6 @@ public class Database {
         return servers;
     }
 
-    public void joinServer(String address) {
-
-    }
-
     public void closeServer() throws UnknownHostException {
         collection = database.getCollection("Servers");
         
@@ -71,5 +65,59 @@ public class Database {
         try {
             collection.deleteOne(query);
         } catch (MongoException me) {}
+    }
+
+    public void createAccount(String name, String password) {
+        collection = database.getCollection("Accounts");
+
+        try {
+            collection.insertOne(new Document()
+                    .append("_id", new ObjectId())
+                    .append("name", name)
+                    .append("password", password)
+                    .append("level", 0)
+                    .append("exp", 0));
+
+            Bson projectionFields = Projections.fields(
+                Projections.include("name", "password", "level", "exp"),
+                Projections.excludeId());
+                
+            Document doc = collection.find(Filters.eq("password", password))
+                    .projection(projectionFields)
+                    .first();
+
+            MyGame.account.name = doc.getString("name");
+            MyGame.account.level = doc.getInteger("level");
+            MyGame.account.exp = doc.getInteger("exp");
+            MyGame.status.addMessage("Account created successfully!");
+        } catch (MongoException me) {}
+    }
+
+    public void linkAccount(String name, String password) {
+        collection = database.getCollection("Accounts");
+
+        Bson projectionFields = Projections.fields(
+                Projections.include("name", "password", "level", "exp"),
+                Projections.excludeId());
+        
+        FindIterable<Document> iterable = collection.find()
+                .projection(projectionFields);
+
+        ArrayList<Document> accounts = new ArrayList<>();
+        iterable.into(accounts);
+
+        for (int i = 0; i < accounts.size(); i++) {
+            Document doc = accounts.get(i);
+
+            if (doc.getString("name").equals(name) && doc.getString("password").equals(password)) {
+                MyGame.account.name = name;
+                MyGame.account.level = doc.getInteger("level");
+                MyGame.account.exp = doc.getInteger("exp");
+                MyGame.status.addMessage("Logged in successfully!");
+                return;
+            }
+        }
+
+        createAccount(name, password);
     }
 }
