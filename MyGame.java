@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import java.util.ArrayList;
 
 public class MyGame extends Game {
@@ -64,6 +65,8 @@ public class MyGame extends Game {
 
     private static ClearAnimation animation;
 
+    public static Database database;
+
     public MyGame() {
         // initialize variables here
         chat = new Chat();
@@ -106,7 +109,7 @@ public class MyGame extends Game {
             }
         }, (long)1000, 1000);
 
-        //database = new Database();
+        database = new Database();
     }
 
     public static void startGame() {
