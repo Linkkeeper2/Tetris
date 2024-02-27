@@ -1117,12 +1117,14 @@ public class MyGame extends Game {
                 return;
             }
 
-            timer.schedule(new TimerTask() {
-                public void run() {
-                    inputDelay += 10;
-                    repeatLeft();
-                }
-            }, (long)10);
+            try {
+                timer.schedule(new TimerTask() {
+                    public void run() {
+                        inputDelay += 10;
+                        repeatLeft();
+                    }
+                }, (long)10);
+            } catch (IllegalStateException e) {}
         }
     }
 
@@ -1134,12 +1136,14 @@ public class MyGame extends Game {
                 return;
             }
 
-            timer.schedule(new TimerTask() {
-                public void run() {
-                    inputDelay += 10;
-                    repeatRight();
-                }
-            }, (long)10);
+            try {
+                timer.schedule(new TimerTask() {
+                    public void run() {
+                        inputDelay += 10;
+                        repeatRight();
+                    }
+                }, (long)10);
+            } catch (IllegalStateException e) {}
         }
     }
 
