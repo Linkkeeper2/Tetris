@@ -35,7 +35,6 @@ public class TextActions {
                 MyGame.status.addMessage("Connected to host.");
                 
                 MyGame.menu = new Menus().new MainMenu();
-                MyGame.menu.buttons.add(MyGame.disconnect);
             } else {
                 MyGame.menu.buttons.remove(MyGame.disconnect);
                 MyGame.client.lobby.clear();
@@ -43,14 +42,6 @@ public class TextActions {
                 MyGame.client = null;
                 return;
             }
-        }
-    }
-
-    public class ConnectClient implements TextAction {
-        public void action() {
-            MyGame.prompt = new TextBox("Enter the host address");
-            Thread t = new ConnectClientThread();
-            t.start();
         }
     }
 
@@ -59,37 +50,6 @@ public class TextActions {
             MyGame.prompt = new TextBox("Enter your chat message");
             Thread t = new ChatThread();
             t.start();
-        }
-    }
-
-    public class ConnectClientThread extends Thread {
-        @Override
-        public void run() {
-            while (MyGame.prompt != null && MyGame.prompt.send.length() == 0) {
-                System.out.print("");
-            }
-
-            if (MyGame.prompt == null) return;
-
-            String host = MyGame.prompt.send;
-
-            MyGame.client = new Client(host, 2500);
-
-            if (MyGame.client.output != null) {
-                MyGame.client.name = MyGame.account.name;
-                MyGame.client.addPlayer(MyGame.client.name);
-
-                MyGame.client.output.println(MyGame.client.name + " has connected.");
-                MyGame.status.addMessage("Connected to host.");
-            } else {
-                MyGame.menu.buttons.remove(MyGame.disconnect);
-                MyGame.client.lobby.clear();
-                MyGame.prompt = null;
-                MyGame.client = null;
-                return;
-            }
-            
-            MyGame.prompt = null;
         }
     }
 

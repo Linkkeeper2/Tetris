@@ -30,7 +30,6 @@ public class ButtonActions {
             try {
                 MyGame.client = new Client(InetAddress.getLocalHost().getHostAddress(), 2500);
                 new TextActions().new EnterName().action();
-                MyGame.disconnect = MyGame.menu.new Button(MyGame.SCREEN_WIDTH / 2 - 75, (75 * MyGame.menu.buttons.size()) + 200, 150, 50, Color.GRAY, Color.DARK_GRAY, "Disconnect", new ButtonActions().new DisConnect());
                 MyGame.menu.buttons.add(MyGame.disconnect);
                 MyGame.addBot = MyGame.menu.new Button(MyGame.SCREEN_WIDTH / 2 - 75, (75 * MyGame.menu.buttons.size()) + 200, 150, 50, Color.GRAY, Color.DARK_GRAY, "Add Bot", new ButtonActions().new AddBot());
                 //MyGame.menu.buttons.add(MyGame.addBot);
@@ -39,15 +38,6 @@ public class ButtonActions {
                 MyGame.menu.buttons.remove(MyGame.disconnect);
                 //MyGame.menu.buttons.remove(MyGame.addBot);
             }
-        }
-    }
-
-    public class Connect implements ButtonAction {
-        public void action() {
-            if (MyGame.server != null || MyGame.client != null) return;
-            new TextActions().new ConnectClient().action();
-            MyGame.disconnect = MyGame.menu.new Button(MyGame.SCREEN_WIDTH / 2 - 75, 425, 150, 50, Color.GRAY, Color.DARK_GRAY, "Disconnect", new ButtonActions().new DisConnect());
-            MyGame.menu.buttons.add(MyGame.disconnect);
         }
     }
 
