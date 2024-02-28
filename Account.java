@@ -33,7 +33,7 @@ public class Account {
 
     public void addExp(int val) {
         exp += val;
-        MyGame.status.addMessage("Earned " + exp + " EXP!", 3000);
+        MyGame.status.addMessage("Earned " + val + " EXP!", 3000);
 
         while (exp >= 100 + (level * 50)) {
             exp -= 100 + (level * 50);
