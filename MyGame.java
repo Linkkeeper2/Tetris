@@ -61,6 +61,7 @@ public class MyGame extends Game {
     public static int linesToSend; // Amount of lines to send to other clients when a threshold is reached
     private static int clock = 10; // Clock for multiplayer games
     public static boolean recieving = false;
+    public static boolean challenge = false;
 
     public static Save save; // Save file properties for the player
 
@@ -161,6 +162,46 @@ public class MyGame extends Game {
             clock = 300;
             MyGame.client.deaths = 0;
         }
+
+        challenge = false;
+    }
+
+    public static void startChallenge() {
+        challenge = true;
+
+        alive = true;
+        lines = 0;
+        score = 0;
+        level = save.startLevel;
+
+        pity = 0;
+        nextPity = 5;
+        palette.currentPalette = 0;
+        menu = null;
+        offset = 125;
+
+        board = new TetriminoNode[20][10];
+
+        currentTetrimino = getTetrimino();
+        nextTetrimino = getNextTetrimino();
+        heldTetrimino = null;
+
+        for (int r = board.length / 2 + 1; r < board.length; r++) {
+            for (int c = 0; c < board[r].length; c++) {
+                if (c % 2 == r % 2) {
+                    board[r][c] = new TetriminoNode(Color.DARK_GRAY, r, c, -1);
+                    board[r][c].updateID();
+                }
+            }
+        }
+
+        updateArray();
+        move(1);
+
+        if (level < 9) SoundManager.playSound("sfx/MusicSolo.wav", true);
+        else if (level < 19) SoundManager.playSound("sfx/Level9.wav", true);
+        else SoundManager.playSound("sfx/Level19.wav", true);
+        clock = 10;
     }
 
     public static void reset() {
@@ -241,9 +282,11 @@ public class MyGame extends Game {
             status.addMessage("Game Over", 3000);
             status.addMessage("Score: " + score, 3000);
             status.addMessage("Level: " + level, 3000);
-            account.addExp(score / 500);
+            if (!challenge) account.addExp(score / 500);
             exitToMenu();
         }
+
+        if (challenge) checkChallenge();
     }
     
     public void updateState() {
@@ -257,6 +300,22 @@ public class MyGame extends Game {
         else if (level >= 29) speed = (int)((1 / 60f) * 1000);
 
         palette.currentPalette = level % 10;
+    }
+
+    public void checkChallenge() {
+        boolean end = true;
+
+        for (int r = board.length / 2 + 1; r < board.length; r++) {
+            for (int c = 0; c < board[r].length; c++) {
+                if (board[r][c] != null && board[r][c].id < 0) end = false;
+            }
+        }
+
+        if (end) {
+            status.addMessage("You Win!", 3000);
+            account.addExp((int)(Math.random() * 200) + 400);
+            exitToMenu();
+        }
     }
 
     public void draw(Graphics pen) {
@@ -1075,6 +1134,8 @@ public class MyGame extends Game {
         menu = menus.new MainMenu();
         SoundManager.stopAllSounds();
         if (client != null) client.queue.clear();
+
+        challenge = false;
     }
 
     public static void leaveGame() {
@@ -1104,6 +1165,8 @@ public class MyGame extends Game {
         }
 
         SoundManager.stopAllSounds();
+
+        challenge = false;
     }
 
     public static void endGame() {
@@ -1135,6 +1198,8 @@ public class MyGame extends Game {
 
         client.output.println(client.name + " " + client.deaths + " ... ... ... ... deaths.");
         if (client != null) client.queue.clear();
+
+        challenge = false;
     }
 
     public void repeatLeft() {

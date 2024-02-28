@@ -124,4 +124,15 @@ public class ButtonActions {
             MyGame.menu = new Menus().new AccountMenu();
         }
     }
+
+    public class Challenge implements ButtonAction {
+        public void action() {
+            if (MyGame.client != null) {
+                MyGame.status.addMessage("Cannot start challenge in multiplayer.");
+                return;
+            }
+
+            MyGame.startChallenge();
+        }
+    }
 }
