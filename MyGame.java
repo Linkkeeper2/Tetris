@@ -241,7 +241,7 @@ public class MyGame extends Game {
             status.addMessage("Game Over", 3000);
             status.addMessage("Score: " + score, 3000);
             status.addMessage("Level: " + level, 3000);
-            account.addExp(score / 100);
+            account.addExp(score / 500);
             exitToMenu();
         }
     }
@@ -1113,14 +1113,18 @@ public class MyGame extends Game {
         
         switch (client.deaths) {
             case 0:
-                account.addExp((int)((Math.random() * 24) + 75));
+                account.addExp((int)((Math.random() * 24) + 125));
                 break;
 
             case 1:
-                account.addExp((int)((Math.random() * 24) + 50));
+                account.addExp((int)((Math.random() * 49) + 75));
                 break;
 
             case 2:
+                account.addExp((int)((Math.random() * 24) + 50));
+                break;
+
+            case 3:
                 account.addExp((int)((Math.random() * 24) + 25));
                 break;
 
