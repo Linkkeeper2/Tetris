@@ -47,6 +47,7 @@ public class MyGame extends Game {
     public static boolean tSpin = false; // Determines if a T-Spin should occur
     public static boolean doActions = true; // Prevents Tetrimino movement if an action is being processed
     public static int tileSize = 16; // Size of each tile on the board
+    private static String prevType = ""; // Keeps track of the last piece to prevent two of the same piece in a row
 
     // Client data
     public static Client client;
@@ -608,7 +609,16 @@ public class MyGame extends Game {
     public static Tetrimino getNextTetrimino() {
         if (!alive) return null;
 
+        String[] types = new String[] {"IPiece", "TPiece", "ZPiece", "SPiece", "OPiece", "LPiece", "JPiece"};
+
         int num = (int)(Math.random() * 7);
+
+        while (types[num].equals(prevType)) {
+            num = (int)(Math.random() * 7);
+        }
+
+        prevType = types[num];
+
         Tetrimino t = null;
 
         if (pity >= nextPity) {
