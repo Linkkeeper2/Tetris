@@ -1,3 +1,4 @@
 *.class
 Tetris.jar
 src/*.class
+Account.txt

@@ -63,7 +63,7 @@ public class Menus {
 
             for (int i = 0; i < servers.size(); i++) {
                 Document doc = servers.get(i);
-                buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 100 + (i * 75), 150, 50, Color.GRAY, Color.DARK_GRAY, doc.getString("name") + "'s Game", new ButtonActions().new JoinServer(doc.getString("address"))));
+                buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 150, 100 + (i * 75), 300, 50, Color.GRAY, Color.DARK_GRAY, doc.getString("name") + "'s Game", new ButtonActions().new JoinServer(doc.getString("address"))));
             }
             
             buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, MyGame.SCREEN_HEIGHT - 100, 150, 50, Color.GRAY, Color.DARK_GRAY, "Back to Menu", new ButtonActions().new BackToMenu()));
@@ -79,7 +79,8 @@ public class Menus {
             text.add(new Text("EXP: " + MyGame.account.exp + "/" + (100 + (MyGame.account.level * 50)), MyGame.SCREEN_WIDTH / 2 - 20, 148, Color.WHITE));
 
             this.buttons = new ArrayList<>();
-            buttons.add(new Button(MyGame.SCREEN_WIDTH - 175, MyGame.SCREEN_HEIGHT - 100, 150, 50, Color.GRAY, Color.DARK_GRAY, "Link Account", new ButtonActions().new LinkAccount()));
+            if (MyGame.account.name.startsWith("Guest")) buttons.add(new Button(MyGame.SCREEN_WIDTH - 175, MyGame.SCREEN_HEIGHT - 100, 150, 50, Color.GRAY, Color.DARK_GRAY, "Link Account", new ButtonActions().new LinkAccount()));
+            else buttons.add(new Button(MyGame.SCREEN_WIDTH - 175, MyGame.SCREEN_HEIGHT - 100, 150, 50, Color.GRAY, Color.DARK_GRAY, "Log Out", new ButtonActions().new LogOut()));
             buttons.add(new Button(25, MyGame.SCREEN_HEIGHT - 100, 150, 50, Color.GRAY, Color.DARK_GRAY, "Back to Menu", new ButtonActions().new BackToMenu()));
         }
     }

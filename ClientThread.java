@@ -69,7 +69,7 @@ public class ClientThread extends Thread {
                                 SoundManager.playSound("sfx/KO.wav", false);
                             } 
                             else if (response.endsWith("over.")) {
-                                MyGame.endGame();
+                                if (MyGame.server == null) MyGame.endGame();
                                 MyGame.status.addMessage("Game Over.");
                             }
                             else if (response.endsWith("deaths.")) {
@@ -111,6 +111,7 @@ public class ClientThread extends Thread {
         } catch (SocketException e) {
             MyGame.status.addMessage("Disconnected from host.");
             MyGame.client = null;
+            MyGame.menu = new Menus().new MainMenu();
         } catch (IOException e) {} 
         finally {
             try {

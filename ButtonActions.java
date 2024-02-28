@@ -51,6 +51,7 @@ public class ButtonActions {
     public class BackToMenu implements ButtonAction {
         public void action() {
             MyGame.menu = new Menus().new MainMenu();
+            MyGame.prompt = null;
         }
     }
 
@@ -105,6 +106,16 @@ public class ButtonActions {
             if (MyGame.client != null) return;
             MyGame.prompt = new TextBox("Enter the Account Name (If you have an account, enter it's name)");
             new TextActions().new AccountThread().start();
+        }
+    }
+
+    public class LogOut implements ButtonAction {
+        public void action() {
+            MyGame.account.name = "Guest" + (int)(Math.random() * 10000);
+            MyGame.account.level = 0;
+            MyGame.account.exp = 0;
+            MyGame.menu = new Menus().new AccountMenu();
+            MyGame.status.addMessage("Logged out Successfully!");
         }
     }
 

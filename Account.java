@@ -40,5 +40,7 @@ public class Account {
             level++;
             MyGame.status.addMessage("Leveled up to Level " + level + "!", 3000);
         }
+
+        if (!name.startsWith("Guest")) MyGame.database.updateAccount(name);
     }
 }

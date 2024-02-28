@@ -2,10 +2,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.Binary;
 import org.bson.types.ObjectId;
 
 import com.mongodb.MongoException;
@@ -17,6 +19,7 @@ import com.mongodb.client.MongoDatabase;
 
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
+import com.mongodb.client.model.Updates;
 
 public class Database {
     private MongoClient client;
@@ -76,7 +79,7 @@ public class Database {
             collection.insertOne(new Document()
                     .append("_id", new ObjectId())
                     .append("name", name)
-                    .append("password", password)
+                    .append("password", password.getBytes())
                     .append("level", 0)
                     .append("exp", 0));
 
@@ -111,7 +114,10 @@ public class Database {
         for (int i = 0; i < accounts.size(); i++) {
             Document doc = accounts.get(i);
 
-            if (doc.getString("name").equals(name) && doc.getString("password").equals(password)) {
+            Binary bytes = (Binary) doc.get("password");
+            String pass = new String(bytes.getData(), StandardCharsets.UTF_8);
+
+            if (doc.getString("name").equals(name) && pass.equals(password)) {
                 MyGame.account.name = name;
                 MyGame.account.level = doc.getInteger("level");
                 MyGame.account.exp = doc.getInteger("exp");
@@ -119,9 +125,13 @@ public class Database {
 
                 try {
                     FileWriter myWriter = new FileWriter("Account.txt");
+
                     myWriter.write(name + "\n" + password);
                     myWriter.close();
                 } catch (IOException e) {}
+                return;
+            } else if (doc.getString("name").equals(name)) {
+                MyGame.status.addMessage("Username is taken.", 2500);
                 return;
             }
         }
@@ -133,5 +143,18 @@ public class Database {
             myWriter.write(name + "\n" + password);
             myWriter.close();
         } catch (IOException e) {}
+    }
+
+    public void updateAccount(String name) {
+        collection = database.getCollection("Accounts");
+        
+        Document query = new Document().append("name", name);
+
+        Bson updates = Updates.combine(
+                Updates.set("level", MyGame.account.level),
+                Updates.set("exp", MyGame.account.exp));
+        try {
+            collection.updateOne(query, updates);
+        } catch (MongoException me) {}
     }
 }
