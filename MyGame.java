@@ -118,6 +118,7 @@ public class MyGame extends Game {
         account.login();
 
         disconnect = menu.new Button(MyGame.SCREEN_WIDTH / 2 - 75, 575, 150, 50, Color.GRAY, Color.DARK_GRAY, "Disconnect", new ButtonActions().new DisConnect());
+        addBot = MyGame.menu.new Button(MyGame.SCREEN_WIDTH / 2 - 75, 650, 150, 50, Color.GRAY, Color.DARK_GRAY, "Add Bot", new ButtonActions().new AddBot());
     }
 
     public static void startGame() {
@@ -283,7 +284,7 @@ public class MyGame extends Game {
             status.addMessage("Game Over", 3000);
             status.addMessage("Score: " + score, 3000);
             status.addMessage("Level: " + level, 3000);
-            if (!challenge) account.addExp(score / 500);
+            if (!challenge) account.addExp(score / 400);
             exitToMenu();
         }
 
@@ -1170,7 +1171,7 @@ public class MyGame extends Game {
             server = null;
             prompt = null;
             menu = new Menus().new MainMenu();
-            //menu.buttons.remove(addBot);
+            menu.buttons.remove(addBot);
             bots.clear();
         }
 

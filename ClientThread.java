@@ -28,7 +28,7 @@ public class ClientThread extends Thread {
                             if (response.endsWith("connected.")) {
                                 MyGame.status.addMessage(response);
                                 MyGame.client.addPlayer(s[0]);
-                                MyGame.client.output.println(MyGame.client.name + " has added.");
+                                if (!response.startsWith("Bot")) MyGame.client.output.println(MyGame.client.name + " has added.");
                             } 
                             else if (response.endsWith("added.")) {
                                 boolean addPlayer = true;
@@ -41,8 +41,7 @@ public class ClientThread extends Thread {
                                     }
                                 }
     
-                                if (addPlayer)
-                                    MyGame.client.addPlayer(s[0]);
+                                if (addPlayer) MyGame.client.addPlayer(s[0]);
                             } 
                             else if (response.endsWith("left.")) {
                                 Menu.Text t = null;

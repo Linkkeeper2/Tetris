@@ -23,7 +23,6 @@ public class Menus {
 
             if (MyGame.client != null) {
                 buttons.add(MyGame.disconnect);
-                //buttons.add(MyGame.addBot);
             }
         }
     }

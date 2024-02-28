@@ -17,8 +17,7 @@ public class Bot {
 
         name = "Bot" + MyGame.bots.size();
         client.name = name;
-        MyGame.client.addPlayer(name);
-        MyGame.status.addMessage(name + " has connected.");
+        client.output.println(name + " has connected.");
 
         MyGame.timer.schedule(new TimerTask() {
             public void run() {

@@ -51,6 +51,8 @@ public class Client {
 			}
 			lobby.get(i).draw(pen);
 		}
+
+		cleanLobby();
 	}
 
 	public void drawQueue(Graphics pen) {
@@ -66,6 +68,24 @@ public class Client {
 
 			queue.get(i).draw(pen);
 		}
+	}
+
+	public void cleanLobby() {
+		for (int i = 0; i < lobby.size(); i++) {
+			for (int k = i + 1; k < lobby.size(); k++) {
+				if (lobby.get(i).contents.equals(lobby.get(k).contents)) {
+					lobby.remove(k);
+				}
+			}
+		}
+
+		/*
+		if (lobby.size() > 2) {
+            if (MyGame.server != null && !MyGame.menu.buttons.contains(MyGame.addBot)) MyGame.menu.buttons.add(MyGame.addBot);
+		} else {
+			MyGame.menu.buttons.remove(MyGame.addBot);
+		}
+		*/
 	}
 
 	public void addPlayer(String s) {
