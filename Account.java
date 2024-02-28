@@ -35,8 +35,8 @@ public class Account {
         exp += val;
         MyGame.status.addMessage("Earned " + val + " EXP!", 3000);
 
-        while (exp >= 100 + (level * 50)) {
-            exp -= 100 + (level * 50);
+        while (exp >= 50 + (level * 25)) {
+            exp -= 50 + (level * 25);
             level++;
             MyGame.status.addMessage("Leveled up to Level " + level + "!", 3000);
         }
