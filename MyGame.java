@@ -236,6 +236,14 @@ public class MyGame extends Game {
         updateState();
 
         if (client == null && tileSize == 25) exitToMenu();
+
+        if (client == null && !alive && menu == null) {
+            status.addMessage("Game Over", 3000);
+            status.addMessage("Score: " + score, 3000);
+            status.addMessage("Level: " + level, 3000);
+            account.addExp(score / 100);
+            exitToMenu();
+        }
     }
     
     public void updateState() {
