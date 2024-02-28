@@ -793,12 +793,11 @@ public class MyGame extends Game {
         // Used for automatic Tetrimino movement to reschedule the task
         int time = speed;
         if (client != null) {
-            if (clock <= 20) time /= 7;
-            else if (clock <= 30) time /= 6;
-            else if (clock <= 60) time /= 5;
-            else if (clock <= 100) time /= 4;
-            else if (clock <= 150) time /= 3;
-            else if (clock <= 225) time /= 2;
+            if (clock <= 20) time /= 6;
+            else if (clock <= 30) time /= 5;
+            else if (clock <= 60) time /= 4;
+            else if (clock <= 100) time /= 3;
+            else if (clock <= 150) time /= 2;
         }
 
         if (!alive || !doActions) {

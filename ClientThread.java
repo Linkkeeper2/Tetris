@@ -94,7 +94,7 @@ public class ClientThread extends Thread {
                                 } else {
                                     if (s[5].equals(MyGame.client.name)) {
                                         for (int i = 0; i < Integer.parseInt(s[2]); i++) {
-                                            MyGame.client.queue.add(new TetriminoNode(Color.BLUE, 0, -2, -1));
+                                            if (MyGame.client.queue.size() < 10) MyGame.client.queue.add(new TetriminoNode(Color.BLUE, 0, -2, -1));
                                         }
 
                                         MyGame.status.addMessage("Recieved " + s[2] + " lines from " + s[0]);
