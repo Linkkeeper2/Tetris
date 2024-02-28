@@ -86,6 +86,7 @@ public class Menu {
         public int x;
         public int y;
         private Color color;
+        private Rectangle rect;
 
         public Text(String contents, int x, int y, Color color) {
             this.contents = contents;
@@ -94,10 +95,35 @@ public class Menu {
             this.color = color;
         }
 
+        public Text(String contents, int x, int y, Color color, Rectangle rect) {
+            this.contents = contents;
+            this.x = x;
+            this.y = y;
+            this.color = color;
+            this.rect = rect;
+        }
+
         public void draw(Graphics pen) {
             pen.setFont(new Font("comicsansms", 0, 20));
             pen.setColor(color);
-            pen.drawString(contents, x, y);
+
+            if (rect != null) {
+                Graphics2D g2d = (Graphics2D) pen;
+                FontMetrics fm = g2d.getFontMetrics();
+
+                int sum = 0;
+
+                for (int i = 0; i < contents.length(); i++) {
+                    sum += fm.charWidth(contents.charAt(i));
+                }
+
+                int x = rect.x + ((int)rect.getWidth() - (int) rect.getWidth() / 2) - sum / 2;
+                int y = rect.y + ((int)rect.getHeight() - (int) rect.getHeight() / 2) + fm.getAscent() / 2 - 4;
+                g2d.drawString(contents, x, y);
+            }
+            else {
+                pen.drawString(contents, x, y);
+            }
         }
     }
 }

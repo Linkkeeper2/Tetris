@@ -157,4 +157,17 @@ public class Database {
             collection.updateOne(query, updates);
         } catch (MongoException me) {}
     }
+
+    public FindIterable<Document> getAccounts() {
+        collection = database.getCollection("Accounts");
+
+        Bson projectionFields = Projections.fields(
+                Projections.include("name", "level"),
+                Projections.excludeId());
+        
+        FindIterable<Document> accounts = collection.find()
+                .projection(projectionFields);
+
+        return accounts;
+    }
 }

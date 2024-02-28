@@ -135,4 +135,10 @@ public class ButtonActions {
             MyGame.startChallenge();
         }
     }
+
+    public class Leaderboard implements ButtonAction {
+        public void action() {
+            MyGame.menu = new Menus().new LeaderboardMenu();
+        }
+    }
 }

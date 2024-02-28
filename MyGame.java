@@ -116,7 +116,7 @@ public class MyGame extends Game {
 
         account.login();
 
-        disconnect = menu.new Button(MyGame.SCREEN_WIDTH / 2 - 75, (75 * MyGame.menu.buttons.size()) + 200, 150, 50, Color.GRAY, Color.DARK_GRAY, "Disconnect", new ButtonActions().new DisConnect());
+        disconnect = menu.new Button(MyGame.SCREEN_WIDTH / 2 - 75, 575, 150, 50, Color.GRAY, Color.DARK_GRAY, "Disconnect", new ButtonActions().new DisConnect());
     }
 
     public static void startGame() {
