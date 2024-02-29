@@ -22,7 +22,7 @@ public class ClearAnimation extends Thread {
 
         clearing = true;
 
-        TetriminoNode[][] board = MyGame.board;
+        TetriminoNode[][] board = MyGame.board.board;
 
         if (col1 >= 0 && col2 <= board[0].length) {
             for (int i = 0; i < rowsToClear.size(); i++) {

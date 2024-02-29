@@ -59,7 +59,7 @@ public class ClientThread extends Thread {
                                     
                                     if (MyGame.server == null && MyGame.client.lobby.size() == 2) {
                                         MyGame.client = null;
-                                        MyGame.menu.buttons.remove(MyGame.disconnect);
+                                        if (MyGame.menu != null) MyGame.menu.buttons.remove(MyGame.disconnect);
                                     }
                                 }
                             } 
@@ -101,7 +101,7 @@ public class ClientThread extends Thread {
                                 }
                             }
                         } else {
-                            MyGame.startGame();
+                            MyGame.board.startGame();
                             MyGame.status.addMessage(response);
                         }
                     }

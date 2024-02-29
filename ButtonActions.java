@@ -6,10 +6,10 @@ public class ButtonActions {
     public class Start implements ButtonAction {
         public void action() {
             Client client = MyGame.client;
-            if (client == null && MyGame.prompt == null) MyGame.startGame();
+            if (client == null && MyGame.prompt == null) MyGame.board.startGame();
             else {
                 if (MyGame.server != null && client.lobby.size() > 2) {
-                    MyGame.startGame();
+                    MyGame.board.startGame();
                     MyGame.client.output.println(MyGame.client.name + " Started the Game!");
                     MyGame.status.addMessage(MyGame.client.name + " Started the Game!");
                 } else {
@@ -129,7 +129,7 @@ public class ButtonActions {
                 return;
             }
 
-            MyGame.startChallenge();
+            MyGame.board.startChallenge();
         }
     }
 

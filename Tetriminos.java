@@ -9,7 +9,7 @@ public class Tetriminos {
 
             for (int i = 0; i < 4; i++) {
                 nodes[i] = new TetriminoNode(color, 0, i + 2, this.colorIndex);
-                MyGame.add(nodes[i], 0, i + 2);
+                MyGame.board.add(nodes[i], 0, i + 2);
             }
 
             this.nodes = nodes;
@@ -66,11 +66,11 @@ public class Tetriminos {
 
             for (int i = 0; i < 3; i++) {
                 nodes[i] = new TetriminoNode(color, 1, i + 3, this.colorIndex);
-                MyGame.add(nodes[i], 1, i + 3);
+                MyGame.board.add(nodes[i], 1, i + 3);
             }
 
             nodes[3] = new TetriminoNode(color, 0, 4, this.colorIndex);
-            MyGame.add(nodes[3], 0, 4);
+            MyGame.board.add(nodes[3], 0, 4);
 
             this.nodes = nodes;
             createRotations();
@@ -136,7 +136,7 @@ public class Tetriminos {
             nodes[3] = new TetriminoNode(color, 0, 4, this.colorIndex);
 
             for (int i = 0; i < 4; i++) {
-                MyGame.add(nodes[i], nodes[i].row, nodes[i].col);
+                MyGame.board.add(nodes[i], nodes[i].row, nodes[i].col);
             }
 
             this.nodes = nodes;
@@ -202,7 +202,7 @@ public class Tetriminos {
             nodes[3] = new TetriminoNode(color, 0, 3, this.colorIndex);
 
             for (int i = 0; i < 4; i++) {
-                MyGame.add(nodes[i], nodes[i].row, nodes[i].col);
+                MyGame.board.add(nodes[i], nodes[i].row, nodes[i].col);
             }
 
             this.nodes = nodes;
@@ -268,7 +268,7 @@ public class Tetriminos {
             nodes[3] = new TetriminoNode(color, 0, 3, this.colorIndex);
 
             for (int i = 0; i < 4; i++) {
-                MyGame.add(nodes[i], nodes[i].row, nodes[i].col);
+                MyGame.board.add(nodes[i], nodes[i].row, nodes[i].col);
             }
 
             this.nodes = nodes;
@@ -310,7 +310,7 @@ public class Tetriminos {
             nodes[3] = new TetriminoNode(color, 1, 2, this.colorIndex);
 
             for (int i = 0; i < 4; i++) {
-                MyGame.add(nodes[i], nodes[i].row, nodes[i].col);
+                MyGame.board.add(nodes[i], nodes[i].row, nodes[i].col);
             }
 
             this.nodes = nodes;
@@ -376,7 +376,7 @@ public class Tetriminos {
             nodes[3] = new TetriminoNode(color, 1, 4, this.colorIndex);
 
             for (int i = 0; i < 4; i++) {
-                MyGame.add(nodes[i], nodes[i].row, nodes[i].col);
+                MyGame.board.add(nodes[i], nodes[i].row, nodes[i].col);
             }
 
             this.nodes = nodes;

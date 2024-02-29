@@ -57,7 +57,7 @@ public class Client {
 
 	public void drawQueue(Graphics pen) {
 		for (int i = 0; i < queue.size(); i++) {
-			queue.get(i).row = MyGame.board.length - i - 1;
+			queue.get(i).row = MyGame.board.board.length - i - 1;
 			
 			if (queueTimer > queue.size() + 3) queue.get(i).sprite = MyGame.palette.sheet.sprites[14];
 			else if (queueTimer > queue.size()) queue.get(i).sprite = MyGame.palette.sheet.sprites[20];
@@ -101,7 +101,7 @@ public class Client {
 
 		if (queue.size() > 2 && queueTimer < queue.size() / 2) {
 			MyGame.linesToSend = 5;
-			MyGame.sendLines(queue.size() / 2);
+			MyGame.board.sendLines(queue.size() / 2);
 
 			for (int i = 0; i < queue.size() / 2; i++) {
 				queue.remove(i);
@@ -110,7 +110,7 @@ public class Client {
 			queueTimer = 0;
 		} else if (queue.size() > 0 && queueTimer < 0) {
 			MyGame.linesToSend = 5;
-			MyGame.sendLines(queue.size());
+			MyGame.board.sendLines(queue.size());
 			queue.clear();
 			queueTimer = 0;
 		}
@@ -122,7 +122,7 @@ public class Client {
 		else queueTimer = 0;
 
 		if (queue.size() > 0 && queueTimer > queue.size() + 5) {
-			MyGame.recieveLines(queue.size());
+			MyGame.board.recieveLines(queue.size());
 			queue.clear();
 		}
 

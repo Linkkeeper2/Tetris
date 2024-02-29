@@ -151,7 +151,7 @@ public class Tetrimino {
     private void updateRotations(int factor, int[] move) {
         for (int i = 0; i < nodes.length; i++) {
             TetriminoNode node = nodes[i];
-            MyGame.board[node.row][node.col] = null;
+            MyGame.board.board[node.row][node.col] = null;
             node.row += move[1] * -1;
             node.col += move[0];
         }
@@ -169,10 +169,10 @@ public class Tetrimino {
 
         for (int i = 0; i < nodes.length; i++) {
             TetriminoNode node = nodes[i];
-            MyGame.board[node.row][node.col] = node;
+            MyGame.board.board[node.row][node.col] = node;
         }
 
-        MyGame.updateArray();
+        MyGame.board.updateArray();
         if (this.getType().equals("TPiece"))
             MyGame.tSpin = true;
 
@@ -219,9 +219,9 @@ public class Tetrimino {
     protected void createRotations() {}
 
     protected boolean canRotate(int nextRow, int nextCol) {
-        if (!(nextRow >= 0 && nextRow < MyGame.board.length && nextCol >= 0 && nextCol < MyGame.board[0].length)) return false;
+        if (!(nextRow >= 0 && nextRow < MyGame.board.board.length && nextCol >= 0 && nextCol < MyGame.board.board[0].length)) return false;
 
-        if (MyGame.board[nextRow][nextCol] != null && MyGame.board[nextRow][nextCol].id != this.id) return false;
+        if (MyGame.board.board[nextRow][nextCol] != null && MyGame.board.board[nextRow][nextCol].id != this.id) return false;
 
         return true;
     }
