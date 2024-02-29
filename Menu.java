@@ -26,7 +26,7 @@ public class Menu {
     public void buttonInteractions(MouseEvent me) {
         for (int i = 0; i < buttons.size(); i++) {
             if (buttons.get(i) != null) buttons.get(i).hover(me);
-            if (buttons.get(i) != null) buttons.get(i).click(me);
+            if (buttons.get(i) != null && me.getButton() == 1) buttons.get(i).click(me);
         }
     }
 
@@ -74,10 +74,8 @@ public class Menu {
     
         public void click(MouseEvent me) {
             if (rect.intersects(new Rectangle(me.getX() - 8, me.getY() - 32, 1, 1))) {
-                color = hoverColor;
                 if (this.action != null) this.action.action();
             }
-            else color = defaultColor;
         }
     } 
 
