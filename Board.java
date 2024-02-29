@@ -168,20 +168,25 @@ public class Board {
         }
 
         if (!alive || !MyGame.doActions) {
+            try {
+                MyGame.timer.schedule(new TimerTask() {
+                    public void run() {
+                        automaticMove();
+                    }
+                }, (long)time);
+                return;
+            } catch (IllegalStateException e) {}
+        }
+
+        moveTetriminos();
+
+        try {
             MyGame.timer.schedule(new TimerTask() {
                 public void run() {
                     automaticMove();
                 }
             }, (long)time);
-            return;
-        }
-
-        moveTetriminos();
-        MyGame.timer.schedule(new TimerTask() {
-            public void run() {
-                automaticMove();
-            }
-        }, (long)time);
+        } catch (IllegalStateException e) {}
     }
 
     public void moveTetriminos() {

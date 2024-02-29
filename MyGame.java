@@ -82,31 +82,33 @@ public class MyGame extends Game {
         animation = new ClearAnimation();
         animation.start();
 
-        timer.schedule(new TimerTask() {
-            public void run() {
-                board.automaticMove();
-            }
-        }, (long)speed);
-
-        timer.schedule(new TimerTask() {
-            public void run() {
-                if (clock > 0 && menu == null) {
-                    clock--;
+        try {
+            timer.schedule(new TimerTask() {
+                public void run() {
+                    board.automaticMove();
                 }
-
-                switch (clock) {
-                    case 150:
-                        SoundManager.stopAllSounds();
-                        SoundManager.playSound("sfx/BattleHalf.wav", false);
-                        break;
-
-                    case 60:
-                        SoundManager.stopAllSounds();
-                        SoundManager.playSound("sfx/BattleMinute.wav", false);
-                        break;
+            }, (long)speed);
+    
+            timer.schedule(new TimerTask() {
+                public void run() {
+                    if (clock > 0 && menu == null) {
+                        clock--;
+                    }
+    
+                    switch (clock) {
+                        case 150:
+                            SoundManager.stopAllSounds();
+                            SoundManager.playSound("sfx/BattleHalf.wav", false);
+                            break;
+    
+                        case 60:
+                            SoundManager.stopAllSounds();
+                            SoundManager.playSound("sfx/BattleMinute.wav", false);
+                            break;
+                    }
                 }
-            }
-        }, (long)1000, 1000);
+            }, (long)1000, 1000);
+        } catch (IllegalStateException e) {}
 
         account.login();
 
