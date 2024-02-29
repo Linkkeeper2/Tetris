@@ -7,7 +7,7 @@ public class ColorPalette {
     public ColorPalette() {
         currentPalette = 0;
         try {
-            sheet = new SpriteSheetLoader(16, 16, 10, 3);
+            sheet = new SpriteSheetLoader(24, 24, 10, 3);
         } catch (IOException e) {}
     }
 }

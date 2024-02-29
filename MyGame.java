@@ -44,7 +44,7 @@ public class MyGame extends Game {
     public static boolean notMove = false; // Used to delay Tetrimino downwards movement when a key is pressed
     public static boolean tSpin = false; // Determines if a T-Spin should occur
     public static boolean doActions = true; // Prevents Tetrimino movement if an action is being processed
-    public static int tileSize = 16; // Size of each tile on the board
+    public static int tileSize = 24; // Size of each tile on the board
     public static String prevType = ""; // Keeps track of the last piece to prevent two of the same piece in a row
 
     // Client data

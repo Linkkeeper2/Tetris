@@ -859,7 +859,7 @@ public class Board {
             MyGame.clock = 300;
             MyGame.client.deaths = 0;
         }
-        
+
         MyGame.lines = 0;
         MyGame.score = 0;
         MyGame.timesCleared = 0;
@@ -867,13 +867,13 @@ public class Board {
         try {
             if (MyGame.client == null) {
                 MyGame.level = MyGame.save.startLevel;
-                MyGame.tileSize = 16;
-                MyGame.palette.sheet = new SpriteSheetLoader(16, 16, 10, 3);
+                MyGame.tileSize = 24;
+                MyGame.palette.sheet = new SpriteSheetLoader(MyGame.tileSize, MyGame.tileSize, 10, 3);
             }
             else {
                 MyGame.level = 0;
                 MyGame.tileSize = 25;
-                MyGame.palette.sheet = new SpriteSheetLoader(25, 25, 10, 3, "gfx/PaletteBattle.png");
+                MyGame.palette.sheet = new SpriteSheetLoader(MyGame.tileSize, MyGame.tileSize, 10, 3, "gfx/PaletteBattle.png");
             }
         } catch (IOException e) {}
 
