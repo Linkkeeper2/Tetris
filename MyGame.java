@@ -284,7 +284,15 @@ public class MyGame extends Game {
             status.addMessage("Game Over", 3000);
             status.addMessage("Score: " + score, 3000);
             status.addMessage("Level: " + level, 3000);
-            if (!challenge) account.addExp(score / 400);
+            
+            if (!challenge) {
+                account.addExp(score / 400);
+
+                if (level > MyGame.account.highestLevel && (MyGame.save.startLevel == 0 || level > MyGame.save.startLevel)) {
+                    MyGame.account.highestLevel = level;
+                    MyGame.database.updateAccount(MyGame.account.name);
+                }
+            }
             exitToMenu();
         }
 

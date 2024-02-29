@@ -81,7 +81,8 @@ public class Database {
                     .append("name", name)
                     .append("password", password.getBytes())
                     .append("level", 0)
-                    .append("exp", 0));
+                    .append("exp", 0)
+                    .append("highestLvl", 0));
 
             Bson projectionFields = Projections.fields(
                 Projections.include("name", "password", "level", "exp"),
@@ -94,6 +95,7 @@ public class Database {
             MyGame.account.name = doc.getString("name");
             MyGame.account.level = doc.getInteger("level");
             MyGame.account.exp = doc.getInteger("exp");
+            MyGame.account.highestLevel = doc.getInteger("highestLvl");
             MyGame.status.addMessage("Account created successfully!", 2500);
         } catch (MongoException me) {}
     }
@@ -102,7 +104,7 @@ public class Database {
         collection = database.getCollection("Accounts");
 
         Bson projectionFields = Projections.fields(
-                Projections.include("name", "password", "level", "exp"),
+                Projections.include("name", "password", "level", "exp", "highestLvl"),
                 Projections.excludeId());
         
         FindIterable<Document> iterable = collection.find()
@@ -121,6 +123,7 @@ public class Database {
                 MyGame.account.name = name;
                 MyGame.account.level = doc.getInteger("level");
                 MyGame.account.exp = doc.getInteger("exp");
+                MyGame.account.highestLevel = doc.getInteger("highestLvl");
                 MyGame.status.addMessage("Logged in successfully!", 2500);
 
                 try {
@@ -152,7 +155,8 @@ public class Database {
 
         Bson updates = Updates.combine(
                 Updates.set("level", MyGame.account.level),
-                Updates.set("exp", MyGame.account.exp));
+                Updates.set("exp", MyGame.account.exp),
+                Updates.set("highestLvl", MyGame.account.highestLevel));
         try {
             collection.updateOne(query, updates);
         } catch (MongoException me) {}
@@ -162,7 +166,7 @@ public class Database {
         collection = database.getCollection("Accounts");
 
         Bson projectionFields = Projections.fields(
-                Projections.include("name", "level"),
+                Projections.include("name", "level", "highestLvl"),
                 Projections.excludeId());
         
         FindIterable<Document> accounts = collection.find()

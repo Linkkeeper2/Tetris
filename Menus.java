@@ -18,7 +18,7 @@ public class Menus {
             buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 350, 150, 50, Color.GRAY, Color.DARK_GRAY, "Host Game", new ButtonActions().new Host()));
             buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 425, 150, 50, Color.GRAY, Color.DARK_GRAY, "Servers", new ButtonActions().new ServerList()));
             buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 500, 150, 50, Color.GRAY, Color.DARK_GRAY, "Challenge", new ButtonActions().new Challenge()));
-            buttons.add(new Button(MyGame.SCREEN_WIDTH - 175, MyGame.SCREEN_HEIGHT - 100, 150, 50, Color.GRAY, Color.DARK_GRAY, "Account", new ButtonActions().new Account()));
+            buttons.add(new Button(MyGame.SCREEN_WIDTH - 175, MyGame.SCREEN_HEIGHT - 100, 150, 50, Color.GRAY, Color.DARK_GRAY, "Account", new ButtonActions().new ViewAccount()));
             buttons.add(new Button(10, MyGame.SCREEN_HEIGHT - 100, 150, 50, Color.GRAY, Color.DARK_GRAY, "Leaderboard", new ButtonActions().new Leaderboard()));
 
             if (MyGame.client != null) {
@@ -79,6 +79,7 @@ public class Menus {
             text.add(new Text(MyGame.account.name, MyGame.SCREEN_WIDTH - 175, MyGame.SCREEN_HEIGHT - 125, Color.WHITE));
             text.add(new Text("Level: " + MyGame.account.level, MyGame.SCREEN_WIDTH / 2 - 20, 100, Color.WHITE, new Rectangle(0, 100, MyGame.SCREEN_WIDTH, 48)));
             text.add(new Text("EXP: " + MyGame.account.exp + "/" + (50 + (MyGame.account.level * 50)), MyGame.SCREEN_WIDTH / 2 - 20, 148, Color.WHITE, new Rectangle(0, 148, MyGame.SCREEN_WIDTH, 48)));
+            text.add(new Text("Highest Level: " + MyGame.account.highestLevel, MyGame.SCREEN_WIDTH / 2 - 20, 196, Color.WHITE, new Rectangle(0, 196, MyGame.SCREEN_WIDTH, 48)));
 
             this.buttons = new ArrayList<>();
             if (MyGame.account.name.startsWith("Guest")) buttons.add(new Button(MyGame.SCREEN_WIDTH - 175, MyGame.SCREEN_HEIGHT - 100, 150, 50, Color.GRAY, Color.DARK_GRAY, "Link Account", new ButtonActions().new LinkAccount()));
@@ -97,11 +98,13 @@ public class Menus {
             iterable.into(accounts);
             String[] names = new String[accounts.size()];
             int[] levels = new int[accounts.size()];
+            int[] highestLvl = new int[accounts.size()];
 
             for (int i = 0; i < accounts.size(); i++) {
                 Document doc = accounts.get(i);
                 names[i] = doc.getString("name");
                 levels[i] = doc.getInteger("level");
+                highestLvl[i] = doc.getInteger("highestLvl");
             }
 
             for (int k = 0; k < levels.length; k++) {
@@ -114,12 +117,16 @@ public class Menus {
                         String temp = names[i];
                         names[i] = names[i + 1];
                         names[i + 1] = temp;
+
+                        tmp = highestLvl[i];
+                        highestLvl[i] = highestLvl[i + 1];
+                        highestLvl[i + 1] = tmp;
                     }
                 }
             }
 
             for (int i = 0; i < names.length; i++) {
-                text.add(new Text(names[i] + ": LVL " + levels[i], MyGame.SCREEN_WIDTH / 2 - 20, 96 + (i * 48), Color.WHITE, new Rectangle(0, 96 + (i * 48), MyGame.SCREEN_WIDTH, 48)));
+                text.add(new Text(names[i] + ": LVL " + levels[i] + " | Highest LVL: " + highestLvl[i], MyGame.SCREEN_WIDTH / 2 - 20, 96 + (i * 48), Color.WHITE, new Rectangle(0, 96 + (i * 48), MyGame.SCREEN_WIDTH, 48)));
             }
 
             this.buttons = new ArrayList<>();

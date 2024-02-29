@@ -109,15 +109,13 @@ public class ButtonActions {
 
     public class LogOut implements ButtonAction {
         public void action() {
-            MyGame.account.name = "Guest" + (int)(Math.random() * 10000);
-            MyGame.account.level = 0;
-            MyGame.account.exp = 0;
+            MyGame.account = new Account();
             MyGame.menu = new Menus().new AccountMenu();
             MyGame.status.addMessage("Logged out Successfully!");
         }
     }
 
-    public class Account implements ButtonAction {
+    public class ViewAccount implements ButtonAction {
         public void action() {
             MyGame.menu = new Menus().new AccountMenu();
         }
