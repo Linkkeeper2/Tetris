@@ -25,16 +25,12 @@ public class MyGame extends Game {
     public static int lines = 0; // The number of lines cleared
     public static int score = 0; // The total score of the player
     public static short level = 0; // The level (speed) of the game
-    public static boolean alive = false;
-    public static boolean held = false; // Has the player held a piece on the current turn?
     public static Menus menus;
     public static Menu menu;
-    public static ArrayList<Message> messages; // Message for line clears
     public static Menu.Text levelMessage; // Message for level ups
     public static ColorPalette palette;
     public static int messageCol; // Column to display line clear messages
     public static int messageRow; // Row to display line clear messages
-    public static int messageDirection; // Direction to move message when clearing lines
     private boolean[] arrows = new boolean[4]; // Determines whether or not to repeated left or right movement
     public static int direction = 0; // -1 = Left, 1 = Right, 0 = None
     private int inputDelay = 0; // Delay for repeating directional inputs
@@ -78,7 +74,6 @@ public class MyGame extends Game {
         status = new ServerStatus();
         menus = new Menus();
         menu = menus.new MainMenu();
-        messages = new ArrayList<>();
         levelMessage = new Menu().new Text("", 0, 700, Color.WHITE);
         palette = new ColorPalette();
         timer = new Timer();
@@ -123,18 +118,7 @@ public class MyGame extends Game {
         // updating logic
         board.update();
 
-        for (int i = 0; i < messages.size(); i++) {
-            if (i < messages.size()) {
-                Message m = messages.get(i);
-                if (m != null) {
-                    m.y--;
-                    m.x += messageDirection == 0 ? 1 : -1;
-                    m.updatePosition();
-                }
-            }
-        }
-
-        if (menu == null && !alive && client != null) {
+        if (menu == null && !board.alive && client != null) {
             client.output.println(client.name + " has topped out.");
             board.reset();
             SoundManager.playSound("sfx/KO.wav", false);
@@ -149,7 +133,7 @@ public class MyGame extends Game {
 
         if (client == null && tileSize == 25) exitToMenu();
 
-        if (client == null && !alive && menu == null) {
+        if (client == null && !board.alive && menu == null) {
             status.addMessage("Game Over", 3000);
             status.addMessage("Score: " + score, 3000);
             status.addMessage("Level: " + level, 3000);
@@ -211,10 +195,6 @@ public class MyGame extends Game {
             pen.drawString("Hold", 32, offset + 40);
             
             if (client != null) drawClock(pen);
-            
-            for (int i = 0; i < messages.size(); i++) {
-                messages.get(i).draw(pen);
-            }
 
             levelMessage.draw(pen);
         } else {
@@ -431,7 +411,7 @@ public class MyGame extends Game {
                 break;
 
             case 67: // C Key (Holding)
-                if (!held) board.hold();
+                if (!board.held) board.hold();
                 break;
 
             case 90: // Z Key

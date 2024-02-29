@@ -32,7 +32,7 @@ public class Tetrimino {
     }
 
     public void rotate(int factor) {
-        if (!MyGame.alive) return;
+        if (!MyGame.board.alive) return;
         
         boolean wallKick = false;
         MyGame.doActions = false;

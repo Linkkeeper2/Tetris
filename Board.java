@@ -1,11 +1,16 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.TimerTask;
 
 public class Board {
     public TetriminoNode[][] board;
     public Tetrimino currentTetrimino, nextTetrimino, heldTetrimino;
+    public boolean held = false; // Has the player held a piece on the current turn?
+    public ArrayList<Message> messages = new ArrayList<>(); // Message for line clears
+    public int messageDirection; // Direction to move message when clearing lines
+    public boolean alive = false;
 
     public Board() {
         board = new TetriminoNode[20][10];
@@ -14,11 +19,11 @@ public class Board {
     public void update() {
         ClearAnimation animation = MyGame.animation;
 
-        if (currentTetrimino == null && MyGame.alive) {
+        if (currentTetrimino == null && alive) {
             if (animation.rowsToClear.size() == 0) clearRow();
 
             if (animation.rowsToClear.size() == 0) {
-                MyGame.held = false;
+                held = false;
                 swapTetriminos();
                 move(1);
                 MyGame.notMove = false;
@@ -29,6 +34,17 @@ public class Board {
 
             if (MyGame.direction != 0) {
                 move(MyGame.direction);
+            }
+        }
+
+        for (int i = 0; i < messages.size(); i++) {
+            if (i < messages.size()) {
+                Message m = messages.get(i);
+                if (m != null) {
+                    m.y--;
+                    m.x += messageDirection == 0 ? 1 : -1;
+                    m.updatePosition();
+                }
             }
         }
 
@@ -89,7 +105,7 @@ public class Board {
             }
         }
 
-        if (MyGame.alive) {
+        if (alive) {
             if (nextTetrimino != null) {
                 TetriminoNode[] nodes = nextTetrimino.getNodes();
             
@@ -112,6 +128,10 @@ public class Board {
                 }
             }
         }
+
+        for (int i = 0; i < messages.size(); i++) {
+            messages.get(i).draw(pen);
+        }
     }
 
     public void updateArray() {
@@ -132,7 +152,7 @@ public class Board {
     }
 
     public void add(TetriminoNode t, int row, int col) {
-        if (board[row][col] != null) MyGame.alive = false;
+        if (board[row][col] != null) alive = false;
         board[row][col] = t;
     }
 
@@ -147,7 +167,7 @@ public class Board {
             else if (MyGame.clock <= 150) time /= 2;
         }
 
-        if (!MyGame.alive || !MyGame.doActions) {
+        if (!alive || !MyGame.doActions) {
             MyGame.timer.schedule(new TimerTask() {
                 public void run() {
                     automaticMove();
@@ -165,7 +185,7 @@ public class Board {
     }
 
     public void moveTetriminos() {
-        if (!MyGame.alive || MyGame.menu != null) return;
+        if (!alive || MyGame.menu != null) return;
 
         if (currentTetrimino == null) return;
 
@@ -217,7 +237,7 @@ public class Board {
     }
 
     public Tetrimino getTetrimino() {
-        if (!MyGame.alive) return null;
+        if (!alive) return null;
 
         int num = (int)(Math.random() * 7);
         Tetrimino t = null;
@@ -254,13 +274,13 @@ public class Board {
 
         t.setID(MyGame.tNum);
         MyGame.tNum++;
-        MyGame.held = false;
+        held = false;
 
         return t;
     }
 
     public Tetrimino getNextTetrimino() {
-        if (!MyGame.alive) return null;
+        if (!alive) return null;
 
         String[] types = new String[] {"IPiece", "TPiece", "ZPiece", "SPiece", "OPiece", "LPiece", "JPiece"};
 
@@ -364,7 +384,7 @@ public class Board {
 
     public void hardDrop() {
         MyGame.tSpin = false;
-        if (!MyGame.alive) return;
+        if (!alive) return;
 
         MyGame.hardDropping = true;
 
@@ -380,12 +400,12 @@ public class Board {
                 if (nodes[i].row >= board.length - 1) {
                     currentTetrimino = null;
                     MyGame.hardDropping = false;
-                    MyGame.held = false;
+                    held = false;
                     return;
                 } else if (board[nodes[i].row + 1][nodes[i].col] != null && board[nodes[i].row + 1][nodes[i].col].id != nodes[i].id) {
                     currentTetrimino = null;
                     MyGame.hardDropping = false;
-                    MyGame.held = false;
+                    held = false;
                     return;
                 }
             }
@@ -418,11 +438,11 @@ public class Board {
         }
 
         MyGame.hardDropping = false;
-        MyGame.held = false;
+        held = false;
     }
 
     public void move(int direction) {
-        if (!MyGame.alive || !MyGame.doActions) return;
+        if (!alive || !MyGame.doActions) return;
 
         if (currentTetrimino == null) return;
 
@@ -579,7 +599,7 @@ public class Board {
             }
         }
 
-        MyGame.held = true;
+        held = true;
         if (MyGame.client != null) {
             SoundManager.playSound("sfx/Hold.wav", false);
         }
@@ -589,7 +609,7 @@ public class Board {
     }
 
     public void clearRow() {
-        if (!MyGame.alive || board == null) return;
+        if (!alive || board == null) return;
 
         int linesCleared = 0;
 
@@ -626,10 +646,10 @@ public class Board {
             case 1:
                 scoreAdded += 40 * (MyGame.level + 1);
                 MyGame.score += 40 * (MyGame.level + 1);
-                if (!MyGame.tSpin) MyGame.messages.add(new Message("+" + scoreAdded + " Single!"));
+                if (!MyGame.tSpin) messages.add(new Message("+" + scoreAdded + " Single!"));
                 else {
                     scoreAdded += 50 * (MyGame.level + 1);
-                    MyGame.messages.add(new Message("+" + scoreAdded + " T-Spin Single!"));
+                    messages.add(new Message("+" + scoreAdded + " T-Spin Single!"));
                     MyGame.score += 50 * (MyGame.level + 1);
                 }
                 
@@ -638,10 +658,10 @@ public class Board {
             case 2:
                 MyGame.score += 100 * (MyGame.level + 1);
                 scoreAdded += 100 * (MyGame.level + 1);
-                if (!MyGame.tSpin) MyGame.messages.add(new Message("+" + scoreAdded + " Double!"));
+                if (!MyGame.tSpin) messages.add(new Message("+" + scoreAdded + " Double!"));
                 else {
                     scoreAdded += 100 * (MyGame.level + 1);
-                    MyGame.messages.add(new Message("+" + scoreAdded + " T-Spin Double!"));
+                    messages.add(new Message("+" + scoreAdded + " T-Spin Double!"));
                     MyGame.score += 100 * (MyGame.level + 1);
                 }
                 
@@ -650,10 +670,10 @@ public class Board {
             case 3:
                 scoreAdded += 300 * (MyGame.level + 1);
                 MyGame.score += 300 * (MyGame.level + 1);
-                if (!MyGame.tSpin) MyGame.messages.add(new Message("+" + scoreAdded + " Triple!"));
+                if (!MyGame.tSpin) messages.add(new Message("+" + scoreAdded + " Triple!"));
                 else {
                     scoreAdded += 300 * (MyGame.level + 1);
-                    MyGame.messages.add(new Message("+" + scoreAdded + " T-Spin Triple!"));
+                    messages.add(new Message("+" + scoreAdded + " T-Spin Triple!"));
                     MyGame.score += 300 * (MyGame.level + 1);
                 }
 
@@ -662,14 +682,14 @@ public class Board {
             case 4:
                 scoreAdded += 1200 * (MyGame.level + 1);
                 MyGame.score += 1200 * (MyGame.level + 1);
-                MyGame.messages.add(new Message("+" + scoreAdded + " Tetris!"));
+                messages.add(new Message("+" + scoreAdded + " Tetris!"));
 
                 break;
 
             case 5:
                 scoreAdded += 2000 * (MyGame.level + 1);
                 MyGame.score += 2000 * (MyGame.level + 1);
-                MyGame.messages.add(new Message("+" + scoreAdded + " Back-to-Back Tetris!"));
+                messages.add(new Message("+" + scoreAdded + " Back-to-Back Tetris!"));
                 
                 break;
         }
@@ -683,16 +703,16 @@ public class Board {
         
         MyGame.tSpin = false;
 
-        MyGame.messageDirection = (int)(Math.random() * 2);
+        messageDirection = (int)(Math.random() * 2);
 
-        if (MyGame.messages.size() > 0) {
-            Message msg = MyGame.messages.get(MyGame.messages.size() - 1);
+        if (messages.size() > 0) {
+            Message msg = messages.get(messages.size() - 1);
             msg.x = MyGame.messageCol * MyGame.tileSize + MyGame.offset;
             msg.y = MyGame.messageRow * MyGame.tileSize + MyGame.offset;
 
             MyGame.timer.schedule(new TimerTask() {
                 public void run() {
-                    MyGame.messages.remove(msg);
+                    messages.remove(msg);
                 }
             }, (long)750);
         }
@@ -809,7 +829,7 @@ public class Board {
             return;
         } 
 
-        if (MyGame.menu == null && MyGame.alive) {
+        if (MyGame.menu == null && alive) {
             int row = board.length - 1;
 
             for (int i = 0; i < lines; i++) {
@@ -845,7 +865,7 @@ public class Board {
     }
 
     public void startGame() {
-        MyGame.alive = true;
+        alive = true;
         board = new TetriminoNode[20][10];
 
         if (MyGame.client == null) {
@@ -897,7 +917,7 @@ public class Board {
     public void startChallenge() {
         MyGame.challenge = true;
 
-        MyGame.alive = true;
+        alive = true;
         MyGame.lines = 0;
         MyGame.score = 0;
         MyGame.level = MyGame.save.startLevel;
@@ -933,7 +953,7 @@ public class Board {
     }
 
     public void reset() {
-        MyGame.alive = true;
+        alive = true;
         MyGame.lines = 0;
         MyGame.score = 0;
         MyGame.level = 0;
