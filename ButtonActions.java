@@ -75,6 +75,7 @@ public class ButtonActions {
         public void action() {
             if (MyGame.save.startLevel >= 0 && MyGame.save.startLevel < 18) MyGame.save.startLevel += factor;
             if (MyGame.save.startLevel < 0) MyGame.save.startLevel = 0;
+            if (factor == -1 && MyGame.save.startLevel == 18) MyGame.save.startLevel += factor;
 
             MyGame.menu.text.remove(MyGame.menu.text.size() - 1);
             MyGame.menu.text.add(new Menu().new Text("Starting Level: " + MyGame.save.startLevel, MyGame.SCREEN_WIDTH / 2 - 75, 375, Color.WHITE));
