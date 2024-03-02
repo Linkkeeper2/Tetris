@@ -154,6 +154,7 @@ public class Menus {
             text.add(new Text("Challenges", MyGame.SCREEN_WIDTH / 2 - 20, 48, Color.WHITE, new Rectangle(0, 48, MyGame.SCREEN_WIDTH, 48)));
 
             buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 200, 150, 50, Color.GRAY, Color.DARK_GRAY, "Checkerboard", new ButtonActions().new StartChallenge(new CheckerboardChallenge())));
+            buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 275, 150, 50, Color.GRAY, Color.DARK_GRAY, "Staircase", new ButtonActions().new StartChallenge(new StairCaseChallenge())));
             buttons.add(new Button(10, MyGame.SCREEN_HEIGHT - 100, 150, 50, Color.GRAY, Color.DARK_GRAY, "Back to Menu", new ButtonActions().new BackToMenu()));
         }
     }
