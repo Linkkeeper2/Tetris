@@ -59,7 +59,6 @@ public class ClientThread extends Thread {
                                     
                                     if (MyGame.server == null && MyGame.client.lobby.size() == 2) {
                                         MyGame.client = null;
-                                        if (MyGame.menu != null) MyGame.menu.buttons.remove(MyGame.disconnect);
                                     }
                                 }
                             } 
@@ -110,6 +109,7 @@ public class ClientThread extends Thread {
         } catch (SocketException e) {
             MyGame.status.addMessage("Disconnected from host.");
             MyGame.client = null;
+            MyGame.server = null;
             MyGame.menu = new Menus().new MainMenu();
         } catch (IOException e) {} 
         finally {

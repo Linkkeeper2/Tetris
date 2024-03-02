@@ -11,6 +11,7 @@ public class Board {
     public ArrayList<Message> messages = new ArrayList<>(); // Message for line clears
     public int messageDirection; // Direction to move message when clearing lines
     public boolean alive = false;
+    public Challenge challenge;
 
     public Board() {
         board = new TetriminoNode[20][10];
@@ -49,6 +50,8 @@ public class Board {
         }
 
         updateArray();
+
+        if (challenge != null) challenge.check();
     }
 
     public void draw(Graphics pen) {
@@ -915,46 +918,12 @@ public class Board {
 
         updateArray();
         move(1);
-
-        MyGame.challenge = false;
     }
 
-    public void startChallenge() {
-        MyGame.challenge = true;
-
-        alive = true;
-        MyGame.lines = 0;
-        MyGame.score = 0;
-        MyGame.level = MyGame.save.startLevel;
-
-        MyGame.pity = 0;
-        MyGame.nextPity = 5;
-        MyGame.palette.currentPalette = 0;
-        MyGame.menu = null;
-        MyGame.offset = 125;
-
-        board = new TetriminoNode[20][10];
-
-        currentTetrimino = getTetrimino();
-        nextTetrimino = getNextTetrimino();
-        heldTetrimino = null;
-
-        for (int r = board.length / 2 + 1; r < board.length; r++) {
-            for (int c = 0; c < board[r].length; c++) {
-                if (c % 2 == r % 2) {
-                    board[r][c] = new TetriminoNode(Color.DARK_GRAY, r, c, -1);
-                    board[r][c].updateID();
-                }
-            }
-        }
-
-        updateArray();
-        move(1);
-
-        if (MyGame.level < 9) SoundManager.playSound("sfx/MusicSolo.wav", true);
-        else if (MyGame.level < 19) SoundManager.playSound("sfx/Level9.wav", true);
-        else SoundManager.playSound("sfx/Level19.wav", true);
-        MyGame.clock = 10;
+    public void startChallenge(Challenge challenge) {
+        startGame();
+        this.challenge = challenge;
+        this.challenge.start();
     }
 
     public void reset() {

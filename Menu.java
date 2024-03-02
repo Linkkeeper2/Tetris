@@ -11,7 +11,10 @@ public class Menu {
     protected ArrayList<Button> buttons;
     protected ArrayList<Text> text;
 
-    public Menu() {}
+    public Menu() {
+        this.buttons = new ArrayList<>();
+        this.text = new ArrayList<>();
+    }
 
     public void draw(Graphics pen) {
         for (int i = 0; i < buttons.size(); i++) {

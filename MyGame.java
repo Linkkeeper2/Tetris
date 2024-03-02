@@ -49,14 +49,11 @@ public class MyGame extends Game {
     public static ServerStatus status; // Status messages to display in game
     public static Chat chat; // Chat between players
     public static TextBox prompt;
-    public static Menu.Button disconnect;
-    public static Menu.Button addBot;
     public static ArrayList<Bot> bots;
     public static int timesCleared = 0; // The amount of times the player has cleared lines in order to send lines to other clients
     public static int linesToSend; // Amount of lines to send to other clients when a threshold is reached
     public static int clock = 10; // Clock for multiplayer games
     public static boolean recieving = false;
-    public static boolean challenge = false;
 
     public static Save save; // Save file properties for the player
 
@@ -111,9 +108,6 @@ public class MyGame extends Game {
         } catch (IllegalStateException e) {}
 
         account.login();
-
-        disconnect = menu.new Button(MyGame.SCREEN_WIDTH / 2 - 75, 575, 150, 50, Color.GRAY, Color.DARK_GRAY, "Disconnect", new ButtonActions().new DisConnect());
-        addBot = MyGame.menu.new Button(MyGame.SCREEN_WIDTH / 2 - 75, 650, 150, 50, Color.GRAY, Color.DARK_GRAY, "Add Bot", new ButtonActions().new AddBot());
     }
     
     public void update() {
@@ -140,7 +134,7 @@ public class MyGame extends Game {
             status.addMessage("Score: " + score, 3000);
             status.addMessage("Level: " + level, 3000);
             
-            if (!challenge) {
+            if (board.challenge == null) {
                 account.addExp(score / 400);
 
                 if (level > MyGame.account.highestLevel && (MyGame.save.startLevel == 0 || level > MyGame.save.startLevel)) {
@@ -150,8 +144,6 @@ public class MyGame extends Game {
             }
             exitToMenu();
         }
-
-        if (challenge) checkChallenge();
     }
     
     public void updateState() {
@@ -165,22 +157,6 @@ public class MyGame extends Game {
         else if (level >= 29) speed = (int)((1 / 60f) * 1000);
 
         palette.currentPalette = level % 10;
-    }
-
-    public void checkChallenge() {
-        boolean end = true;
-
-        for (int r = board.board.length / 2 + 1; r < board.board.length; r++) {
-            for (int c = 0; c < board.board[r].length; c++) {
-                if (board.board[r][c] != null && board.board[r][c].id < 0) end = false;
-            }
-        }
-
-        if (end) {
-            status.addMessage("You Win!", 3000);
-            account.addExp((int)(Math.random() * 200) + 400);
-            exitToMenu();
-        }
     }
 
     public void draw(Graphics pen) {
@@ -225,11 +201,16 @@ public class MyGame extends Game {
     }
     
     public static void exitToMenu() {
-        menu = menus.new MainMenu();
         SoundManager.stopAllSounds();
-        if (client != null) client.queue.clear();
 
-        challenge = false;
+        if (client != null) {
+            client.queue.clear();
+            menu = menus.new LobbyMenu();
+        } else {
+            menu = menus.new MainMenu();
+        }
+
+        board.challenge = null;
     }
 
     public static void leaveGame() {
@@ -254,13 +235,10 @@ public class MyGame extends Game {
             server = null;
             prompt = null;
             menu = new Menus().new MainMenu();
-            menu.buttons.remove(addBot);
             bots.clear();
         }
 
         SoundManager.stopAllSounds();
-
-        challenge = false;
     }
 
     public static void endGame() {
@@ -292,8 +270,6 @@ public class MyGame extends Game {
 
         client.output.println(client.name + " " + client.deaths + " ... ... ... ... deaths.");
         if (client != null) client.queue.clear();
-
-        challenge = false;
     }
 
     public void repeatLeft() {
