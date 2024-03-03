@@ -395,6 +395,7 @@ public class Board {
         if (!alive) return;
 
         MyGame.hardDropping = true;
+        MyGame.doActions = false;
 
         for (int k = 0; k < board.length; k++) {
             if (currentTetrimino == null) {
@@ -409,11 +410,13 @@ public class Board {
                     currentTetrimino = null;
                     MyGame.hardDropping = false;
                     held = false;
+                    MyGame.doActions = true;
                     return;
                 } else if (board[nodes[i].row + 1][nodes[i].col] != null && board[nodes[i].row + 1][nodes[i].col].id != nodes[i].id) {
                     currentTetrimino = null;
                     MyGame.hardDropping = false;
                     held = false;
+                    MyGame.doActions = true;
                     return;
                 }
             }
@@ -446,6 +449,7 @@ public class Board {
         }
 
         MyGame.hardDropping = false;
+        MyGame.doActions = true;
         held = false;
     }
 
