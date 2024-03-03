@@ -5,8 +5,9 @@ public class StairCaseChallenge extends Challenge {
         TetriminoNode[][] board = MyGame.board.board;
 
         int count = 1;
+        int direction = 1;
 
-        for (int r = board.length / 2 + 1; r < board.length; r++) {
+        for (int r = 3; r < board.length; r++) {
             for (int c = 0; c < board[r].length; c++) {
                 if (c < count) {
                     board[r][c] = new TetriminoNode(Color.DARK_GRAY, r, c, -1);
@@ -14,13 +15,14 @@ public class StairCaseChallenge extends Challenge {
                 } else break;
             }
 
-            count++;
+            count += direction;
+            if (count == board[r].length - 1 || count == 1) direction = -direction;
         }
     }
 
     public void end() {
         MyGame.status.addMessage("You Win!", 3000);
-        MyGame.account.addExp((int)(Math.random() * 100) + 100);
+        MyGame.account.addExp((int)(Math.random() * 100) + 500);
         MyGame.exitToMenu();
     }
 }
