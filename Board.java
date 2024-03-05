@@ -12,7 +12,7 @@ public class Board {
     public int messageDirection; // Direction to move message when clearing lines
     public boolean alive = false;
     public Challenge challenge;
-    private boolean lock = false;
+    public boolean lock = false;
     private int lockTime = 0;
 
     public Board() {
@@ -23,13 +23,15 @@ public class Board {
         ClearAnimation animation = MyGame.animation;
 
         if (currentTetrimino == null && alive) {
-            if (animation.rowsToClear.size() == 0) clearRow();
+            if (animation.rowsToClear.size() == 0)
+                clearRow();
 
             if (animation.rowsToClear.size() == 0) {
                 held = false;
                 swapTetriminos();
                 move(1);
-                MyGame.notMove = false;
+                lock = false;
+                lockTime = 0;
             }
         } else if (currentTetrimino != null) {
             MyGame.messageCol = currentTetrimino.getNodes()[0].col;
@@ -53,11 +55,14 @@ public class Board {
 
         updateArray();
 
-        if (challenge != null) challenge.check();
+        if (challenge != null)
+            challenge.check();
 
         if (lock) {
-            if (lockTime < 100) lockTime++;
-            else lock = false;
+            if (lockTime < 100)
+                lockTime++;
+            else
+                lock = false;
         }
     }
 
@@ -82,13 +87,14 @@ public class Board {
             for (int c = 0; c < board[r].length; c++) {
                 if (board[r][c] != null) {
                     TetriminoNode curr = board[r][c];
-                    
+
                     // Draws the current node to the board
                     curr.updateColor();
                     curr.draw(pen);
 
                     if (currentTetrimino != null) {
-                        // Determines if the indicator for dropping the Tetrimino should be drawn for the current node
+                        // Determines if the indicator for dropping the Tetrimino should be drawn for
+                        // the current node
                         TetriminoNode[] nodes = currentTetrimino.getNodes();
                         boolean stop = true;
 
@@ -107,7 +113,8 @@ public class Board {
                                     pen.fillRect(c * tileSize + offset, i * tileSize + offset, tileSize, tileSize);
                                     pen.setColor(Color.GRAY);
                                     pen.drawRect(c * tileSize + offset, i * tileSize + offset, tileSize, tileSize);
-                                } else break;
+                                } else
+                                    break;
                             }
                         }
                     }
@@ -118,12 +125,13 @@ public class Board {
         if (alive) {
             if (nextTetrimino != null) {
                 TetriminoNode[] nodes = nextTetrimino.getNodes();
-            
+
                 // Draws the next Tetrimino
                 for (int i = 0; i < nodes.length; i++) {
                     TetriminoNode node = nodes[i];
                     node.updateColor();
-                    pen.drawImage(node.sprite, node.col * tileSize + (offset + board[0].length * tileSize - tileSize), node.row * tileSize + offset + 60, null);
+                    pen.drawImage(node.sprite, node.col * tileSize + (offset + board[0].length * tileSize - tileSize),
+                            node.row * tileSize + offset + 60, null);
                 }
             }
 
@@ -162,7 +170,8 @@ public class Board {
     }
 
     public void add(TetriminoNode t, int row, int col) {
-        if (board[row][col] != null) alive = false;
+        if (board[row][col] != null)
+            alive = false;
         board[row][col] = t;
     }
 
@@ -170,11 +179,16 @@ public class Board {
         // Used for automatic Tetrimino movement to reschedule the task
         int time = MyGame.speed;
         if (MyGame.client != null) {
-            if (MyGame.clock <= 20) time /= 6;
-            else if (MyGame.clock <= 30) time /= 5;
-            else if (MyGame.clock <= 60) time /= 4;
-            else if (MyGame.clock <= 100) time /= 3;
-            else if (MyGame.clock <= 150) time /= 2;
+            if (MyGame.clock <= 20)
+                time /= 6;
+            else if (MyGame.clock <= 30)
+                time /= 5;
+            else if (MyGame.clock <= 60)
+                time /= 4;
+            else if (MyGame.clock <= 100)
+                time /= 3;
+            else if (MyGame.clock <= 150)
+                time /= 2;
         }
 
         if (!alive || !MyGame.doActions) {
@@ -183,9 +197,10 @@ public class Board {
                     public void run() {
                         automaticMove();
                     }
-                }, (long)time);
+                }, (long) time);
                 return;
-            } catch (IllegalStateException e) {}
+            } catch (IllegalStateException e) {
+            }
         }
 
         moveTetriminos();
@@ -195,28 +210,34 @@ public class Board {
                 public void run() {
                     automaticMove();
                 }
-            }, (long)time);
-        } catch (IllegalStateException e) {}
+            }, (long) time);
+        } catch (IllegalStateException e) {
+        }
     }
 
     public void moveTetriminos() {
-        if (!alive || MyGame.menu != null) return;
+        if (!alive || MyGame.menu != null)
+            return;
 
-        if (currentTetrimino == null) return;
+        if (currentTetrimino == null)
+            return;
 
         TetriminoNode[] nodes = currentTetrimino.getNodes();
 
         for (int i = 0; i < nodes.length; i++) {
             if (nodes[i].row >= board.length - 1) {
-                if (!MyGame.notMove && !lock) currentTetrimino = null;
+                if (!lock)
+                    currentTetrimino = null;
                 return;
-            }
-            else if (board[nodes[i].row + 1][nodes[i].col] != null && board[nodes[i].row + 1][nodes[i].col].parent == null) {
-                if (!MyGame.notMove && !lock) currentTetrimino = null;
+            } else if (board[nodes[i].row + 1][nodes[i].col] != null
+                    && board[nodes[i].row + 1][nodes[i].col].parent == null) {
+                if (!lock)
+                    currentTetrimino = null;
                 return;
-            } 
-            else if (board[nodes[i].row + 1][nodes[i].col] != null && !board[nodes[i].row + 1][nodes[i].col].parent.equals(nodes[i].parent)) {
-                if (!MyGame.notMove && !lock) currentTetrimino = null;
+            } else if (board[nodes[i].row + 1][nodes[i].col] != null
+                    && !board[nodes[i].row + 1][nodes[i].col].parent.equals(nodes[i].parent)) {
+                if (!lock)
+                    currentTetrimino = null;
                 return;
             }
         }
@@ -227,34 +248,36 @@ public class Board {
             for (int i = 0; i < nodes.length; i++) {
                 nodes[i].row++;
             }
-    
+
             TetriminoNode[][] rotations = currentTetrimino.getRotations();
-    
+
             if (rotations != null) {
                 for (int r = 0; r < rotations.length; r++) {
                     for (int c = 0; c < rotations[r].length; c++) {
                         if (rotations[r][c] != null) {
-                            if (nodes.equals(rotations[r])) break;
-                            
+                            if (nodes.equals(rotations[r]))
+                                break;
+
                             rotations[r][c].row++;
                         }
                     }
                 }
             }
-    
+
             for (int i = 0; i < nodes.length; i++) {
                 TetriminoNode node = nodes[i];
                 board[node.row][node.col] = node;
             }
-    
+
             updateArray();
         }
     }
 
     public Tetrimino getTetrimino() {
-        if (!alive) return null;
+        if (!alive)
+            return null;
 
-        int num = (int)(Math.random() * 7);
+        int num = (int) (Math.random() * 7);
         Tetrimino t = null;
 
         switch (num) {
@@ -295,14 +318,15 @@ public class Board {
     }
 
     public Tetrimino getNextTetrimino() {
-        if (!alive) return null;
+        if (!alive)
+            return null;
 
-        String[] types = new String[] {"IPiece", "TPiece", "ZPiece", "SPiece", "OPiece", "LPiece", "JPiece"};
+        String[] types = new String[] { "IPiece", "TPiece", "ZPiece", "SPiece", "OPiece", "LPiece", "JPiece" };
 
-        int num = (int)(Math.random() * 7);
+        int num = (int) (Math.random() * 7);
 
         while (types[num].equals(MyGame.prevType)) {
-            num = (int)(Math.random() * 7);
+            num = (int) (Math.random() * 7);
         }
 
         MyGame.prevType = types[num];
@@ -311,7 +335,7 @@ public class Board {
 
         if (MyGame.pity >= MyGame.nextPity) {
             MyGame.pity = 0;
-            MyGame.nextPity = (int)(Math.random() * 5) + 5;
+            MyGame.nextPity = (int) (Math.random() * 5) + 5;
             num = 0;
         }
 
@@ -355,9 +379,11 @@ public class Board {
     }
 
     public void swapTetriminos() {
-        if (board == null) return;
+        if (board == null)
+            return;
 
-        if (nextTetrimino == null) return;
+        if (nextTetrimino == null)
+            return;
 
         switch (nextTetrimino.getType()) {
             case "IPiece":
@@ -391,7 +417,8 @@ public class Board {
                 break;
         }
 
-        if (currentTetrimino != null) currentTetrimino.setID(MyGame.tNum);
+        if (currentTetrimino != null)
+            currentTetrimino.setID(MyGame.tNum);
         MyGame.tNum++;
 
         nextTetrimino = getNextTetrimino();
@@ -399,7 +426,8 @@ public class Board {
 
     public void hardDrop() {
         MyGame.tSpin = false;
-        if (!alive) return;
+        if (!alive)
+            return;
 
         MyGame.hardDropping = true;
         MyGame.doActions = false;
@@ -419,7 +447,8 @@ public class Board {
                     held = false;
                     MyGame.doActions = true;
                     return;
-                } else if (board[nodes[i].row + 1][nodes[i].col] != null && board[nodes[i].row + 1][nodes[i].col].id != nodes[i].id) {
+                } else if (board[nodes[i].row + 1][nodes[i].col] != null
+                        && board[nodes[i].row + 1][nodes[i].col].id != nodes[i].id) {
                     currentTetrimino = null;
                     MyGame.hardDropping = false;
                     held = false;
@@ -431,27 +460,29 @@ public class Board {
             for (int i = 0; i < nodes.length; i++) {
                 nodes[i].row++;
             }
-    
+
             TetriminoNode[][] rotations = currentTetrimino.getRotations();
-    
+
             if (rotations != null) {
                 for (int r = 0; r < rotations.length; r++) {
                     for (int c = 0; c < rotations[r].length; c++) {
                         if (rotations[r][c] != null) {
                             boolean move = true;
-                            if (nodes.equals(rotations[r])) move = false;
-                            
-                            if (move) rotations[r][c].row++;
+                            if (nodes.equals(rotations[r]))
+                                move = false;
+
+                            if (move)
+                                rotations[r][c].row++;
                         }
                     }
                 }
             }
-    
+
             for (int i = 0; i < nodes.length; i++) {
                 TetriminoNode node = nodes[i];
                 board[node.row][node.col] = node;
             }
-    
+
             updateArray();
         }
 
@@ -461,24 +492,30 @@ public class Board {
     }
 
     public void move(int direction) {
-        if (!alive || !MyGame.doActions) return;
+        if (!alive || !MyGame.doActions)
+            return;
 
-        if (currentTetrimino == null) return;
+        if (currentTetrimino == null)
+            return;
 
         TetriminoNode[] nodes = currentTetrimino.getNodes();
 
         for (int i = 0; i < nodes.length; i++) {
             switch (direction) {
                 case -1:
-                    if (nodes[i].col <= 0) return;
+                    if (nodes[i].col <= 0)
+                        return;
                     break;
 
                 case 1:
-                    if (nodes[i].col >= board[0].length - 1) return;
+                    if (nodes[i].col >= board[0].length - 1)
+                        return;
                     break;
             }
 
-            if (board[nodes[i].row][nodes[i].col + 1 * direction] != null && board[nodes[i].row][nodes[i].col + 1 * direction].id != nodes[i].id) return;
+            if (board[nodes[i].row][nodes[i].col + 1 * direction] != null
+                    && board[nodes[i].row][nodes[i].col + 1 * direction].id != nodes[i].id)
+                return;
         }
 
         for (int i = 0; i < nodes.length; i++) {
@@ -495,8 +532,10 @@ public class Board {
                 for (int c = 0; c < rotations[r].length; c++) {
                     if (rotations[r][c] != null) {
                         boolean move = true;
-                        if (nodes.equals(rotations[r])) move = false;
-                        if (move) rotations[r][c].col += 1 * direction;
+                        if (nodes.equals(rotations[r]))
+                            move = false;
+                        if (move)
+                            rotations[r][c].col += 1 * direction;
                     }
                 }
             }
@@ -510,14 +549,14 @@ public class Board {
         updateArray();
         if (MyGame.client != null) {
             SoundManager.playSound("sfx/Move.wav", false);
-        }
-        else {
+        } else {
             SoundManager.playSound("sfx/Action.wav", false);
         }
     }
 
     public void hold() {
-        if (MyGame.menu != null || currentTetrimino == null) return;
+        if (MyGame.menu != null || currentTetrimino == null)
+            return;
 
         for (int i = 0; i < currentTetrimino.nodes.length; i++) {
             board[currentTetrimino.nodes[i].row][currentTetrimino.nodes[i].col] = null;
@@ -528,32 +567,32 @@ public class Board {
                 case "IPiece":
                     heldTetrimino = new Tetriminos().new IPiece(false);
                     break;
-    
+
                 case "TPiece":
                     heldTetrimino = new Tetriminos().new TPiece(false);
                     break;
-    
+
                 case "ZPiece":
                     heldTetrimino = new Tetriminos().new ZPiece(false);
                     break;
-    
+
                 case "SPiece":
                     heldTetrimino = new Tetriminos().new SPiece(false);
                     break;
-    
+
                 case "OPiece":
                     heldTetrimino = new Tetriminos().new OPiece(false);
                     break;
-    
+
                 case "LPiece":
                     heldTetrimino = new Tetriminos().new LPiece(false);
                     break;
-    
+
                 case "JPiece":
                     heldTetrimino = new Tetriminos().new JPiece(false);
                     break;
             }
-            
+
             currentTetrimino = null;
         } else {
             String type = currentTetrimino.getType();
@@ -562,29 +601,29 @@ public class Board {
                 case "IPiece":
                     currentTetrimino = new Tetriminos().new IPiece();
                     break;
-    
+
                 case "TPiece":
                     currentTetrimino = new Tetriminos().new TPiece();
                     break;
-    
+
                 case "ZPiece":
                     currentTetrimino = new Tetriminos().new ZPiece();
                     currentTetrimino.rotate(1);
                     break;
-    
+
                 case "SPiece":
                     currentTetrimino = new Tetriminos().new SPiece();
                     currentTetrimino.rotate(1);
                     break;
-    
+
                 case "OPiece":
                     currentTetrimino = new Tetriminos().new OPiece();
                     break;
-    
+
                 case "LPiece":
                     currentTetrimino = new Tetriminos().new LPiece();
                     break;
-    
+
                 case "JPiece":
                     currentTetrimino = new Tetriminos().new JPiece();
                     break;
@@ -594,27 +633,27 @@ public class Board {
                 case "IPiece":
                     heldTetrimino = new Tetriminos().new IPiece(false);
                     break;
-    
+
                 case "TPiece":
                     heldTetrimino = new Tetriminos().new TPiece(false);
                     break;
-    
+
                 case "ZPiece":
                     heldTetrimino = new Tetriminos().new ZPiece(false);
                     break;
-    
+
                 case "SPiece":
                     heldTetrimino = new Tetriminos().new SPiece(false);
                     break;
-    
+
                 case "OPiece":
                     heldTetrimino = new Tetriminos().new OPiece(false);
                     break;
-    
+
                 case "LPiece":
                     heldTetrimino = new Tetriminos().new LPiece(false);
                     break;
-    
+
                 case "JPiece":
                     heldTetrimino = new Tetriminos().new JPiece(false);
                     break;
@@ -624,14 +663,14 @@ public class Board {
         held = true;
         if (MyGame.client != null) {
             SoundManager.playSound("sfx/Hold.wav", false);
-        }
-        else {
+        } else {
             SoundManager.playSound("sfx/Action.wav", false);
         }
     }
 
     public void clearRow() {
-        if (!alive || board == null) return;
+        if (!alive || board == null)
+            return;
 
         int linesCleared = 0;
 
@@ -660,39 +699,43 @@ public class Board {
             MyGame.prevLinesCleared = linesCleared;
             linesCleared++;
         } else {
-            if (linesCleared > 0) MyGame.prevLinesCleared = linesCleared;
+            if (linesCleared > 0)
+                MyGame.prevLinesCleared = linesCleared;
         }
-        
+
         int scoreAdded = 0;
         switch (linesCleared) {
             case 1:
                 scoreAdded += 40 * (MyGame.level + 1);
                 MyGame.score += 40 * (MyGame.level + 1);
-                if (!MyGame.tSpin) messages.add(new Message("+" + scoreAdded + " Single!"));
+                if (!MyGame.tSpin)
+                    messages.add(new Message("+" + scoreAdded + " Single!"));
                 else {
                     scoreAdded += 50 * (MyGame.level + 1);
                     messages.add(new Message("+" + scoreAdded + " T-Spin Single!"));
                     MyGame.score += 50 * (MyGame.level + 1);
                 }
-                
+
                 break;
 
             case 2:
                 MyGame.score += 100 * (MyGame.level + 1);
                 scoreAdded += 100 * (MyGame.level + 1);
-                if (!MyGame.tSpin) messages.add(new Message("+" + scoreAdded + " Double!"));
+                if (!MyGame.tSpin)
+                    messages.add(new Message("+" + scoreAdded + " Double!"));
                 else {
                     scoreAdded += 100 * (MyGame.level + 1);
                     messages.add(new Message("+" + scoreAdded + " T-Spin Double!"));
                     MyGame.score += 100 * (MyGame.level + 1);
                 }
-                
+
                 break;
 
             case 3:
                 scoreAdded += 300 * (MyGame.level + 1);
                 MyGame.score += 300 * (MyGame.level + 1);
-                if (!MyGame.tSpin) messages.add(new Message("+" + scoreAdded + " Triple!"));
+                if (!MyGame.tSpin)
+                    messages.add(new Message("+" + scoreAdded + " Triple!"));
                 else {
                     scoreAdded += 300 * (MyGame.level + 1);
                     messages.add(new Message("+" + scoreAdded + " T-Spin Triple!"));
@@ -712,20 +755,22 @@ public class Board {
                 scoreAdded += 2000 * (MyGame.level + 1);
                 MyGame.score += 2000 * (MyGame.level + 1);
                 messages.add(new Message("+" + scoreAdded + " Back-to-Back Tetris!"));
-                
+
                 break;
         }
 
         playClearSound(linesCleared);
 
         if (linesCleared > 0 && MyGame.client != null) {
-            if (MyGame.client.queue.size() == 0) sendLines(linesCleared);
-            else MyGame.client.changeTimer(linesCleared);
+            if (MyGame.client.queue.size() == 0)
+                sendLines(linesCleared);
+            else
+                MyGame.client.changeTimer(linesCleared);
         }
-        
+
         MyGame.tSpin = false;
 
-        messageDirection = (int)(Math.random() * 2);
+        messageDirection = (int) (Math.random() * 2);
 
         if (messages.size() > 0) {
             Message msg = messages.get(messages.size() - 1);
@@ -736,7 +781,7 @@ public class Board {
                 public void run() {
                     messages.remove(msg);
                 }
-            }, (long)750);
+            }, (long) 750);
         }
     }
 
@@ -745,8 +790,7 @@ public class Board {
             case 1:
                 if (MyGame.client != null) {
                     SoundManager.playSound("sfx/Single.wav", false);
-                }
-                else {
+                } else {
                     SoundManager.playSound("sfx/LineClearSolo.wav", false);
                 }
                 break;
@@ -754,8 +798,7 @@ public class Board {
             case 2:
                 if (MyGame.client != null) {
                     SoundManager.playSound("sfx/Double.wav", false);
-                }
-                else {
+                } else {
                     SoundManager.playSound("sfx/LineClearSolo.wav", false);
                 }
                 break;
@@ -763,8 +806,7 @@ public class Board {
             case 3:
                 if (MyGame.client != null) {
                     SoundManager.playSound("sfx/Triple.wav", false);
-                }
-                else {
+                } else {
                     SoundManager.playSound("sfx/LineClearSolo.wav", false);
                 }
                 break;
@@ -772,8 +814,7 @@ public class Board {
             case 4:
                 if (MyGame.client != null) {
                     SoundManager.playSound("sfx/Tetris.wav", false);
-                }
-                else {
+                } else {
                     SoundManager.playSound("sfx/TetrisSolo.wav", false);
                 }
                 break;
@@ -781,8 +822,7 @@ public class Board {
             case 5:
                 if (MyGame.client != null) {
                     SoundManager.playSound("sfx/Tetris.wav", false);
-                }
-                else {
+                } else {
                     SoundManager.playSound("sfx/TetrisSolo.wav", false);
                 }
                 break;
@@ -796,16 +836,14 @@ public class Board {
 
             if (MyGame.client != null) {
                 SoundManager.playSound("sfx/LUp.wav", false);
-            }
-            else {
+            } else {
                 SoundManager.playSound("sfx/LevelUpSolo.wav", false);
             }
 
             if (MyGame.level == 9) {
                 SoundManager.stopAllSounds();
                 SoundManager.playSound("sfx/Level9.wav", true);
-            }
-            else if (MyGame.level == 19) {
+            } else if (MyGame.level == 19) {
                 SoundManager.stopAllSounds();
                 SoundManager.playSound("sfx/Level19.wav", true);
             }
@@ -814,7 +852,7 @@ public class Board {
                 public void run() {
                     MyGame.levelMessage.contents = "";
                 }
-            }, (long)750);
+            }, (long) 750);
         }
     }
 
@@ -823,19 +861,21 @@ public class Board {
         if (MyGame.client != null && MyGame.client.output != null) {
             if (MyGame.linesToSend >= MyGame.timesCleared || linesCleared >= 4) {
                 if (linesCleared > 0) {
-                    String recieve = MyGame.client.lobby.get((int)(Math.random() * MyGame.client.lobby.size())).contents;
+                    String recieve = MyGame.client.lobby
+                            .get((int) (Math.random() * MyGame.client.lobby.size())).contents;
                     while (recieve.equals(MyGame.client.name) || recieve.equals("Lobby")) {
-                        recieve = MyGame.client.lobby.get((int)(Math.random() * MyGame.client.lobby.size())).contents;
+                        recieve = MyGame.client.lobby.get((int) (Math.random() * MyGame.client.lobby.size())).contents;
                     }
-                    
+
                     MyGame.client.output.println(MyGame.client.name + " sent " + linesCleared + " lines to " + recieve);
                     MyGame.status.addMessage("Sent " + linesCleared + " lines to " + recieve + ".");
 
                     MyGame.linesToSend = 0;
-                    MyGame.timesCleared = (int)(Math.random() * 4) + 1;
+                    MyGame.timesCleared = (int) (Math.random() * 4) + 1;
                 }
             } else {
-                if (MyGame.linesToSend < 5) MyGame.linesToSend += linesCleared;
+                if (MyGame.linesToSend < 5)
+                    MyGame.linesToSend += linesCleared;
             }
         }
     }
@@ -847,9 +887,9 @@ public class Board {
                 public void run() {
                     recieveLines(lines);
                 }
-            }, (long)100);
+            }, (long) 100);
             return;
-        } 
+        }
 
         if (MyGame.menu == null && alive) {
             int row = board.length - 1;
@@ -870,7 +910,7 @@ public class Board {
             }
 
             for (int r = row + 1; r < row + 1 + lines; r++) {
-                int stop = (int)(Math.random() * board[r].length);
+                int stop = (int) (Math.random() * board[r].length);
                 for (int c = 0; c < board[r].length; c++) {
                     if (c != stop) {
                         board[r][c] = new TetriminoNode(Color.DARK_GRAY, r, c, -1);
@@ -891,12 +931,14 @@ public class Board {
         board = new TetriminoNode[20][10];
 
         if (MyGame.client == null) {
-            if (MyGame.level < 9) SoundManager.playSound("sfx/MusicSolo.wav", true);
-            else if (MyGame.level < 19) SoundManager.playSound("sfx/Level9.wav", true);
-            else SoundManager.playSound("sfx/Level19.wav", true);
+            if (MyGame.level < 9)
+                SoundManager.playSound("sfx/MusicSolo.wav", true);
+            else if (MyGame.level < 19)
+                SoundManager.playSound("sfx/Level9.wav", true);
+            else
+                SoundManager.playSound("sfx/Level19.wav", true);
             MyGame.clock = 10;
-        }
-        else {
+        } else {
             SoundManager.playSound("sfx/Battle.wav", false);
             MyGame.clock = 300;
             MyGame.client.deaths = 0;
@@ -911,19 +953,21 @@ public class Board {
                 MyGame.level = MyGame.save.startLevel;
                 MyGame.tileSize = 24;
                 MyGame.palette.sheet = new SpriteSheetLoader(MyGame.tileSize, MyGame.tileSize, 10, 3);
-            }
-            else {
+            } else {
                 MyGame.level = 0;
                 MyGame.tileSize = 25;
-                MyGame.palette.sheet = new SpriteSheetLoader(MyGame.tileSize, MyGame.tileSize, 10, 3, "gfx/PaletteBattle.png");
+                MyGame.palette.sheet = new SpriteSheetLoader(MyGame.tileSize, MyGame.tileSize, 10, 3,
+                        "gfx/PaletteBattle.png");
             }
-        } catch (IOException e) {}
+        } catch (IOException e) {
+        }
 
         MyGame.pity = 0;
         MyGame.nextPity = 5;
         MyGame.palette.currentPalette = 0;
         MyGame.menu = null;
-        if (MyGame.client != null) recieveLines(0);
+        if (MyGame.client != null)
+            recieveLines(0);
         MyGame.offset = 125;
 
         currentTetrimino = getTetrimino();
@@ -950,7 +994,8 @@ public class Board {
         MyGame.palette.currentPalette = 0;
         MyGame.menu = null;
         board = new TetriminoNode[20][10];
-        if (MyGame.client != null) recieveLines(0);
+        if (MyGame.client != null)
+            recieveLines(0);
         MyGame.offset = 125;
 
         currentTetrimino = getTetrimino();

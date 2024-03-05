@@ -20,7 +20,8 @@ public class MyGame extends Game {
     public static int offset;
     public static Timer timer;
     public static int tNum = 0; // Number of Tetriminos used (Keeps track of ID for each Tetrimino)
-    public static boolean hardDropping = false; // Determines whether or not the regular drop interval should occur (prevents Tetrimino clipping while Hard Dropping)
+    public static boolean hardDropping = false; // Determines whether or not the regular drop interval should occur
+                                                // (prevents Tetrimino clipping while Hard Dropping)
     public static int speed = 1000; // The millisecond delay between automatic Tetrimino movement
     public static int lines = 0; // The number of lines cleared
     public static int score = 0; // The total score of the player
@@ -37,7 +38,6 @@ public class MyGame extends Game {
     public static int prevLinesCleared = 0; // Previous amount of lines cleared to score Back-to-Back Tetrises
     public static int pity = 0; // Pity to getting an IPiece
     public static int nextPity = 5; // Value that pity needs to surpass the get an IPiece
-    public static boolean notMove = false; // Used to delay Tetrimino downwards movement when a key is pressed
     public static boolean tSpin = false; // Determines if a T-Spin should occur
     public static boolean doActions = true; // Prevents Tetrimino movement if an action is being processed
     public static int tileSize = 24; // Size of each tile on the board
@@ -50,7 +50,8 @@ public class MyGame extends Game {
     public static Chat chat; // Chat between players
     public static TextBox prompt;
     public static ArrayList<Bot> bots;
-    public static int timesCleared = 0; // The amount of times the player has cleared lines in order to send lines to other clients
+    public static int timesCleared = 0; // The amount of times the player has cleared lines in order to send lines to
+                                        // other clients
     public static int linesToSend; // Amount of lines to send to other clients when a threshold is reached
     public static int clock = 10; // Clock for multiplayer games
     public static boolean recieving = false;
@@ -84,32 +85,33 @@ public class MyGame extends Game {
                 public void run() {
                     board.automaticMove();
                 }
-            }, (long)speed);
-    
+            }, (long) speed);
+
             timer.schedule(new TimerTask() {
                 public void run() {
                     if (clock > 0 && menu == null) {
                         clock--;
                     }
-    
+
                     switch (clock) {
                         case 150:
                             SoundManager.stopAllSounds();
                             SoundManager.playSound("sfx/BattleHalf.wav", false);
                             break;
-    
+
                         case 60:
                             SoundManager.stopAllSounds();
                             SoundManager.playSound("sfx/BattleMinute.wav", false);
                             break;
                     }
                 }
-            }, (long)1000, 1000);
-        } catch (IllegalStateException e) {}
+            }, (long) 1000, 1000);
+        } catch (IllegalStateException e) {
+        }
 
         account.login();
     }
-    
+
     public void update() {
         // updating logic
         board.update();
@@ -127,17 +129,19 @@ public class MyGame extends Game {
 
         updateState();
 
-        if (client == null && tileSize == 25) exitToMenu();
+        if (client == null && tileSize == 25)
+            exitToMenu();
 
         if (client == null && !board.alive && menu == null) {
             status.addMessage("Game Over", 3000);
             status.addMessage("Score: " + score, 3000);
             status.addMessage("Level: " + level, 3000);
-            
+
             if (board.challenge == null) {
                 account.addExp(score / 400);
 
-                if (level > MyGame.account.highestLevel && (MyGame.save.startLevel == 0 || level > MyGame.save.startLevel)) {
+                if (level > MyGame.account.highestLevel
+                        && (MyGame.save.startLevel == 0 || level > MyGame.save.startLevel)) {
                     MyGame.account.highestLevel = level;
                     MyGame.database.updateAccount(MyGame.account.name);
                 }
@@ -145,16 +149,23 @@ public class MyGame extends Game {
             exitToMenu();
         }
     }
-    
+
     public void updateState() {
         // Updates the speed of the game and color palette
-        if (level <= 8) speed = (int)(((48 - level * 5) / 60f) * 1000);
-        else if (level == 9) speed = (int)((6 / 60f) * 1000);
-        else if (level >= 10 && level <= 12) speed = (int)((5 / 60f) * 1000);
-        else if (level >= 13 && level <= 15) speed = (int)((4 / 60f) * 1000);
-        else if (level >= 16 && level <= 18) speed = (int)((3 / 60f) * 1000);
-        else if (level >= 19 && level <= 28) speed = (int)((2 / 60f) * 1000);
-        else if (level >= 29) speed = (int)((1 / 60f) * 1000);
+        if (level <= 8)
+            speed = (int) (((48 - level * 5) / 60f) * 1000);
+        else if (level == 9)
+            speed = (int) ((6 / 60f) * 1000);
+        else if (level >= 10 && level <= 12)
+            speed = (int) ((5 / 60f) * 1000);
+        else if (level >= 13 && level <= 15)
+            speed = (int) ((4 / 60f) * 1000);
+        else if (level >= 16 && level <= 18)
+            speed = (int) ((3 / 60f) * 1000);
+        else if (level >= 19 && level <= 28)
+            speed = (int) ((2 / 60f) * 1000);
+        else if (level >= 29)
+            speed = (int) ((1 / 60f) * 1000);
 
         palette.currentPalette = level % 10;
     }
@@ -171,8 +182,9 @@ public class MyGame extends Game {
             pen.drawString("Level: " + level, 32, 60);
             pen.drawString("Next", offset + board.board[0].length * tileSize + 48, offset + 40);
             pen.drawString("Hold", 32, offset + 40);
-            
-            if (client != null) drawClock(pen);
+
+            if (client != null)
+                drawClock(pen);
 
             levelMessage.draw(pen);
         } else {
@@ -180,7 +192,8 @@ public class MyGame extends Game {
         }
 
         status.draw(pen);
-        if (prompt != null) prompt.draw(pen);
+        if (prompt != null)
+            prompt.draw(pen);
         if (client != null) {
             client.drawLobby(pen);
             client.drawQueue(pen);
@@ -192,14 +205,16 @@ public class MyGame extends Game {
         int c = clock;
         String s = clock / 60 + ":";
         c -= clock / 60 * 60;
-        
-        if (c < 10) s += "0" + c;
-        else s += c;
+
+        if (c < 10)
+            s += "0" + c;
+        else
+            s += c;
 
         pen.setColor(Color.WHITE);
         pen.drawString("Time Left " + s, offset + board.board[0].length * 25 + 8, offset - 48);
     }
-    
+
     public static void exitToMenu() {
         SoundManager.stopAllSounds();
 
@@ -229,7 +244,8 @@ public class MyGame extends Game {
             if (server != null) {
                 try {
                     database.closeServer();
-                } catch (UnknownHostException e) {}
+                } catch (UnknownHostException e) {
+                }
             }
 
             server = null;
@@ -245,31 +261,32 @@ public class MyGame extends Game {
         SoundManager.stopAllSounds();
         menu = new Menus().new ResultsMenu();
         clock = 10;
-        
+
         switch (client.deaths) {
             case 0:
-                account.addExp((int)((Math.random() * 24) + 125));
+                account.addExp((int) ((Math.random() * 24) + 125));
                 break;
 
             case 1:
-                account.addExp((int)((Math.random() * 49) + 75));
+                account.addExp((int) ((Math.random() * 49) + 75));
                 break;
 
             case 2:
-                account.addExp((int)((Math.random() * 24) + 50));
+                account.addExp((int) ((Math.random() * 24) + 50));
                 break;
 
             case 3:
-                account.addExp((int)((Math.random() * 24) + 25));
+                account.addExp((int) ((Math.random() * 24) + 25));
                 break;
 
             default:
-                account.addExp((int)((Math.random() * 24) + 1));
+                account.addExp((int) ((Math.random() * 24) + 1));
                 break;
         }
 
         client.output.println(client.name + " " + client.deaths + " ... ... ... ... deaths.");
-        if (client != null) client.queue.clear();
+        if (client != null)
+            client.queue.clear();
     }
 
     public void repeatLeft() {
@@ -286,8 +303,9 @@ public class MyGame extends Game {
                         inputDelay += 10;
                         repeatLeft();
                     }
-                }, (long)10);
-            } catch (IllegalStateException e) {}
+                }, (long) 10);
+            } catch (IllegalStateException e) {
+            }
         }
     }
 
@@ -305,17 +323,20 @@ public class MyGame extends Game {
                         inputDelay += 10;
                         repeatRight();
                     }
-                }, (long)10);
-            } catch (IllegalStateException e) {}
+                }, (long) 10);
+            } catch (IllegalStateException e) {
+            }
         }
     }
 
     @Override
-    public void keyTyped(KeyEvent ke) {}
+    public void keyTyped(KeyEvent ke) {
+    }
 
     @Override
     public void keyPressed(KeyEvent ke) {
-        if (prompt != null) prompt.type(ke);
+        if (prompt != null)
+            prompt.type(ke);
         switch (ke.getKeyCode()) {
             case 27: // ESCAPE Key
                 if (menu == null) {
@@ -323,11 +344,12 @@ public class MyGame extends Game {
                         exitToMenu();
                         client.output.println("Game Ended.");
                     } else {
-                        if (client == null) exitToMenu();
+                        if (client == null)
+                            exitToMenu();
                     }
                 } else {
                     leaveGame();
-                    
+
                     this.running = false;
                 }
                 break;
@@ -337,12 +359,10 @@ public class MyGame extends Game {
                     board.hardDrop();
                     if (client != null) {
                         SoundManager.playSound("sfx/Harddrop.wav", false);
-                    }
-                    else {
+                    } else {
                         SoundManager.playSound("sfx/HarddropSolo.wav", false);
                     }
                 }
-                notMove = false;
                 break;
 
             case 37: // Left Arrow Key
@@ -354,12 +374,11 @@ public class MyGame extends Game {
                 }
 
                 board.move(-1);
-                notMove = true;
                 break;
 
             case 38: // Up Arrow Key
-                if (board.currentTetrimino != null && board.currentTetrimino.direction != -1) board.currentTetrimino.rotate(1);
-                notMove = true;
+                if (board.currentTetrimino != null && board.currentTetrimino.direction != -1)
+                    board.currentTetrimino.rotate(1);
                 break;
 
             case 39: // Right Arrow Key
@@ -369,32 +388,32 @@ public class MyGame extends Game {
                 if (timer != null) {
                     repeatRight();
                 }
-                
+
                 board.move(1);
-                notMove = true;
                 break;
 
             case 40: // Down Arrow Key
                 board.moveTetriminos();
                 if (client != null) {
                     SoundManager.playSound("sfx/Softdrop.wav", false);
-                }
-                else {
+                } else {
                     SoundManager.playSound("sfx/Action.wav", false);
                 }
                 break;
 
             case 47: // Slash key
-                if (prompt == null) chat.openChat();
+                if (prompt == null)
+                    chat.openChat();
                 break;
 
             case 67: // C Key (Holding)
-                if (!board.held) board.hold();
+                if (!board.held)
+                    board.hold();
                 break;
 
             case 90: // Z Key
-                if (board.currentTetrimino != null && board.currentTetrimino.direction != -1) board.currentTetrimino.rotate(-1);
-                notMove = true;
+                if (board.currentTetrimino != null && board.currentTetrimino.direction != -1)
+                    board.currentTetrimino.rotate(-1);
                 break;
         }
     }
@@ -409,7 +428,6 @@ public class MyGame extends Game {
                 inputDelay = 0;
                 break;
 
-
             case 39: // Right Arrow Key
                 arrows[1] = false;
                 arrows[3] = true;
@@ -417,37 +435,44 @@ public class MyGame extends Game {
                 inputDelay = 0;
                 break;
         }
-
-        notMove = false;
     }
 
     @Override
     public void mouseClicked(MouseEvent ke) {
-        if (menu != null) menu.buttonInteractions(ke);
+        if (menu != null)
+            menu.buttonInteractions(ke);
     }
 
     @Override
-    public void mousePressed(MouseEvent me) {}
-    
-    @Override
-    public void mouseReleased(MouseEvent me) {}
+    public void mousePressed(MouseEvent me) {
+    }
 
     @Override
-    public void mouseEntered(MouseEvent me) {}
+    public void mouseReleased(MouseEvent me) {
+    }
 
     @Override
-    public void mouseExited(MouseEvent me) {}
+    public void mouseEntered(MouseEvent me) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent me) {
+    }
 
     @Override
     public void mouseMoved(MouseEvent me) {
-        if (menu != null) menu.buttonInteractions(me);
+        if (menu != null)
+            menu.buttonInteractions(me);
     }
 
     @Override
     public void mouseDragged(MouseEvent me) {
-        if (menu != null) menu.buttonInteractions(me);
+        if (menu != null)
+            menu.buttonInteractions(me);
     }
-        
-    //Launches the Game
-    public static void main(String[] args) { new MyGame().start(TITLE, SCREEN_WIDTH,SCREEN_HEIGHT); }
+
+    // Launches the Game
+    public static void main(String[] args) {
+        new MyGame().start(TITLE, SCREEN_WIDTH, SCREEN_HEIGHT);
+    }
 }
