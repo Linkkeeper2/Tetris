@@ -12,6 +12,8 @@ public class Board {
     public int messageDirection; // Direction to move message when clearing lines
     public boolean alive = false;
     public Challenge challenge;
+    private boolean lock = false;
+    private int lockTime = 0;
 
     public Board() {
         board = new TetriminoNode[20][10];
@@ -52,6 +54,11 @@ public class Board {
         updateArray();
 
         if (challenge != null) challenge.check();
+
+        if (lock) {
+            if (lockTime < 100) lockTime++;
+            else lock = false;
+        }
     }
 
     public void draw(Graphics pen) {
@@ -201,15 +208,15 @@ public class Board {
 
         for (int i = 0; i < nodes.length; i++) {
             if (nodes[i].row >= board.length - 1) {
-                if (!MyGame.notMove) currentTetrimino = null;
+                if (!MyGame.notMove && !lock) currentTetrimino = null;
                 return;
             }
             else if (board[nodes[i].row + 1][nodes[i].col] != null && board[nodes[i].row + 1][nodes[i].col].parent == null) {
-                if (!MyGame.notMove) currentTetrimino = null;
+                if (!MyGame.notMove && !lock) currentTetrimino = null;
                 return;
             } 
             else if (board[nodes[i].row + 1][nodes[i].col] != null && !board[nodes[i].row + 1][nodes[i].col].parent.equals(nodes[i].parent)) {
-                if (!MyGame.notMove) currentTetrimino = null;
+                if (!MyGame.notMove && !lock) currentTetrimino = null;
                 return;
             }
         }
@@ -477,6 +484,9 @@ public class Board {
         for (int i = 0; i < nodes.length; i++) {
             nodes[i].col += 1 * direction;
         }
+
+        lockTime = 0;
+        lock = true;
 
         TetriminoNode[][] rotations = currentTetrimino.getRotations();
 
