@@ -242,8 +242,7 @@ public class Board {
             }
         }
 
-        lock = false;
-        lockTime = 0;
+        lockTime++;
         MyGame.tSpin = false;
 
         if (!MyGame.hardDropping) {
@@ -932,20 +931,6 @@ public class Board {
         alive = true;
         board = new TetriminoNode[20][10];
 
-        if (MyGame.client == null) {
-            if (MyGame.level < 9)
-                SoundManager.playSound("sfx/MusicSolo.wav", true);
-            else if (MyGame.level < 19)
-                SoundManager.playSound("sfx/Level9.wav", true);
-            else
-                SoundManager.playSound("sfx/Level19.wav", true);
-            MyGame.clock = 10;
-        } else {
-            SoundManager.playSound("sfx/Battle.wav", false);
-            MyGame.clock = 300;
-            MyGame.client.deaths = 0;
-        }
-
         MyGame.lines = 0;
         MyGame.score = 0;
         MyGame.timesCleared = 0;
@@ -978,6 +963,20 @@ public class Board {
 
         updateArray();
         move(1);
+
+        if (MyGame.client == null) {
+            if (MyGame.level < 9)
+                SoundManager.playSound("sfx/MusicSolo.wav", true);
+            else if (MyGame.level < 19)
+                SoundManager.playSound("sfx/Level9.wav", true);
+            else
+                SoundManager.playSound("sfx/Level19.wav", true);
+            MyGame.clock = 10;
+        } else {
+            SoundManager.playSound("sfx/Battle.wav", false);
+            MyGame.clock = 300;
+            MyGame.client.deaths = 0;
+        }
     }
 
     public void startChallenge(Challenge challenge) {
