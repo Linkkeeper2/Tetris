@@ -59,7 +59,7 @@ public class Board {
             challenge.check();
 
         if (lock) {
-            if (lockTime < 100)
+            if (lockTime < 60)
                 lockTime++;
             else
                 lock = false;
@@ -242,6 +242,8 @@ public class Board {
             }
         }
 
+        lock = false;
+        lockTime = 0;
         MyGame.tSpin = false;
 
         if (!MyGame.hardDropping) {
