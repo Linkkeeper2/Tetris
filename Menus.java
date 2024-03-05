@@ -62,7 +62,7 @@ public class Menus {
                 buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 150, 100 + (i * 75), 300, 50, Color.GRAY, Color.DARK_GRAY, doc.getString("name") + "'s Game", new ButtonActions().new JoinServer(doc.getString("address"))));
             }
             
-            buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, MyGame.SCREEN_HEIGHT - 100, 150, 50, Color.GRAY, Color.DARK_GRAY, "Back to Menu", new ButtonActions().new BackToMenu()));
+            buttons.add(new Button(10, MyGame.SCREEN_HEIGHT - 100, 150, 50, Color.GRAY, Color.DARK_GRAY, "Back to Menu", new ButtonActions().new BackToMenu()));
         }
     }
 
