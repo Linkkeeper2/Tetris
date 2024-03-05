@@ -30,11 +30,12 @@ public class Database {
         // Replace the uri string with your MongoDB deployment's connection string
         try {
             String uri = "mongodb+srv://Linkkeeper2:admin@cluster0.hae2g3k.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-            
+
             client = MongoClients.create(uri);
             database = client.getDatabase("Tetris");
             collection = database.getCollection("Servers");
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
     public void createServer(String address, String hostName) {
@@ -45,7 +46,8 @@ public class Database {
                     .append("_id", new ObjectId())
                     .append("address", address)
                     .append("name", hostName));
-        } catch (MongoException me) {}
+        } catch (MongoException me) {
+        }
     }
 
     public FindIterable<Document> getServers() {
@@ -54,7 +56,7 @@ public class Database {
         Bson projectionFields = Projections.fields(
                 Projections.include("address", "name"),
                 Projections.excludeId());
-        
+
         FindIterable<Document> servers = collection.find()
                 .projection(projectionFields);
 
@@ -63,13 +65,14 @@ public class Database {
 
     public void closeServer() throws UnknownHostException {
         collection = database.getCollection("Servers");
-        
+
         String address = InetAddress.getLocalHost().getHostAddress();
         Bson query = Filters.eq("address", address);
 
         try {
             collection.deleteOne(query);
-        } catch (MongoException me) {}
+        } catch (MongoException me) {
+        }
     }
 
     public void createAccount(String name, String password) {
@@ -85,9 +88,9 @@ public class Database {
                     .append("highestLvl", 0));
 
             Bson projectionFields = Projections.fields(
-                Projections.include("name", "password", "level", "exp"),
-                Projections.excludeId());
-                
+                    Projections.include("name", "password", "level", "exp", "prestige"),
+                    Projections.excludeId());
+
             Document doc = collection.find(Filters.eq("password", password))
                     .projection(projectionFields)
                     .first();
@@ -95,18 +98,20 @@ public class Database {
             MyGame.account.name = doc.getString("name");
             MyGame.account.level = doc.getInteger("level");
             MyGame.account.exp = doc.getInteger("exp");
+            MyGame.account.prestige = doc.getInteger("prestige");
             MyGame.account.highestLevel = doc.getInteger("highestLvl");
             MyGame.status.addMessage("Account created successfully!", 2500);
-        } catch (MongoException me) {}
+        } catch (MongoException me) {
+        }
     }
 
     public void linkAccount(String name, String password) {
         collection = database.getCollection("Accounts");
 
         Bson projectionFields = Projections.fields(
-                Projections.include("name", "password", "level", "exp", "highestLvl"),
+                Projections.include("name", "password", "level", "exp", "highestLvl", "prestige"),
                 Projections.excludeId());
-        
+
         FindIterable<Document> iterable = collection.find()
                 .projection(projectionFields);
 
@@ -123,6 +128,7 @@ public class Database {
                 MyGame.account.name = name;
                 MyGame.account.level = doc.getInteger("level");
                 MyGame.account.exp = doc.getInteger("exp");
+                MyGame.account.prestige = doc.getInteger("prestige");
                 MyGame.account.highestLevel = doc.getInteger("highestLvl");
                 MyGame.status.addMessage("Logged in successfully!", 2500);
 
@@ -131,7 +137,8 @@ public class Database {
 
                     myWriter.write(name + "\n" + password);
                     myWriter.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                }
                 return;
             } else if (doc.getString("name").equals(name)) {
                 MyGame.status.addMessage("Username is taken.", 2500);
@@ -145,30 +152,33 @@ public class Database {
             FileWriter myWriter = new FileWriter("Account.txt");
             myWriter.write(name + "\n" + password);
             myWriter.close();
-        } catch (IOException e) {}
+        } catch (IOException e) {
+        }
     }
 
     public void updateAccount(String name) {
         collection = database.getCollection("Accounts");
-        
+
         Document query = new Document().append("name", name);
 
         Bson updates = Updates.combine(
                 Updates.set("level", MyGame.account.level),
                 Updates.set("exp", MyGame.account.exp),
-                Updates.set("highestLvl", MyGame.account.highestLevel));
+                Updates.set("highestLvl", MyGame.account.highestLevel),
+                Updates.set("prestige", MyGame.account.prestige));
         try {
             collection.updateOne(query, updates);
-        } catch (MongoException me) {}
+        } catch (MongoException me) {
+        }
     }
 
     public FindIterable<Document> getAccounts() {
         collection = database.getCollection("Accounts");
 
         Bson projectionFields = Projections.fields(
-                Projections.include("name", "level", "highestLvl"),
+                Projections.include("name", "level", "highestLvl", "prestige"),
                 Projections.excludeId());
-        
+
         FindIterable<Document> accounts = collection.find()
                 .projection(projectionFields);
 

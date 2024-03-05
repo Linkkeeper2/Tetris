@@ -7,16 +7,17 @@ public class Account {
     public int level = 0;
     public int exp = 0;
     public int highestLevel = 0;
-    
+    public int prestige = 0;
+
     public Account() {
-        name = "Guest" + (int)(Math.random() * 10000);
+        name = "Guest" + (int) (Math.random() * 10000);
     }
 
     public void login() {
         try {
             File account = new File("Account.txt");
             Scanner reader = new Scanner(account);
-            
+
             if (reader.hasNext()) {
                 String accName = reader.nextLine();
                 String accPassword = reader.nextLine();
@@ -26,10 +27,10 @@ public class Account {
                 reader.close();
                 return;
             }
-            
 
             reader.close();
-        } catch (FileNotFoundException e) {}
+        } catch (FileNotFoundException e) {
+        }
     }
 
     public void addExp(int val) {
@@ -40,8 +41,19 @@ public class Account {
             exp -= 50 + (level * 50);
             level++;
             MyGame.status.addMessage("Leveled up to Level " + level + "!", 3000);
+
+            if (level >= 50)
+                prestige();
         }
 
-        if (!name.startsWith("Guest")) MyGame.database.updateAccount(name);
+        if (!name.startsWith("Guest"))
+            MyGame.database.updateAccount(name);
+    }
+
+    private void prestige() {
+        level = 0;
+        exp = 0;
+        prestige++;
+        MyGame.status.addMessage("You are now Prestige " + prestige + "!", 3000);
     }
 }
