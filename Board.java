@@ -14,6 +14,7 @@ public class Board {
     public Challenge challenge;
     public boolean lock = false;
     private int lockTime = 0;
+    private boolean moving = false;
 
     public Board() {
         board = new TetriminoNode[20][10];
@@ -37,7 +38,7 @@ public class Board {
             MyGame.messageCol = currentTetrimino.getNodes()[0].col;
             MyGame.messageRow = currentTetrimino.getNodes()[0].row;
 
-            if (MyGame.direction != 0) {
+            if (MyGame.direction != 0 && !moving) {
                 move(MyGame.direction);
             }
         }
@@ -59,7 +60,7 @@ public class Board {
             challenge.check();
 
         if (lock) {
-            if (lockTime < 60)
+            if (lockTime < 50)
                 lockTime++;
             else
                 lock = false;
@@ -519,6 +520,8 @@ public class Board {
                 return;
         }
 
+        moving = true;
+
         for (int i = 0; i < nodes.length; i++) {
             nodes[i].col += 1 * direction;
         }
@@ -553,6 +556,8 @@ public class Board {
         } else {
             SoundManager.playSound("sfx/Action.wav", false);
         }
+
+        moving = false;
     }
 
     public void hold() {
