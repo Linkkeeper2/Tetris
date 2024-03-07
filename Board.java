@@ -227,23 +227,28 @@ public class Board {
 
         for (int i = 0; i < nodes.length; i++) {
             if (nodes[i].row >= board.length - 1) {
-                if (!lock)
+                if (lockTime >= 50)
                     currentTetrimino = null;
+
+                lock = true;
                 return;
             } else if (board[nodes[i].row + 1][nodes[i].col] != null
                     && board[nodes[i].row + 1][nodes[i].col].parent == null) {
-                if (!lock)
+                if (lockTime >= 50)
                     currentTetrimino = null;
+
+                lock = true;
                 return;
             } else if (board[nodes[i].row + 1][nodes[i].col] != null
                     && !board[nodes[i].row + 1][nodes[i].col].parent.equals(nodes[i].parent)) {
-                if (!lock)
+                if (lockTime >= 50)
                     currentTetrimino = null;
+
+                lock = true;
                 return;
             }
         }
 
-        lockTime++;
         MyGame.tSpin = false;
 
         if (!MyGame.hardDropping) {
