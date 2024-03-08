@@ -35,8 +35,10 @@ public class Board {
                 lockTime = 0;
             }
         } else if (currentTetrimino != null) {
-            MyGame.messageCol = currentTetrimino.getNodes()[0].col;
-            MyGame.messageRow = currentTetrimino.getNodes()[0].row;
+            try {
+                MyGame.messageCol = currentTetrimino.getNodes()[0].col;
+                MyGame.messageRow = currentTetrimino.getNodes()[0].row;
+            } catch (NullPointerException e) {}
 
             if (MyGame.direction != 0 && !moving) {
                 move(MyGame.direction);
