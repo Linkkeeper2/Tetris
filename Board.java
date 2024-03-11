@@ -38,7 +38,8 @@ public class Board {
             try {
                 MyGame.messageCol = currentTetrimino.getNodes()[0].col;
                 MyGame.messageRow = currentTetrimino.getNodes()[0].row;
-            } catch (NullPointerException e) {}
+            } catch (NullPointerException e) {
+            }
 
             if (MyGame.direction != 0 && !moving) {
                 move(MyGame.direction);
@@ -704,7 +705,7 @@ public class Board {
                 MyGame.messageRow = r;
                 MyGame.animation.rowsToClear.add(r);
 
-                speedCalculation();
+                levelCalculation();
             }
         }
 
@@ -842,30 +843,32 @@ public class Board {
         }
     }
 
-    public void speedCalculation() {
-        if ((MyGame.level + 1) * 10 - MyGame.lines <= 0) {
-            MyGame.level++;
-            MyGame.levelMessage.contents = "Level Up!";
-
-            if (MyGame.client != null) {
-                SoundManager.playSound("sfx/LUp.wav", false);
-            } else {
-                SoundManager.playSound("sfx/LevelUpSolo.wav", false);
+    public void levelCalculation() {
+        if (MyGame.save.startLevel >= 12 && MyGame.level == MyGame.save.startLevel) {
+            if ((MyGame.save.startLevel * 10 - 50) - MyGame.lines <= 0)
+                levelUp();
+        } else {
+            if ((MyGame.level + 1) * 10 - MyGame.lines <= 0) {
+                levelUp();
             }
+        }
+    }
 
-            if (MyGame.level == 9) {
-                SoundManager.stopAllSounds();
-                SoundManager.playSound("sfx/Level9.wav", true);
-            } else if (MyGame.level == 19) {
-                SoundManager.stopAllSounds();
-                SoundManager.playSound("sfx/Level19.wav", true);
-            }
+    public void levelUp() {
+        MyGame.level++;
 
-            MyGame.timer.schedule(new TimerTask() {
-                public void run() {
-                    MyGame.levelMessage.contents = "";
-                }
-            }, (long) 750);
+        if (MyGame.client != null) {
+            SoundManager.playSound("sfx/LUp.wav", false);
+        } else {
+            SoundManager.playSound("sfx/LevelUpSolo.wav", false);
+        }
+
+        if (MyGame.level == 9) {
+            SoundManager.stopAllSounds();
+            SoundManager.playSound("sfx/Level9.wav", true);
+        } else if (MyGame.level == 19) {
+            SoundManager.stopAllSounds();
+            SoundManager.playSound("sfx/Level19.wav", true);
         }
     }
 
