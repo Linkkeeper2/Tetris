@@ -66,8 +66,8 @@ public class MyGame extends Game {
     public MyGame() {
         // initialize variables here
         board = new Board();
-        database = new Database();
-        account = new Account();
+        // database = new Database();
+        // account = new Account();
         chat = new Chat();
         status = new ServerStatus();
         menus = new Menus();
@@ -109,7 +109,7 @@ public class MyGame extends Game {
         } catch (IllegalStateException e) {
         }
 
-        account.login();
+        // account.login();
     }
 
     public void update() {

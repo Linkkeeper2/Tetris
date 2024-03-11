@@ -844,11 +844,16 @@ public class Board {
     }
 
     public void levelCalculation() {
-        if (MyGame.save.startLevel >= 12 && MyGame.level == MyGame.save.startLevel) {
-            if ((MyGame.save.startLevel * 10 - 50) - MyGame.lines <= 0)
-                levelUp();
+        if (MyGame.save.startLevel >= 12) {
+            if (MyGame.level == MyGame.save.startLevel) {
+                if ((MyGame.save.startLevel * 10 - 50) - MyGame.lines <= 0)
+                    levelUp();
+            } else {
+                if (((MyGame.level + 1) * 10 - MyGame.lines) - (MyGame.save.startLevel * 10 - 50) <= 0)
+                    levelUp();
+            }
         } else {
-            if (((MyGame.level + 1) * 10 - MyGame.lines) - (MyGame.save.startLevel * 10 - 50) <= 0) {
+            if (((MyGame.level + 1) * 10 - MyGame.lines) <= 0) {
                 levelUp();
             }
         }
