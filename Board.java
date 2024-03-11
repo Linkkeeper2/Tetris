@@ -863,12 +863,21 @@ public class Board {
             SoundManager.playSound("sfx/LevelUpSolo.wav", false);
         }
 
-        if (MyGame.level == 9) {
-            SoundManager.stopAllSounds();
-            SoundManager.playSound("sfx/Level9.wav", true);
-        } else if (MyGame.level == 19) {
-            SoundManager.stopAllSounds();
-            SoundManager.playSound("sfx/Level19.wav", true);
+        switch (MyGame.level) {
+            case 9:
+                SoundManager.stopAllSounds();
+                SoundManager.playSound("sfx/Level9.wav", true);
+                break;
+
+            case 19:
+                SoundManager.stopAllSounds();
+                SoundManager.playSound("sfx/Level19.wav", true);
+                break;
+
+            case 29:
+                SoundManager.stopAllSounds();
+                SoundManager.playSound("sfx/Level29.wav", true);
+                break;
         }
     }
 
