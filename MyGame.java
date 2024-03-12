@@ -3,12 +3,9 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import java.util.ArrayList;
 
 public class MyGame extends Game {
     public static final String TITLE = "Tetris";
@@ -45,11 +42,9 @@ public class MyGame extends Game {
 
     // Client data
     public static Client client;
-    public static Server server;
     public static ServerStatus status; // Status messages to display in game
     public static Chat chat; // Chat between players
     public static TextBox prompt;
-    public static ArrayList<Bot> bots;
     public static int timesCleared = 0; // The amount of times the player has cleared lines in order to send lines to
                                         // other clients
     public static int linesToSend; // Amount of lines to send to other clients when a threshold is reached
@@ -66,16 +61,22 @@ public class MyGame extends Game {
     public MyGame() {
         // initialize variables here
         board = new Board();
-        database = new Database();
+        status = new ServerStatus();
+
+        try {
+            database = new Database();
+        } catch (Exception e) {
+            status.addMessage("Could not connect to servers.", 5000);
+        }
+
         account = new Account();
         chat = new Chat();
-        status = new ServerStatus();
+
         menus = new Menus();
         menu = menus.new MainMenu();
         levelMessage = new Menu().new Text("", 0, 700, Color.WHITE);
         palette = new ColorPalette();
         timer = new Timer();
-        bots = new ArrayList<>();
         save = new Save();
         animation = new ClearAnimation();
         animation.start();
@@ -106,10 +107,17 @@ public class MyGame extends Game {
                     }
                 }
             }, (long) 1000, 1000);
+
+            timer.schedule(new TimerTask() {
+                public void run() {
+                    database.readAll();
+                }
+            }, 250, 250);
         } catch (IllegalStateException e) {
         }
 
-        account.login();
+        if (database != null)
+            account.login();
     }
 
     public void update() {
@@ -117,13 +125,13 @@ public class MyGame extends Game {
         board.update();
 
         if (menu == null && !board.alive && client != null) {
-            client.output.println(client.name + " has topped out.");
+            MyGame.database.addStatus(client.name + " has topped out.");
             board.reset();
             SoundManager.playSound("sfx/KO.wav", false);
         }
 
-        if (clock <= 0 && server != null && menu == null) {
-            client.output.println("... ... ... ... ... ... ... Game over.");
+        if (clock <= 0 && client != null && client.gameHost && menu == null) {
+            MyGame.database.addStatus("Game Over.");
             endGame();
         }
 
@@ -147,6 +155,11 @@ public class MyGame extends Game {
                 }
             }
             exitToMenu();
+        }
+
+        if (client == null && menu instanceof Menus.LobbyMenu) {
+            exitToMenu();
+            status.addMessage("Disconnected from Host.", 3000);
         }
     }
 
@@ -221,6 +234,9 @@ public class MyGame extends Game {
         if (client != null) {
             client.queue.clear();
             menu = menus.new LobbyMenu();
+
+            if (client.gameHost)
+                database.clearStatus();
         } else {
             menu = menus.new MainMenu();
         }
@@ -229,29 +245,20 @@ public class MyGame extends Game {
     }
 
     public static void leaveGame() {
-        if (client != null && client.output != null && client.input != null) {
-            client.output.println(client.name + " has left.");
+        if (client != null) {
+            MyGame.database.addStatus(client.name + " has left.");
+            MyGame.status.addMessage("Disconnected from Host.");
 
-            try {
-                client.output.close();
-                client.input.close();
-            } catch (IOException e) {
-                status.addMessage(e.toString());
-            }
-
-            client = null;
-
-            if (server != null) {
+            if (client.gameHost) {
                 try {
                     database.closeServer();
                 } catch (UnknownHostException e) {
                 }
             }
 
-            server = null;
+            client = null;
             prompt = null;
             menu = new Menus().new MainMenu();
-            bots.clear();
         }
 
         SoundManager.stopAllSounds();
@@ -284,7 +291,7 @@ public class MyGame extends Game {
                 break;
         }
 
-        client.output.println(client.name + " " + client.deaths + " ... ... ... ... deaths.");
+        MyGame.database.addResult(client.name + " " + client.deaths + " deaths.");
         if (client != null)
             client.queue.clear();
     }
@@ -340,9 +347,9 @@ public class MyGame extends Game {
         switch (ke.getKeyCode()) {
             case 27: // ESCAPE Key
                 if (menu == null) {
-                    if (server != null) {
+                    if (client != null && client.gameHost) {
                         exitToMenu();
-                        client.output.println("Game Ended.");
+                        MyGame.database.addStatus("Game Ended by Host.");
                     } else {
                         if (client == null)
                             exitToMenu();

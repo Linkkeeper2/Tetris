@@ -8,8 +8,6 @@ public class Chat {
 
     public Chat() {
         messages = new ArrayList<Menu.Text>();
-        Menu.Text t = new Menu().new Text("Chat (/ to chat)", 0, 0, Color.WHITE);
-        messages.add(t);
     }
 
     public void addMessage(String s) {
@@ -18,9 +16,13 @@ public class Chat {
     }
 
     public void draw(Graphics pen) {
+        if (messages == null)
+            messages = new ArrayList<>();
+
         for (int i = 0; i < messages.size(); i++) {
             if (MyGame.menu == null) {
-                if (messages.get(i) == null) continue;
+                if (messages.get(i) == null)
+                    continue;
                 messages.get(i).x = MyGame.offset + 10 * 25 + 300;
                 messages.get(i).y = MyGame.offset + i * 25;
                 messages.get(i).draw(pen);
@@ -29,9 +31,15 @@ public class Chat {
     }
 
     public void openChat() {
-        if (MyGame.client == null) return;
-        if (MyGame.menu != null) return;
+        if (MyGame.client == null)
+            return;
+        if (MyGame.menu != null)
+            return;
         bubble = new TextActions().new Chat();
         bubble.action();
+    }
+
+    public void updateChat(ArrayList<Menu.Text> msgs) {
+        messages = msgs;
     }
 }

@@ -6,15 +6,11 @@ public class ButtonActions {
     public class Start implements ButtonAction {
         public void action() {
             Client client = MyGame.client;
-            if (client == null && MyGame.prompt == null) MyGame.board.startGame();
+            if (client == null && MyGame.prompt == null)
+                MyGame.board.startGame();
             else {
-                if (MyGame.server != null && client.lobby.size() > 2) {
-                    MyGame.board.startGame();
-                    MyGame.client.output.println(MyGame.client.name + " Started the Game!");
-                    MyGame.status.addMessage(MyGame.client.name + " Started the Game!");
-                } else {
-                    if (MyGame.server != null) MyGame.status.addMessage("Game cannot start with 1 player.");
-                    else MyGame.status.addMessage("Only the host can start the game..");
+                if (MyGame.client.gameHost && client.lobby.size() > 2) {
+                    MyGame.database.addStatus(MyGame.client.name + " Started the Game!");
                 }
             }
         }
@@ -22,20 +18,17 @@ public class ButtonActions {
 
     public class Host implements ButtonAction {
         public void action() {
-            if (MyGame.client != null) return;
-
-            MyGame.server = new Server(2500);
-            MyGame.server.start();
+            if (MyGame.client != null)
+                return;
 
             try {
-                MyGame.client = new Client(InetAddress.getLocalHost().getHostAddress(), 2500);
+                MyGame.client = new Client(InetAddress.getLocalHost().getHostAddress(), true);
                 MyGame.client.name = MyGame.account.name;
 
-                MyGame.client.addPlayer(MyGame.client.name);
-
                 try {
-                    MyGame.status.addMessage("Hosted Game Successfully!", 5000);
                     MyGame.database.createServer(InetAddress.getLocalHost().getHostAddress(), MyGame.client.name);
+                    MyGame.database.addLobby(MyGame.client.name);
+                    MyGame.database.addStatus("Hosted Game Successfully!");
                 } catch (UnknownHostException e) {
                     MyGame.status.addMessage("Could not host game.");
                 }
@@ -43,7 +36,6 @@ public class ButtonActions {
                 MyGame.menu = new Menus().new LobbyMenu();
             } catch (UnknownHostException e) {
                 MyGame.status.addMessage("Failed to connect to server");
-                MyGame.server = null;
                 MyGame.client = null;
             }
         }
@@ -58,15 +50,11 @@ public class ButtonActions {
 
     public class BackToMenu implements ButtonAction {
         public void action() {
-            if (MyGame.client == null) MyGame.menu = new Menus().new MainMenu();
-            else MyGame.menu = new Menus().new LobbyMenu();
+            if (MyGame.client == null)
+                MyGame.menu = new Menus().new MainMenu();
+            else
+                MyGame.menu = new Menus().new LobbyMenu();
             MyGame.prompt = null;
-        }
-    }
-
-    public class AddBot implements ButtonAction {
-        public void action() {
-            MyGame.bots.add(new Bot());
         }
     }
 
@@ -84,18 +72,23 @@ public class ButtonActions {
         }
 
         public void action() {
-            if (MyGame.save.startLevel >= 0 && MyGame.save.startLevel < 18) MyGame.save.startLevel += factor;
-            if (MyGame.save.startLevel < 0) MyGame.save.startLevel = 0;
-            if (factor == -1 && MyGame.save.startLevel == 18) MyGame.save.startLevel += factor;
+            if (MyGame.save.startLevel >= 0 && MyGame.save.startLevel < 18)
+                MyGame.save.startLevel += factor;
+            if (MyGame.save.startLevel < 0)
+                MyGame.save.startLevel = 0;
+            if (factor == -1 && MyGame.save.startLevel == 18)
+                MyGame.save.startLevel += factor;
 
             MyGame.menu.text.remove(MyGame.menu.text.size() - 1);
-            MyGame.menu.text.add(new Menu().new Text("Starting Level: " + MyGame.save.startLevel, MyGame.SCREEN_WIDTH / 2 - 75, 375, Color.WHITE));
+            MyGame.menu.text.add(new Menu().new Text("Starting Level: " + MyGame.save.startLevel,
+                    MyGame.SCREEN_WIDTH / 2 - 75, 375, Color.WHITE));
         }
     }
 
     public class ServerList implements ButtonAction {
         public void action() {
-            if (MyGame.client == null) MyGame.menu = new Menus().new ServerMenu();
+            if (MyGame.client == null)
+                MyGame.menu = new Menus().new ServerMenu();
         }
     }
 
@@ -104,32 +97,30 @@ public class ButtonActions {
 
         public JoinServer(String address) {
             this.address = address;
-        } 
+        }
 
         public void action() {
-            MyGame.client = new Client(address, 2500);
+            MyGame.client = new Client(address, false);
 
             MyGame.client.name = MyGame.account.name;
 
-            if (MyGame.client.output != null) {
-                MyGame.client.addPlayer(MyGame.client.name);
+            MyGame.database.addLobby(MyGame.client.name);
+            MyGame.status.addMessage("Connected to host.");
+            MyGame.database.addStatus(MyGame.client.name + " has connected.");
 
-                MyGame.client.output.println(MyGame.client.name + " has connected.");
-                MyGame.status.addMessage("Connected to host.");
-                
-                MyGame.menu = new Menus().new LobbyMenu();
-            } else {
-                MyGame.client.lobby.clear();
-                MyGame.prompt = null;
-                MyGame.client = null;
-                return;
-            }
+            MyGame.menu = new Menus().new LobbyMenu();
         }
     }
 
     public class LinkAccount implements ButtonAction {
         public void action() {
-            if (MyGame.client != null) return;
+            if (MyGame.database == null) {
+                MyGame.status.addMessage("Not connected to servers.", 3000);
+                return;
+            }
+
+            if (MyGame.client != null)
+                return;
             MyGame.prompt = new TextBox("Enter the Account Name (If you have an account, enter it's name)");
             new TextActions().new AccountThread().start();
         }
@@ -163,13 +154,24 @@ public class ButtonActions {
 
     public class Leaderboard implements ButtonAction {
         public void action() {
+            if (MyGame.database == null) {
+                MyGame.status.addMessage("Not connected to servers.", 3000);
+                return;
+            }
+
             MyGame.menu = new Menus().new LeaderboardMenu();
         }
     }
 
     public class Multiplayer implements ButtonAction {
         public void action() {
-            if (MyGame.client == null) MyGame.menu = new Menus().new MultiplayerMenu();
+            if (MyGame.database == null) {
+                MyGame.status.addMessage("Not connected to servers.", 3000);
+                return;
+            }
+
+            if (MyGame.client == null)
+                MyGame.menu = new Menus().new MultiplayerMenu();
         }
     }
 

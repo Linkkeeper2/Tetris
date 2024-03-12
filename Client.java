@@ -1,43 +1,31 @@
-import java.io.*;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.TimerTask;
 import java.awt.Graphics;
-import java.awt.Color;
 
 public class Client {
-	public DataOutputStream out = null;
-	public PrintWriter output;
-	public BufferedReader input;
 	public String name = "";
-	public Socket socket = null;
 	public ArrayList<Menu.Text> lobby;
 	public int deaths = 0;
 	public ArrayList<TetriminoNode> queue;
 	public int queueTimer = 0;
-	
-	public Client(String host, int port)
-	{
+	public boolean gameHost = false;
+	public String host;
+
+	public Client(String host, boolean gameHost) {
 		lobby = new ArrayList<>();
 		queue = new ArrayList<>();
-		addPlayer("Lobby");
-		MyGame.timer.schedule(new TimerTask() {
-			public void run() {
-				increaseTimer();
-			}
-		}, (long)1500);
 
 		try {
-			socket = new Socket(host, port);
-			input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			out = new DataOutputStream(socket.getOutputStream());
-			output = new PrintWriter(socket.getOutputStream(), true);
-			ClientThread clientThread = new ClientThread(socket);
-
-			clientThread.start();
-		} catch (Exception e) {
-			MyGame.status.addMessage("Could not connect to server.");
+			MyGame.timer.schedule(new TimerTask() {
+				public void run() {
+					increaseTimer();
+				}
+			}, (long) 1500);
+		} catch (IllegalStateException e) {
 		}
+
+		this.gameHost = gameHost;
+		this.host = host;
 	}
 
 	public void drawLobby(Graphics pen) {
@@ -51,18 +39,20 @@ public class Client {
 			}
 			lobby.get(i).draw(pen);
 		}
-
-		cleanLobby();
 	}
 
 	public void drawQueue(Graphics pen) {
 		for (int i = 0; i < queue.size(); i++) {
 			queue.get(i).row = MyGame.board.board.length - i - 1;
-			
-			if (queueTimer > queue.size() + 3) queue.get(i).sprite = MyGame.palette.sheet.sprites[14];
-			else if (queueTimer > queue.size()) queue.get(i).sprite = MyGame.palette.sheet.sprites[20];
-			else if (queueTimer > queue.size() / 2) queue.get(i).sprite = MyGame.palette.sheet.sprites[4];
-			else queue.get(i).sprite = MyGame.palette.sheet.sprites[5];
+
+			if (queueTimer > queue.size() + 3)
+				queue.get(i).sprite = MyGame.palette.sheet.sprites[14];
+			else if (queueTimer > queue.size())
+				queue.get(i).sprite = MyGame.palette.sheet.sprites[20];
+			else if (queueTimer > queue.size() / 2)
+				queue.get(i).sprite = MyGame.palette.sheet.sprites[4];
+			else
+				queue.get(i).sprite = MyGame.palette.sheet.sprites[5];
 
 			queue.get(i).updateColor();
 
@@ -70,30 +60,34 @@ public class Client {
 		}
 	}
 
-	public void cleanLobby() {
-		for (int i = 0; i < lobby.size(); i++) {
-			for (int k = i + 1; k < lobby.size(); k++) {
-				if (lobby.get(i).contents.equals(lobby.get(k).contents)) {
-					lobby.remove(k);
+	public void updateLobby() {
+		lobby = MyGame.database.readLobby();
+
+		if (!gameHost)
+			return;
+
+		ArrayList<Menu.Text> status = MyGame.status.messages;
+
+		for (int i = 0; i < status.size(); i++) {
+			if (status.get(i).contents.contains("left")) {
+				Menu.Text s = status.get(i);
+
+				for (int k = 0; k < lobby.size(); k++) {
+					if (lobby.get(k).contents.contains(s.contents.split(" ")[0])) {
+						MyGame.database.removeLobby(lobby.get(k).contents);
+
+						try {
+							MyGame.timer.schedule(new TimerTask() {
+								public void run() {
+									MyGame.database.removeStatus(s.contents);
+								}
+							}, 1500);
+						} catch (IllegalStateException e) {
+						}
+					}
 				}
 			}
 		}
-
-		/*
-		if (lobby.size() > 2) {
-            if (MyGame.server != null && !MyGame.menu.buttons.contains(MyGame.addBot)) MyGame.menu.buttons.add(MyGame.addBot);
-		} else {
-			MyGame.menu.buttons.remove(MyGame.addBot);
-		}
-		*/
-	}
-
-	public void addPlayer(String s) {
-		lobby.add(new Menu().new Text(s, 0, 0, Color.WHITE));
-	}
-
-	public void removePlayer(Menu.Text t) {
-		lobby.remove(t);
 	}
 
 	public void changeTimer(int value) {
@@ -118,8 +112,10 @@ public class Client {
 
 	public void increaseTimer() {
 		// Will increase the queue timer to fully recieve lines
-		if (MyGame.menu == null && queue.size() > 0) queueTimer++;
-		else queueTimer = 0;
+		if (MyGame.menu == null && queue.size() > 0)
+			queueTimer++;
+		else
+			queueTimer = 0;
 
 		if (queue.size() > 0 && queueTimer > queue.size() + 5) {
 			MyGame.board.recieveLines(queue.size());
@@ -128,8 +124,9 @@ public class Client {
 
 		MyGame.timer.schedule(new TimerTask() {
 			public void run() {
-				if (MyGame.client != null) increaseTimer();
+				if (MyGame.client != null)
+					increaseTimer();
 			}
-		}, (long)1500);
+		}, (long) 1500);
 	}
 }

@@ -68,6 +68,8 @@ public class Board {
             else
                 lock = false;
         }
+
+        checkGame();
     }
 
     public void draw(Graphics pen) {
@@ -211,11 +213,14 @@ public class Board {
 
         try {
             MyGame.timer.schedule(new TimerTask() {
+
                 public void run() {
                     automaticMove();
                 }
             }, (long) time);
-        } catch (IllegalStateException e) {
+        } catch (
+
+        IllegalStateException e) {
         }
     }
 
@@ -888,7 +893,7 @@ public class Board {
 
     public void sendLines(int linesCleared) {
         // Sends lines to the other players when a lines are cleared
-        if (MyGame.client != null && MyGame.client.output != null) {
+        if (MyGame.client != null) {
             if (MyGame.linesToSend >= MyGame.timesCleared || linesCleared >= 4) {
                 if (linesCleared > 0) {
                     String recieve = MyGame.client.lobby
@@ -897,8 +902,8 @@ public class Board {
                         recieve = MyGame.client.lobby.get((int) (Math.random() * MyGame.client.lobby.size())).contents;
                     }
 
-                    MyGame.client.output.println(MyGame.client.name + " sent " + linesCleared + " lines to " + recieve);
-                    MyGame.status.addMessage("Sent " + linesCleared + " lines to " + recieve + ".");
+                    MyGame.database.addAttack(MyGame.client.name, recieve, linesCleared);
+                    MyGame.database.addStatus(MyGame.client.name + " sent " + linesCleared + " lines to " + recieve);
 
                     MyGame.linesToSend = 0;
                     MyGame.timesCleared = (int) (Math.random() * 4) + 1;
@@ -960,6 +965,7 @@ public class Board {
         alive = true;
         board = new TetriminoNode[20][10];
 
+        MyGame.status.results.clear();
         MyGame.lines = 0;
         MyGame.score = 0;
         MyGame.timesCleared = 0;
@@ -1040,6 +1046,24 @@ public class Board {
         if (MyGame.client != null) {
             MyGame.client.deaths++;
             MyGame.client.queue.clear();
+        }
+    }
+
+    public void checkGame() {
+        ArrayList<Menu.Text> status = MyGame.status.messages;
+
+        if (status == null)
+            return;
+
+        for (int i = 0; i < status.size(); i++) {
+            if (status.get(i).contents.contains("Started") && MyGame.menu != null)
+                startGame();
+
+            else if (status.get(i).contents.contains("Ended") && MyGame.menu == null)
+                MyGame.exitToMenu();
+
+            else if (status.get(i).contents.contains("Over.") && MyGame.menu == null)
+                MyGame.endGame();
         }
     }
 }

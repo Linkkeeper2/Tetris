@@ -14,10 +14,11 @@ public class TextActions {
                 System.out.print("");
             }
 
-            if (MyGame.prompt == null) return;
+            if (MyGame.prompt == null)
+                return;
 
-            MyGame.client.output.println(MyGame.client.name + ": " + MyGame.prompt.send + " chat.");
-            
+            MyGame.database.chatMessage(MyGame.client.name, MyGame.prompt.send);
+
             MyGame.chat.bubble = null;
             MyGame.prompt = null;
         }
@@ -30,7 +31,8 @@ public class TextActions {
                 System.out.print("");
             }
 
-            if (MyGame.prompt == null) return;
+            if (MyGame.prompt == null)
+                return;
 
             String name = MyGame.prompt.send.split(" ")[0];
 

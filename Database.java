@@ -4,6 +4,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.TimerTask;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -20,6 +22,8 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Updates;
+
+import java.awt.Color;
 
 public class Database {
     private MongoClient client;
@@ -45,7 +49,12 @@ public class Database {
             collection.insertOne(new Document()
                     .append("_id", new ObjectId())
                     .append("address", address)
-                    .append("name", hostName));
+                    .append("name", hostName)
+                    .append("chat", Arrays.asList("Chat (/ to chat)"))
+                    .append("lobby", Arrays.asList("Lobby"))
+                    .append("status", Arrays.asList())
+                    .append("attacks", Arrays.asList())
+                    .append("results", Arrays.asList()));
         } catch (MongoException me) {
         }
     }
@@ -73,6 +82,306 @@ public class Database {
             collection.deleteOne(query);
         } catch (MongoException me) {
         }
+    }
+
+    public void chatMessage(String name, String message) {
+        if (MyGame.client == null)
+            return;
+
+        collection = database.getCollection("Servers");
+
+        Document query = new Document().append("address", MyGame.client.host);
+
+        Bson updates = Updates.combine(
+                Updates.addToSet("chat", name + ": " + message));
+
+        try {
+            collection.updateOne(query, updates);
+        } catch (MongoException me) {
+        }
+    }
+
+    public ArrayList<Menu.Text> readChat() {
+        if (MyGame.client == null)
+            return null;
+
+        collection = database.getCollection("Servers");
+
+        Bson projectionFields = Projections.fields(
+                Projections.include("chat"),
+                Projections.excludeId());
+
+        Document doc = collection.find(Filters.eq("address", MyGame.client.host))
+                .projection(projectionFields)
+                .first();
+
+        if (doc == null) {
+            MyGame.leaveGame();
+            return null;
+        }
+
+        @SuppressWarnings("unchecked")
+        ArrayList<String> chats = (ArrayList<String>) doc.get("chat");
+
+        ArrayList<Menu.Text> messages = new ArrayList<>();
+
+        for (Object e : chats)
+            messages.add(new Menu().new Text((String) e, 0, 0, Color.WHITE));
+
+        return messages;
+    }
+
+    public void addAttack(String name, String target, int lines) {
+        if (MyGame.client == null)
+            return;
+
+        collection = database.getCollection("Servers");
+
+        Document query = new Document().append("address", MyGame.client.host);
+
+        Bson updates = Updates.combine(
+                Updates.addToSet("attacks", name + " sent " + lines + " lines to " + target));
+
+        try {
+            collection.updateOne(query, updates);
+        } catch (MongoException me) {
+        }
+    }
+
+    public ArrayList<String> readAttacks() {
+        if (MyGame.client == null)
+            return null;
+
+        collection = database.getCollection("Servers");
+
+        Bson projectionFields = Projections.fields(
+                Projections.include("attacks"),
+                Projections.excludeId());
+
+        Document doc = collection.find(Filters.eq("address", MyGame.client.host))
+                .projection(projectionFields)
+                .first();
+
+        if (doc == null) {
+            MyGame.leaveGame();
+            return null;
+        }
+
+        @SuppressWarnings("unchecked")
+        ArrayList<String> chats = (ArrayList<String>) doc.get("attacks");
+
+        return chats;
+    }
+
+    public void removeAttack(String attack) {
+        if (MyGame.client == null)
+            return;
+
+        collection = database.getCollection("Servers");
+
+        Document query = new Document().append("address", MyGame.client.host);
+
+        Bson updates = Updates.combine(
+                Updates.pull("attacks", attack));
+
+        try {
+            collection.updateOne(query, updates);
+        } catch (MongoException me) {
+        }
+    }
+
+    public void addStatus(String status) {
+        if (MyGame.client == null)
+            return;
+
+        collection = database.getCollection("Servers");
+
+        Document query = new Document().append("address", MyGame.client.host);
+
+        Bson updates = Updates.combine(
+                Updates.addToSet("status", status));
+
+        try {
+            collection.updateOne(query, updates);
+
+            MyGame.timer.schedule(new TimerTask() {
+                public void run() {
+                    removeStatus(status);
+                }
+            }, 3000);
+        } catch (MongoException me) {
+        } catch (IllegalStateException e) {
+        }
+    }
+
+    public ArrayList<Menu.Text> readStatus() {
+        if (MyGame.client == null)
+            return null;
+
+        collection = database.getCollection("Servers");
+
+        Bson projectionFields = Projections.fields(
+                Projections.include("status"),
+                Projections.excludeId());
+
+        Document doc = collection.find(Filters.eq("address", MyGame.client.host))
+                .projection(projectionFields)
+                .first();
+
+        if (doc == null) {
+            MyGame.leaveGame();
+            return null;
+        }
+
+        @SuppressWarnings("unchecked")
+        ArrayList<String> chats = (ArrayList<String>) doc.get("status");
+
+        ArrayList<Menu.Text> messages = new ArrayList<>();
+
+        for (Object e : chats)
+            messages.add(new Menu().new Text((String) e, 0, 0, Color.WHITE));
+
+        return messages;
+    }
+
+    public void clearStatus() {
+        if (MyGame.client == null)
+            return;
+
+        collection = database.getCollection("Servers");
+
+        Document query = new Document().append("address", MyGame.client.host);
+
+        Bson updates = Updates.combine(
+                Updates.set("status", Arrays.asList()));
+
+        try {
+            collection.updateOne(query, updates);
+        } catch (MongoException me) {
+        }
+    }
+
+    public void removeStatus(String status) {
+        if (MyGame.client == null)
+            return;
+
+        collection = database.getCollection("Servers");
+
+        Document query = new Document().append("address", MyGame.client.host);
+
+        Bson updates = Updates.combine(
+                Updates.pull("status", status));
+
+        try {
+            collection.updateOne(query, updates);
+        } catch (MongoException me) {
+        }
+    }
+
+    public void addLobby(String name) {
+        if (MyGame.client == null)
+            return;
+
+        collection = database.getCollection("Servers");
+
+        Document query = new Document().append("address", MyGame.client.host);
+
+        Bson updates = Updates.combine(
+                Updates.addToSet("lobby", name));
+
+        try {
+            collection.updateOne(query, updates);
+        } catch (MongoException me) {
+        }
+    }
+
+    public ArrayList<Menu.Text> readLobby() {
+        if (MyGame.client == null)
+            return null;
+
+        collection = database.getCollection("Servers");
+
+        Bson projectionFields = Projections.fields(
+                Projections.include("lobby"),
+                Projections.excludeId());
+
+        Document doc = collection.find(Filters.eq("address", MyGame.client.host))
+                .projection(projectionFields)
+                .first();
+
+        if (doc == null) {
+            MyGame.leaveGame();
+            return null;
+        }
+
+        @SuppressWarnings("unchecked")
+        ArrayList<String> gameLobby = (ArrayList<String>) doc.get("lobby");
+
+        ArrayList<Menu.Text> lobby = new ArrayList<>();
+
+        for (Object e : gameLobby)
+            lobby.add(new Menu().new Text((String) e, 0, 0, Color.WHITE));
+
+        return lobby;
+    }
+
+    public void removeLobby(String name) {
+        if (MyGame.client == null)
+            return;
+
+        collection = database.getCollection("Servers");
+
+        Document query = new Document().append("address", MyGame.client.host);
+
+        Bson updates = Updates.combine(
+                Updates.pull("lobby", name));
+
+        try {
+            collection.updateOne(query, updates);
+        } catch (MongoException me) {
+        }
+    }
+
+    public void addResult(String result) {
+        if (MyGame.client == null)
+            return;
+
+        collection = database.getCollection("Servers");
+
+        Document query = new Document().append("address", MyGame.client.host);
+
+        Bson updates = Updates.combine(
+                Updates.addToSet("results", result));
+
+        try {
+            collection.updateOne(query, updates);
+        } catch (MongoException me) {
+        }
+    }
+
+    public ArrayList<String> readResults() {
+        if (MyGame.client == null)
+            return null;
+
+        collection = database.getCollection("Servers");
+
+        Bson projectionFields = Projections.fields(
+                Projections.include("results"),
+                Projections.excludeId());
+
+        Document doc = collection.find(Filters.eq("address", MyGame.client.host))
+                .projection(projectionFields)
+                .first();
+
+        if (doc == null) {
+            MyGame.leaveGame();
+            return null;
+        }
+
+        @SuppressWarnings("unchecked")
+        ArrayList<String> chats = (ArrayList<String>) doc.get("results");
+
+        return chats;
     }
 
     public void createAccount(String name, String password) {
@@ -183,5 +492,48 @@ public class Database {
                 .projection(projectionFields);
 
         return accounts;
+    }
+
+    public void readAll() {
+        if (MyGame.client != null) {
+            MyGame.client.updateLobby();
+            MyGame.chat.updateChat(readChat());
+            MyGame.status.updateStatus(readStatus());
+
+            ArrayList<String> results = readResults();
+
+            if (MyGame.menu instanceof Menus.ResultsMenu) {
+                Menus.ResultsMenu menu = (Menus.ResultsMenu) MyGame.menu;
+
+                menu.otherDeaths = new ArrayList<>();
+
+                for (int i = 0; i < results.size(); i++)
+                    menu.otherDeaths.add(new Menu().new Text(results.get(i), MyGame.SCREEN_WIDTH / 2 - 75,
+                            144 + (i * 48) + 48, Color.WHITE));
+            }
+
+            ArrayList<String> attacks = readAttacks();
+
+            if (attacks == null)
+                return;
+
+            for (int i = 0; i < attacks.size(); i++) {
+                String s = attacks.get(i);
+
+                if (s.contains("sent")) {
+                    String[] split = s.split(" ");
+
+                    if (split[5].equals(MyGame.client.name)) {
+                        for (int k = 0; k < Integer.parseInt(split[2]); k++) {
+                            if (MyGame.client.queue.size() < 10)
+                                MyGame.client.queue.add(new TetriminoNode(Color.GRAY, 0, -2, -1));
+                        }
+
+                        removeAttack(s);
+                        continue;
+                    }
+                }
+            }
+        }
     }
 }
