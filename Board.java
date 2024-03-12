@@ -998,8 +998,10 @@ public class Board {
                 SoundManager.playSound("sfx/MusicSolo.wav", true);
             else if (MyGame.level < 19)
                 SoundManager.playSound("sfx/Level9.wav", true);
-            else
+            else if (MyGame.level < 29)
                 SoundManager.playSound("sfx/Level19.wav", true);
+            else
+                SoundManager.playSound("sfx/Level29.wav", true);
             MyGame.clock = 10;
         } else {
             SoundManager.playSound("sfx/Battle.wav", false);
