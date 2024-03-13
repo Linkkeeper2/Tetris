@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Account {
@@ -8,6 +9,8 @@ public class Account {
     public int exp = 0;
     public int highestLevel = 0;
     public int prestige = 0;
+    public static int inputDelay = 150;
+    public static ArrayList<Integer> controls = new ArrayList<>();
 
     public Account() {
         name = "Guest" + (int) (Math.random() * 10000);
@@ -22,7 +25,9 @@ public class Account {
                 String accName = reader.nextLine();
                 String accPassword = reader.nextLine();
 
-                MyGame.database.linkAccount(accName, accPassword);
+                if (MyGame.database.getAccount(accName) != null) {
+                    MyGame.database.linkAccount(accName, accPassword);
+                }
             } else {
                 reader.close();
                 return;
@@ -55,5 +60,16 @@ public class Account {
         exp = 0;
         prestige++;
         MyGame.status.addMessage("You are now Prestige " + prestige + "!", 3000);
+    }
+
+    public static void setDefaultControls() {
+        controls.add(32);
+        controls.add(37);
+        controls.add(38);
+        controls.add(39);
+        controls.add(40);
+        controls.add(47);
+        controls.add(67);
+        controls.add(90);
     }
 }

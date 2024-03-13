@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import org.bson.Document;
@@ -33,6 +34,7 @@ public class Menus {
                                         new ButtonActions().new Leaderboard()));
                         SoundManager.stopAllSounds();
                         MyGame.status.results.clear();
+                        if (MyGame.database != null) MyGame.database.updateAccount(MyGame.account.name);
                 }
         }
 
@@ -70,6 +72,7 @@ public class Menus {
                         text.add(new Text("Starting Level: " + MyGame.save.startLevel, MyGame.SCREEN_WIDTH / 2 - 75,
                                         375,
                                         Color.WHITE));
+                        text.add(new Text("Input Delay: " + Account.inputDelay, MyGame.SCREEN_WIDTH / 2 - 75, 325, Color.WHITE));
 
                         buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 + 150, 350, 50, 50, Color.GRAY, Color.DARK_GRAY,
                                         "-",
@@ -77,8 +80,20 @@ public class Menus {
                         buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 + 100, 350, 50, 50, Color.GRAY, Color.DARK_GRAY,
                                         "+",
                                         new ButtonActions().new ChangeLevel((short) 1)));
+
+                        buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 + 150, 300, 50, 50, Color.GRAY, Color.DARK_GRAY,
+                                        "-",
+                                        new ButtonActions().new ChangeDelay((short) -10)));
+                        buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 + 100, 300, 50, 50, Color.GRAY, Color.DARK_GRAY,
+                                        "+",
+                                        new ButtonActions().new ChangeDelay((short) 10)));
+
+                        buttons.add(new Button(10, MyGame.SCREEN_HEIGHT - 100, 150, 50, Color.GRAY, Color.DARK_GRAY,
+                                        "Back to Menu",
+                                        new ButtonActions().new BackToMenu()));
+
                         buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 425, 150, 50, Color.GRAY, Color.DARK_GRAY,
-                                        "Back to Menu", new ButtonActions().new BackToMenu()));
+                                        "Controls", new ButtonActions().new GoToControls()));
                 }
         }
 
@@ -253,6 +268,57 @@ public class Menus {
                         buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 425, 150, 50, Color.GRAY, Color.DARK_GRAY,
                                         "X",
                                         new ButtonActions().new StartChallenge(new XChallenge())));
+                        buttons.add(new Button(10, MyGame.SCREEN_HEIGHT - 100, 150, 50, Color.GRAY, Color.DARK_GRAY,
+                                        "Back to Menu",
+                                        new ButtonActions().new BackToMenu()));
+                }
+        }
+
+        public class ControlsMenu extends Menu {
+                public ControlsMenu() {
+                        text.add(new Text("Controls", MyGame.SCREEN_WIDTH / 2 - 20, 48, Color.WHITE,
+                                        new Rectangle(0, 48, MyGame.SCREEN_WIDTH, 48)));
+
+                        text.add(new Text("Hard Drop: " + KeyEvent.getKeyText(Account.controls.get(0)), MyGame.SCREEN_WIDTH / 2 - 75, 120, Color.WHITE));
+                        buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 + 200, 95, 40, 40, Color.GRAY, Color.DARK_GRAY,
+                                        "Set",
+                                        new ButtonActions().new SetControl(0)));
+
+                        text.add(new Text("Move Left: " + KeyEvent.getKeyText(Account.controls.get(1)), MyGame.SCREEN_WIDTH / 2 - 75, 168, Color.WHITE));
+                        buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 + 200, 143, 40, 40, Color.GRAY, Color.DARK_GRAY,
+                                        "Set",
+                                        new ButtonActions().new SetControl(1)));
+
+                        text.add(new Text("Rotate Clockwise: " + KeyEvent.getKeyText(Account.controls.get(2)), MyGame.SCREEN_WIDTH / 2 - 75, 216, Color.WHITE));
+                        buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 + 200, 192, 40, 40, Color.GRAY, Color.DARK_GRAY,
+                                        "Set",
+                                        new ButtonActions().new SetControl(2)));
+
+                        text.add(new Text("Move Right: " + KeyEvent.getKeyText(Account.controls.get(3)), MyGame.SCREEN_WIDTH / 2 - 75, 264, Color.WHITE));
+                        buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 + 200, 239, 40, 40, Color.GRAY, Color.DARK_GRAY,
+                                        "Set",
+                                        new ButtonActions().new SetControl(3)));
+
+                        text.add(new Text("Soft Drop: " + KeyEvent.getKeyText(Account.controls.get(4)), MyGame.SCREEN_WIDTH / 2 - 75, 312, Color.WHITE));
+                        buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 + 200, 287, 40, 40, Color.GRAY, Color.DARK_GRAY,
+                                        "Set",
+                                        new ButtonActions().new SetControl(4)));
+
+                        text.add(new Text("Open Chat: " + KeyEvent.getKeyText(Account.controls.get(5)), MyGame.SCREEN_WIDTH / 2 - 75, 368, Color.WHITE));
+                        buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 + 200, 344, 40, 40, Color.GRAY, Color.DARK_GRAY,
+                                        "Set",
+                                        new ButtonActions().new SetControl(5)));
+
+                        text.add(new Text("Hold Piece: " + KeyEvent.getKeyText(Account.controls.get(6)), MyGame.SCREEN_WIDTH / 2 - 75, 416, Color.WHITE));
+                        buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 + 200, 392, 40, 40, Color.GRAY, Color.DARK_GRAY,
+                                        "Set",
+                                        new ButtonActions().new SetControl(6)));
+
+                        text.add(new Text("Rotate CounterClockwise: " + KeyEvent.getKeyText(Account.controls.get(7)), MyGame.SCREEN_WIDTH / 2 - 75, 464, Color.WHITE));
+                        buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 + 200, 439, 40, 40, Color.GRAY, Color.DARK_GRAY,
+                                        "Set",
+                                        new ButtonActions().new SetControl(7)));
+
                         buttons.add(new Button(10, MyGame.SCREEN_HEIGHT - 100, 150, 50, Color.GRAY, Color.DARK_GRAY,
                                         "Back to Menu",
                                         new ButtonActions().new BackToMenu()));

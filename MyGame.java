@@ -59,6 +59,8 @@ public class MyGame extends Game {
     public static Account account;
     public static Server server;
 
+    public static int controlToSet = -1;
+
     public MyGame() {
         // initialize variables here
         board = new Board();
@@ -115,6 +117,8 @@ public class MyGame extends Game {
 
         if (database != null)
             account.login();
+
+        Account.setDefaultControls();
     }
 
     public void update() {
@@ -295,7 +299,7 @@ public class MyGame extends Game {
 
     public void repeatLeft() {
         if (arrows[0]) {
-            if (inputDelay >= 150) {
+            if (inputDelay >= Account.inputDelay) {
                 direction = -1;
                 inputDelay = 0;
                 return;
@@ -315,7 +319,7 @@ public class MyGame extends Game {
 
     public void repeatRight() {
         if (arrows[1]) {
-            if (inputDelay >= 150) {
+            if (inputDelay >= Account.inputDelay) {
                 direction = 1;
                 inputDelay = 0;
                 return;
@@ -330,6 +334,84 @@ public class MyGame extends Game {
                 }, (long) 10);
             } catch (IllegalStateException e) {
             }
+        }
+    }
+
+    public void controls(KeyEvent ke) {
+        int key = ke.getKeyCode();
+
+        if (key == Account.controls.get(0)) { // SPACE
+            if (prompt == null) {
+                board.hardDrop();
+                if (client != null) {
+                    SoundManager.playSound("sfx/Harddrop.wav", false);
+                } else {
+                    SoundManager.playSound("sfx/HarddropSolo.wav", false);
+                }
+            }
+        }
+
+        else if (key == Account.controls.get(1)) { // Left Arrow Key
+            arrows[0] = true;
+            arrows[2] = false;
+
+            if (timer != null) {
+                repeatLeft();
+            }
+
+            board.move(-1);
+        }
+
+        else if (key == Account.controls.get(2)) { // Up Arrow Key
+            if (board.currentTetrimino != null && board.currentTetrimino.direction != -1)
+            board.currentTetrimino.rotate(1);
+        } 
+
+        else if (key == Account.controls.get(3)) { // Right Arrow Key
+            arrows[1] = true;
+            arrows[3] = false;
+
+            if (timer != null) {
+                repeatRight();
+            }
+
+            board.move(1);
+        }       
+
+        else if (key == Account.controls.get(4)) { // Down Arrow Key
+            board.moveTetriminos();
+            if (client != null) {
+                SoundManager.playSound("sfx/Softdrop.wav", false);
+            } else {
+                SoundManager.playSound("sfx/Action.wav", false);
+            }
+        }   
+
+        else if (key == Account.controls.get(5)) { // Slash key
+            if (prompt == null)
+            chat.openChat();
+        }
+
+        else if (key == Account.controls.get(6)) { // C Key (Holding)
+            if (!board.held)
+            board.hold();
+        }      
+
+        else if (key == Account.controls.get(7)) { // Z Key
+            if (board.currentTetrimino != null && board.currentTetrimino.direction != -1)
+            board.currentTetrimino.rotate(-1);
+        }
+    }
+
+    public void setControl(KeyEvent ke) {
+        if (controlToSet != -1) {
+            Account.controls.remove(controlToSet);
+            Account.controls.add(controlToSet, ke.getKeyCode());
+            controlToSet = -1;
+            if (database != null) {
+                database.updateAccount(account.name);
+            }
+            menu = new Menus().new ControlsMenu();
         }
     }
 
@@ -357,87 +439,28 @@ public class MyGame extends Game {
                     this.running = false;
                 }
                 break;
-
-            case 32: // SPACE
-                if (prompt == null) {
-                    board.hardDrop();
-                    if (client != null) {
-                        SoundManager.playSound("sfx/Harddrop.wav", false);
-                    } else {
-                        SoundManager.playSound("sfx/HarddropSolo.wav", false);
-                    }
-                }
-                break;
-
-            case 37: // Left Arrow Key
-                arrows[0] = true;
-                arrows[2] = false;
-
-                if (timer != null) {
-                    repeatLeft();
-                }
-
-                board.move(-1);
-                break;
-
-            case 38: // Up Arrow Key
-                if (board.currentTetrimino != null && board.currentTetrimino.direction != -1)
-                    board.currentTetrimino.rotate(1);
-                break;
-
-            case 39: // Right Arrow Key
-                arrows[1] = true;
-                arrows[3] = false;
-
-                if (timer != null) {
-                    repeatRight();
-                }
-
-                board.move(1);
-                break;
-
-            case 40: // Down Arrow Key
-                board.moveTetriminos();
-                if (client != null) {
-                    SoundManager.playSound("sfx/Softdrop.wav", false);
-                } else {
-                    SoundManager.playSound("sfx/Action.wav", false);
-                }
-                break;
-
-            case 47: // Slash key
-                if (prompt == null)
-                    chat.openChat();
-                break;
-
-            case 67: // C Key (Holding)
-                if (!board.held)
-                    board.hold();
-                break;
-
-            case 90: // Z Key
-                if (board.currentTetrimino != null && board.currentTetrimino.direction != -1)
-                    board.currentTetrimino.rotate(-1);
-                break;
         }
+
+        controls(ke);
+        setControl(ke);
     }
 
     @Override
     public void keyReleased(KeyEvent ke) {
-        switch (ke.getKeyCode()) {
-            case 37: // Left Arrow Key
-                arrows[0] = false;
-                arrows[2] = true;
-                direction = 0;
-                inputDelay = 0;
-                break;
+        int key = ke.getKeyCode();
 
-            case 39: // Right Arrow Key
-                arrows[1] = false;
-                arrows[3] = true;
-                direction = 0;
-                inputDelay = 0;
-                break;
+        if (key == Account.controls.get(1)) { // Left Arrow Key
+            arrows[0] = false;
+            arrows[2] = true;
+            direction = 0;
+            inputDelay = 0;
+        }
+
+        else if (key == Account.controls.get(3)) { // Right Arrow Key
+            arrows[1] = false;
+            arrows[3] = true;
+            direction = 0;
+            inputDelay = 0;
         }
     }
 

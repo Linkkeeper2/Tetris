@@ -1,4 +1,3 @@
-import java.awt.Color;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -79,9 +78,32 @@ public class ButtonActions {
             if (factor == -1 && MyGame.save.startLevel == 18)
                 MyGame.save.startLevel += factor;
 
-            MyGame.menu.text.remove(MyGame.menu.text.size() - 1);
-            MyGame.menu.text.add(new Menu().new Text("Starting Level: " + MyGame.save.startLevel,
-                    MyGame.SCREEN_WIDTH / 2 - 75, 375, Color.WHITE));
+            for (int i = 0; i < MyGame.menu.text.size(); i++) {
+                if (MyGame.menu.text.get(i).contents.contains("Starting"))
+                    MyGame.menu.text.get(i).contents = "Starting Level: " + MyGame.save.startLevel;
+            }
+        }
+    }
+
+    public class ChangeDelay implements ButtonAction {
+        private short factor;
+
+        public ChangeDelay(short factor) {
+            this.factor = factor;
+        }
+
+        public void action() {
+            if (Account.inputDelay >= 0 && Account.inputDelay < 1000)
+                Account.inputDelay += factor;
+            if (Account.inputDelay < 0)
+                Account.inputDelay = 0;
+            if (factor < 0 && Account.inputDelay == 1000)
+                Account.inputDelay += factor;
+
+            for (int i = 0; i < MyGame.menu.text.size(); i++) {
+                if (MyGame.menu.text.get(i).contents.contains("Input"))
+                    MyGame.menu.text.get(i).contents = "Input Delay: " + Account.inputDelay;
+            }
         }
     }
 
@@ -178,6 +200,24 @@ public class ButtonActions {
     public class Challenges implements ButtonAction {
         public void action() {
             MyGame.menu = new Menus().new ChallengeMenu();
+        }
+    }
+
+    public class GoToControls implements ButtonAction {
+        public void action() {
+            MyGame.menu = new Menus().new ControlsMenu();
+        }
+    }
+
+    public class SetControl implements ButtonAction {
+        private int controlNum;
+
+        public SetControl(int num) {
+            controlNum = num;
+        }
+
+        public void action() {
+            MyGame.controlToSet = controlNum;
         }
     }
 }

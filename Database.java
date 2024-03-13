@@ -394,31 +394,22 @@ public class Database {
                     .append("password", password.getBytes())
                     .append("level", 0)
                     .append("exp", 0)
-                    .append("highestLvl", 0));
+                    .append("highestLvl", 0)
+                    .append("prestige", 0)
+                    .append("inputDelay", 150)
+                    .append("controls", Arrays.asList(32, 37, 38, 39, 40, 47, 67, 90)));
 
-            Bson projectionFields = Projections.fields(
-                    Projections.include("name", "password", "level", "exp", "prestige"),
-                    Projections.excludeId());
-
-            Document doc = collection.find(Filters.eq("password", password))
-                    .projection(projectionFields)
-                    .first();
-
-            MyGame.account.name = doc.getString("name");
-            MyGame.account.level = doc.getInteger("level");
-            MyGame.account.exp = doc.getInteger("exp");
-            MyGame.account.prestige = doc.getInteger("prestige");
-            MyGame.account.highestLevel = doc.getInteger("highestLvl");
             MyGame.status.addMessage("Account created successfully!", 2500);
         } catch (MongoException me) {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void linkAccount(String name, String password) {
         collection = database.getCollection("Accounts");
 
         Bson projectionFields = Projections.fields(
-                Projections.include("name", "password", "level", "exp", "highestLvl", "prestige"),
+                Projections.include("name", "password", "level", "exp", "highestLvl", "prestige", "inputDelay", "controls"),
                 Projections.excludeId());
 
         FindIterable<Document> iterable = collection.find()
@@ -439,6 +430,8 @@ public class Database {
                 MyGame.account.exp = doc.getInteger("exp");
                 MyGame.account.prestige = doc.getInteger("prestige");
                 MyGame.account.highestLevel = doc.getInteger("highestLvl");
+                Account.inputDelay = doc.getInteger("inputDelay");
+                Account.controls = (ArrayList<Integer>) doc.get("controls");
                 MyGame.status.addMessage("Logged in successfully!", 2500);
 
                 try {
@@ -463,6 +456,8 @@ public class Database {
             myWriter.close();
         } catch (IOException e) {
         }
+
+        MyGame.account.login();
     }
 
     public void updateAccount(String name) {
@@ -474,7 +469,9 @@ public class Database {
                 Updates.set("level", MyGame.account.level),
                 Updates.set("exp", MyGame.account.exp),
                 Updates.set("highestLvl", MyGame.account.highestLevel),
-                Updates.set("prestige", MyGame.account.prestige));
+                Updates.set("prestige", MyGame.account.prestige),
+                Updates.set("controls", Account.controls),
+                Updates.set("inputDelay", Account.inputDelay));
         try {
             collection.updateOne(query, updates);
         } catch (MongoException me) {
@@ -492,6 +489,20 @@ public class Database {
                 .projection(projectionFields);
 
         return accounts;
+    }
+
+    public Document getAccount(String name) {
+        collection = database.getCollection("Accounts");
+
+        Bson projectionFields = Projections.fields(
+                Projections.include("name"),
+                Projections.excludeId());
+
+        Document account = collection.find(Filters.eq("name", name))
+            .projection(projectionFields)
+            .first();
+
+        return account;
     }
 
     public void readAll() {
