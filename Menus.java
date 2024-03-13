@@ -32,7 +32,6 @@ public class Menus {
                                         "Leaderboard",
                                         new ButtonActions().new Leaderboard()));
                         SoundManager.stopAllSounds();
-                        MyGame.status.messages.clear();
                         MyGame.status.results.clear();
                 }
         }

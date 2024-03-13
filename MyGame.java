@@ -57,6 +57,7 @@ public class MyGame extends Game {
 
     public static Database database;
     public static Account account;
+    public static Server server;
 
     public MyGame() {
         // initialize variables here
@@ -65,6 +66,8 @@ public class MyGame extends Game {
 
         try {
             database = new Database();
+            server = new Server();
+            server.start();
         } catch (Exception e) {
             status.addMessage("Could not connect to servers.", 5000);
         }
@@ -107,12 +110,6 @@ public class MyGame extends Game {
                     }
                 }
             }, (long) 1000, 1000);
-
-            timer.schedule(new TimerTask() {
-                public void run() {
-                    database.readAll();
-                }
-            }, 250, 250);
         } catch (IllegalStateException e) {
         }
 
@@ -291,7 +288,7 @@ public class MyGame extends Game {
                 break;
         }
 
-        MyGame.database.addResult(client.name + " " + client.deaths + " deaths.");
+        MyGame.database.addResult(client.name + ": " + client.deaths + " deaths.");
         if (client != null)
             client.queue.clear();
     }
