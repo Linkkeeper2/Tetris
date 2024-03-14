@@ -370,7 +370,11 @@ public class Menus {
 
                         buttons.add(new Button(MyGame.SCREEN_HEIGHT / 2 + 25, 325, 150, 50, Color.GRAY, Color.DARK_GRAY,
                                         "Minecraft",
-                                        new ButtonActions().new SwitchSkin("gfx/Skins/Minecraft.png", 10, 10)));
+                                        new ButtonActions().new SwitchSkin("gfx/Skins/Minecraft.png", 10, 7)));
+
+                        buttons.add(new Button(MyGame.SCREEN_HEIGHT / 2 + 25, 400, 150, 50, Color.GRAY, Color.DARK_GRAY,
+                                        "Geometry Dash",
+                                        new ButtonActions().new SwitchSkin("gfx/Skins/GD.png", 6, 10)));
 
                         buttons.add(new Button(10, MyGame.SCREEN_HEIGHT - 100, 150, 50, Color.GRAY, Color.DARK_GRAY,
                                         "Back to Menu", new ButtonActions().new BackToMenu()));
