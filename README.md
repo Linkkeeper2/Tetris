@@ -8,6 +8,6 @@
 
 ### .Jar File
 - Download JDK 21 Here: https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html
-- Download the .Jar File Here: https://www.mediafire.com/file/vosdesyn75e48zn/Tetris.jar/file
+- Download the .Jar File Here: https://www.mediafire.com/file/l8r36dmvwrgvgi9/Tetris.jar/file
 - Put the .Jar File inside of the folder that contains all .java files & gfx folder
 - Run the .Jar File
