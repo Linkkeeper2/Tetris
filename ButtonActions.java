@@ -93,16 +93,16 @@ public class ButtonActions {
         }
 
         public void action() {
-            if (Account.inputDelay >= 0 && Account.inputDelay < 1000)
-                Account.inputDelay += factor;
-            if (Account.inputDelay < 0)
-                Account.inputDelay = 0;
-            if (factor < 0 && Account.inputDelay == 1000)
-                Account.inputDelay += factor;
+            if (MyGame.account.inputDelay >= 0 && MyGame.account.inputDelay < 1000)
+                MyGame.account.inputDelay += factor;
+            if (MyGame.account.inputDelay < 0)
+                MyGame.account.inputDelay = 0;
+            if (factor < 0 && MyGame.account.inputDelay == 1000)
+                MyGame.account.inputDelay += factor;
 
             for (int i = 0; i < MyGame.menu.text.size(); i++) {
                 if (MyGame.menu.text.get(i).contents.contains("Input"))
-                    MyGame.menu.text.get(i).contents = "Input Delay: " + Account.inputDelay;
+                    MyGame.menu.text.get(i).contents = "Input Delay: " + MyGame.account.inputDelay;
             }
         }
     }
@@ -218,6 +218,27 @@ public class ButtonActions {
 
         public void action() {
             MyGame.controlToSet = controlNum;
+        }
+    }
+
+    public class GoToSkins implements ButtonAction {
+        public void action() {
+            MyGame.menu = new Menus().new SkinsMenu();
+        }
+    }
+
+    public class SwitchSkin implements ButtonAction {
+        private String skinPath;
+
+        public SwitchSkin(String path) {
+            skinPath = path;
+        }
+
+        public void action() {
+            MyGame.account.skin = skinPath;
+
+            if (MyGame.database != null)
+                MyGame.database.updateAccount(MyGame.account.name);
         }
     }
 }

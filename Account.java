@@ -9,11 +9,20 @@ public class Account {
     public int exp = 0;
     public int highestLevel = 0;
     public int prestige = 0;
-    public static int inputDelay = 150;
-    public static ArrayList<Integer> controls = new ArrayList<>();
+    public int inputDelay = 150;
+    public ArrayList<Integer> controls = new ArrayList<>();
+    public String skin = "gfx/PaletteBattle.png";
 
     public Account() {
         name = "Guest" + (int) (Math.random() * 10000);
+        controls.add(32);
+        controls.add(37);
+        controls.add(38);
+        controls.add(39);
+        controls.add(40);
+        controls.add(47);
+        controls.add(67);
+        controls.add(90);
     }
 
     public void login() {
@@ -60,16 +69,5 @@ public class Account {
         exp = 0;
         prestige++;
         MyGame.status.addMessage("You are now Prestige " + prestige + "!", 3000);
-    }
-
-    public static void setDefaultControls() {
-        controls.add(32);
-        controls.add(37);
-        controls.add(38);
-        controls.add(39);
-        controls.add(40);
-        controls.add(47);
-        controls.add(67);
-        controls.add(90);
     }
 }

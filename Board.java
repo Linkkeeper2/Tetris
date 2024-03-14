@@ -973,11 +973,9 @@ public class Board {
         try {
             if (MyGame.client == null) {
                 MyGame.level = MyGame.save.startLevel;
-                MyGame.tileSize = 24;
                 MyGame.palette.sheet = new SpriteSheetLoader(MyGame.tileSize, MyGame.tileSize, 10, 3);
             } else {
                 MyGame.level = 0;
-                MyGame.tileSize = 25;
                 MyGame.palette.sheet = new SpriteSheetLoader(MyGame.tileSize, MyGame.tileSize, 10, 3,
                         "gfx/PaletteBattle.png");
             }

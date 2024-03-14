@@ -397,7 +397,8 @@ public class Database {
                     .append("highestLvl", 0)
                     .append("prestige", 0)
                     .append("inputDelay", 150)
-                    .append("controls", Arrays.asList(32, 37, 38, 39, 40, 47, 67, 90)));
+                    .append("controls", Arrays.asList(32, 37, 38, 39, 40, 47, 67, 90))
+                    .append("skin", "gfx/PaletteBattle.png"));
 
             MyGame.status.addMessage("Account created successfully!", 2500);
         } catch (MongoException me) {
@@ -409,7 +410,8 @@ public class Database {
         collection = database.getCollection("Accounts");
 
         Bson projectionFields = Projections.fields(
-                Projections.include("name", "password", "level", "exp", "highestLvl", "prestige", "inputDelay", "controls"),
+                Projections.include("name", "password", "level", "exp", "highestLvl", "prestige", "inputDelay",
+                        "controls"),
                 Projections.excludeId());
 
         FindIterable<Document> iterable = collection.find()
@@ -430,8 +432,8 @@ public class Database {
                 MyGame.account.exp = doc.getInteger("exp");
                 MyGame.account.prestige = doc.getInteger("prestige");
                 MyGame.account.highestLevel = doc.getInteger("highestLvl");
-                Account.inputDelay = doc.getInteger("inputDelay");
-                Account.controls = (ArrayList<Integer>) doc.get("controls");
+                MyGame.account.inputDelay = doc.getInteger("inputDelay");
+                MyGame.account.controls = (ArrayList<Integer>) doc.get("controls");
                 MyGame.status.addMessage("Logged in successfully!", 2500);
 
                 try {
@@ -465,13 +467,17 @@ public class Database {
 
         Document query = new Document().append("name", name);
 
+        for (int i = 8; i < MyGame.account.controls.size(); i++)
+            MyGame.account.controls.remove(i);
+
         Bson updates = Updates.combine(
                 Updates.set("level", MyGame.account.level),
                 Updates.set("exp", MyGame.account.exp),
                 Updates.set("highestLvl", MyGame.account.highestLevel),
                 Updates.set("prestige", MyGame.account.prestige),
-                Updates.set("controls", Account.controls),
-                Updates.set("inputDelay", Account.inputDelay));
+                Updates.set("controls", MyGame.account.controls),
+                Updates.set("inputDelay", MyGame.account.inputDelay),
+                Updates.set("skin", MyGame.account.skin));
         try {
             collection.updateOne(query, updates);
         } catch (MongoException me) {
@@ -499,8 +505,8 @@ public class Database {
                 Projections.excludeId());
 
         Document account = collection.find(Filters.eq("name", name))
-            .projection(projectionFields)
-            .first();
+                .projection(projectionFields)
+                .first();
 
         return account;
     }

@@ -65,6 +65,7 @@ public class MyGame extends Game {
         // initialize variables here
         board = new Board();
         status = new ServerStatus();
+        timer = new Timer();
 
         try {
             database = new Database();
@@ -81,7 +82,6 @@ public class MyGame extends Game {
         menu = menus.new MainMenu();
         levelMessage = new Menu().new Text("", 0, 700, Color.WHITE);
         palette = new ColorPalette();
-        timer = new Timer();
         save = new Save();
         animation = new ClearAnimation();
         animation.start();
@@ -117,8 +117,6 @@ public class MyGame extends Game {
 
         if (database != null)
             account.login();
-
-        Account.setDefaultControls();
     }
 
     public void update() {
@@ -137,9 +135,6 @@ public class MyGame extends Game {
         }
 
         updateState();
-
-        if (client == null && tileSize == 25)
-            exitToMenu();
 
         if (client == null && !board.alive && menu == null) {
             status.addMessage("Game Over", 3000);
@@ -210,8 +205,11 @@ public class MyGame extends Game {
             prompt.draw(pen);
         if (client != null) {
             client.drawLobby(pen);
-            client.drawQueue(pen);
-            chat.draw(pen);
+
+            if (menu == null) {
+                client.drawQueue(pen);
+                chat.draw(pen);
+            }
         }
     }
 
@@ -299,7 +297,7 @@ public class MyGame extends Game {
 
     public void repeatLeft() {
         if (arrows[0]) {
-            if (inputDelay >= Account.inputDelay) {
+            if (inputDelay >= MyGame.account.inputDelay) {
                 direction = -1;
                 inputDelay = 0;
                 return;
@@ -319,7 +317,7 @@ public class MyGame extends Game {
 
     public void repeatRight() {
         if (arrows[1]) {
-            if (inputDelay >= Account.inputDelay) {
+            if (inputDelay >= MyGame.account.inputDelay) {
                 direction = 1;
                 inputDelay = 0;
                 return;
@@ -340,7 +338,7 @@ public class MyGame extends Game {
     public void controls(KeyEvent ke) {
         int key = ke.getKeyCode();
 
-        if (key == Account.controls.get(0)) { // SPACE
+        if (key == MyGame.account.controls.get(0)) { // SPACE
             if (prompt == null) {
                 board.hardDrop();
                 if (client != null) {
@@ -351,7 +349,7 @@ public class MyGame extends Game {
             }
         }
 
-        else if (key == Account.controls.get(1)) { // Left Arrow Key
+        else if (key == MyGame.account.controls.get(1)) { // Left Arrow Key
             arrows[0] = true;
             arrows[2] = false;
 
@@ -362,12 +360,12 @@ public class MyGame extends Game {
             board.move(-1);
         }
 
-        else if (key == Account.controls.get(2)) { // Up Arrow Key
+        else if (key == MyGame.account.controls.get(2)) { // Up Arrow Key
             if (board.currentTetrimino != null && board.currentTetrimino.direction != -1)
-            board.currentTetrimino.rotate(1);
-        } 
+                board.currentTetrimino.rotate(1);
+        }
 
-        else if (key == Account.controls.get(3)) { // Right Arrow Key
+        else if (key == MyGame.account.controls.get(3)) { // Right Arrow Key
             arrows[1] = true;
             arrows[3] = false;
 
@@ -376,37 +374,36 @@ public class MyGame extends Game {
             }
 
             board.move(1);
-        }       
+        }
 
-        else if (key == Account.controls.get(4)) { // Down Arrow Key
+        else if (key == MyGame.account.controls.get(4)) { // Down Arrow Key
             board.moveTetriminos();
             if (client != null) {
                 SoundManager.playSound("sfx/Softdrop.wav", false);
             } else {
                 SoundManager.playSound("sfx/Action.wav", false);
             }
-        }   
-
-        else if (key == Account.controls.get(5)) { // Slash key
-            if (prompt == null)
-            chat.openChat();
         }
 
-        else if (key == Account.controls.get(6)) { // C Key (Holding)
-            if (!board.held)
-            board.hold();
-        }      
+        else if (key == MyGame.account.controls.get(5)) { // Slash key
+            if (prompt == null)
+                chat.openChat();
+        }
 
-        else if (key == Account.controls.get(7)) { // Z Key
+        else if (key == MyGame.account.controls.get(6)) { // C Key (Holding)
+            if (!board.held)
+                board.hold();
+        }
+
+        else if (key == MyGame.account.controls.get(7)) { // Z Key
             if (board.currentTetrimino != null && board.currentTetrimino.direction != -1)
-            board.currentTetrimino.rotate(-1);
+                board.currentTetrimino.rotate(-1);
         }
     }
 
     public void setControl(KeyEvent ke) {
         if (controlToSet != -1) {
-            Account.controls.remove(controlToSet);
-            Account.controls.add(controlToSet, ke.getKeyCode());
+            MyGame.account.controls.set(controlToSet, ke.getKeyCode());
             controlToSet = -1;
             if (database != null) {
                 database.updateAccount(account.name);
@@ -449,14 +446,14 @@ public class MyGame extends Game {
     public void keyReleased(KeyEvent ke) {
         int key = ke.getKeyCode();
 
-        if (key == Account.controls.get(1)) { // Left Arrow Key
+        if (key == MyGame.account.controls.get(1)) { // Left Arrow Key
             arrows[0] = false;
             arrows[2] = true;
             direction = 0;
             inputDelay = 0;
         }
 
-        else if (key == Account.controls.get(3)) { // Right Arrow Key
+        else if (key == MyGame.account.controls.get(3)) { // Right Arrow Key
             arrows[1] = false;
             arrows[3] = true;
             direction = 0;

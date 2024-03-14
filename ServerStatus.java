@@ -26,7 +26,8 @@ public class ServerStatus {
         try {
             MyGame.timer.schedule(new TimerTask() {
                 public void run() {
-                    messages.remove(t);
+                    if (t != null)
+                        messages.remove(t);
                 }
             }, (long) 1500);
         } catch (IllegalStateException e) {
@@ -41,11 +42,13 @@ public class ServerStatus {
             t = new Menu().new Text(val, MyGame.SCREEN_WIDTH / 2 + 80, 200, Color.WHITE);
         }
 
-        messages.add(0, t);
+        if (messages != null)
+            messages.add(0, t);
 
         MyGame.timer.schedule(new TimerTask() {
             public void run() {
-                messages.remove(t);
+                if (t != null)
+                    messages.remove(t);
             }
         }, (long) timeAlive);
     }
