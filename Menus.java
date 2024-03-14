@@ -77,6 +77,9 @@ public class Menus {
                         super();
                         text.add(new Text("Settings", MyGame.SCREEN_WIDTH / 2 - 20, 48, Color.WHITE,
                                         new Rectangle(0, 48, MyGame.SCREEN_WIDTH, 48)));
+                        text.add(new Text("Volume: " + (int) (SoundManager.volume * 100), MyGame.SCREEN_WIDTH / 2 - 75,
+                                        275,
+                                        Color.WHITE));
                         text.add(new Text("Starting Level: " + MyGame.save.startLevel, MyGame.SCREEN_WIDTH / 2 - 75,
                                         375,
                                         Color.WHITE));
@@ -96,6 +99,13 @@ public class Menus {
                         buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 + 100, 300, 50, 50, Color.GRAY, Color.DARK_GRAY,
                                         "+",
                                         new ButtonActions().new ChangeDelay((short) 10)));
+
+                        buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 + 150, 250, 50, 50, Color.GRAY, Color.DARK_GRAY,
+                                        "-",
+                                        new ButtonActions().new ChangeVolume(-0.05f)));
+                        buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 + 100, 250, 50, 50, Color.GRAY, Color.DARK_GRAY,
+                                        "+",
+                                        new ButtonActions().new ChangeVolume(0.05f)));
 
                         buttons.add(new Button(10, MyGame.SCREEN_HEIGHT - 100, 150, 50, Color.GRAY, Color.DARK_GRAY,
                                         "Back to Menu",

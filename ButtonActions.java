@@ -107,6 +107,28 @@ public class ButtonActions {
         }
     }
 
+    public class ChangeVolume implements ButtonAction {
+        private float factor;
+
+        public ChangeVolume(float factor) {
+            this.factor = factor;
+        }
+
+        public void action() {
+            if (SoundManager.volume >= 0 && SoundManager.volume < 1)
+                SoundManager.volume += factor;
+            if (SoundManager.volume < 0)
+                SoundManager.volume = 0;
+            if (factor < 0 && SoundManager.volume >= 1)
+                SoundManager.volume += factor;
+
+            for (int i = 0; i < MyGame.menu.text.size(); i++) {
+                if (MyGame.menu.text.get(i).contents.contains("Volume"))
+                    MyGame.menu.text.get(i).contents = "Volume: " + (int) (SoundManager.volume * 100);
+            }
+        }
+    }
+
     public class ServerList implements ButtonAction {
         public void action() {
             if (MyGame.client == null)
