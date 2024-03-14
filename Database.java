@@ -398,7 +398,8 @@ public class Database {
                     .append("prestige", 0)
                     .append("inputDelay", 150)
                     .append("controls", Arrays.asList(32, 37, 38, 39, 40, 47, 67, 90))
-                    .append("skin", "gfx/PaletteBattle.png"));
+                    .append("skin", "gfx/PaletteBattle.png")
+                    .append("skinRows", 10));
 
             MyGame.status.addMessage("Account created successfully!", 2500);
         } catch (MongoException me) {
@@ -411,7 +412,7 @@ public class Database {
 
         Bson projectionFields = Projections.fields(
                 Projections.include("name", "password", "level", "exp", "highestLvl", "prestige", "inputDelay",
-                        "controls"),
+                        "controls", "skin", "skinRows"),
                 Projections.excludeId());
 
         FindIterable<Document> iterable = collection.find()
@@ -434,6 +435,8 @@ public class Database {
                 MyGame.account.highestLevel = doc.getInteger("highestLvl");
                 MyGame.account.inputDelay = doc.getInteger("inputDelay");
                 MyGame.account.controls = (ArrayList<Integer>) doc.get("controls");
+                MyGame.account.skin = doc.getString("skin");
+                MyGame.account.skinRows = doc.getInteger("skinRows");
                 MyGame.status.addMessage("Logged in successfully!", 2500);
 
                 try {
@@ -477,7 +480,8 @@ public class Database {
                 Updates.set("prestige", MyGame.account.prestige),
                 Updates.set("controls", MyGame.account.controls),
                 Updates.set("inputDelay", MyGame.account.inputDelay),
-                Updates.set("skin", MyGame.account.skin));
+                Updates.set("skin", MyGame.account.skin),
+                Updates.set("skinRows", MyGame.account.skinRows));
         try {
             collection.updateOne(query, updates);
         } catch (MongoException me) {

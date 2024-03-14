@@ -358,6 +358,16 @@ public class Menus {
                         text.add(new Text("Skins", MyGame.SCREEN_WIDTH / 2 - 20, 48, Color.WHITE,
                                         new Rectangle(0, 48, MyGame.SCREEN_WIDTH, 48)));
 
+                        buttons.add(new Button(MyGame.SCREEN_HEIGHT / 2 + 25, 100, 150, 50, Color.GRAY, Color.DARK_GRAY,
+                                        "Default", new ButtonActions().new SwitchSkin("gfx/PaletteBattle.png", 10, 0)));
+
+                        buttons.add(new Button(MyGame.SCREEN_HEIGHT / 2 + 25, 175, 150, 50, Color.GRAY, Color.DARK_GRAY,
+                                        "NES", new ButtonActions().new SwitchSkin("gfx/Palette.png", 10, 1)));
+
+                        buttons.add(new Button(MyGame.SCREEN_HEIGHT / 2 + 25, 250, 150, 50, Color.GRAY, Color.DARK_GRAY,
+                                        "Glitched Colors",
+                                        new ButtonActions().new SwitchSkin("gfx/Skins/Glitched.png", 54, 5)));
+
                         buttons.add(new Button(10, MyGame.SCREEN_HEIGHT - 100, 150, 50, Color.GRAY, Color.DARK_GRAY,
                                         "Back to Menu", new ButtonActions().new BackToMenu()));
                 }

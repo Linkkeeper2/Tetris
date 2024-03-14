@@ -152,6 +152,7 @@ public class ButtonActions {
         public void action() {
             MyGame.account = new Account();
             MyGame.menu = new Menus().new AccountMenu();
+            MyGame.palette = new ColorPalette();
             MyGame.status.addMessage("Logged out Successfully!");
         }
     }
@@ -229,16 +230,29 @@ public class ButtonActions {
 
     public class SwitchSkin implements ButtonAction {
         private String skinPath;
+        private int skinRows;
+        private int skinLevel;
 
-        public SwitchSkin(String path) {
+        public SwitchSkin(String path, int rows, int level) {
             skinPath = path;
+            skinRows = rows;
+            skinLevel = level;
         }
 
         public void action() {
+            if (MyGame.account.level < skinLevel) {
+                MyGame.status.addMessage("You must be level " + skinLevel + " for this skin.", 5000);
+                return;
+            }
+
             MyGame.account.skin = skinPath;
+            MyGame.account.skinRows = skinRows;
+            MyGame.palette = new ColorPalette(skinRows);
 
             if (MyGame.database != null)
                 MyGame.database.updateAccount(MyGame.account.name);
+
+            MyGame.status.addMessage("Skin Applied!", 3000);
         }
     }
 }

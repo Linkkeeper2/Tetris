@@ -81,7 +81,6 @@ public class MyGame extends Game {
         menus = new Menus();
         menu = menus.new MainMenu();
         levelMessage = new Menu().new Text("", 0, 700, Color.WHITE);
-        palette = new ColorPalette();
         save = new Save();
         animation = new ClearAnimation();
         animation.start();
@@ -117,6 +116,8 @@ public class MyGame extends Game {
 
         if (database != null)
             account.login();
+
+        palette = new ColorPalette(account.skinRows);
     }
 
     public void update() {
@@ -176,7 +177,7 @@ public class MyGame extends Game {
         else if (level >= 29)
             speed = (int) ((1 / 60f) * 1000);
 
-        palette.currentPalette = level % 10;
+        palette.currentPalette = level % palette.rows;
     }
 
     public void draw(Graphics pen) {

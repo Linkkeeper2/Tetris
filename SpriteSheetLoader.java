@@ -4,7 +4,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class SpriteSheetLoader {
-    BufferedImage spriteSheet = ImageIO.read(new File(MyGame.account.skin));
+    BufferedImage spriteSheet;
 
     int width;
     int height;
@@ -17,6 +17,7 @@ public class SpriteSheetLoader {
         this.height = height;
         this.rows = rows;
         this.columns = columns;
+        this.spriteSheet = ImageIO.read(new File(MyGame.account.skin));
         sprites = new BufferedImage[rows * columns];
 
         for (int i = 0; i < rows; i++) {

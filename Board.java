@@ -1,6 +1,5 @@
 import java.awt.Color;
 import java.awt.Graphics;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.TimerTask;
 
@@ -970,16 +969,10 @@ public class Board {
         MyGame.score = 0;
         MyGame.timesCleared = 0;
 
-        try {
-            if (MyGame.client == null) {
-                MyGame.level = MyGame.save.startLevel;
-                MyGame.palette.sheet = new SpriteSheetLoader(MyGame.tileSize, MyGame.tileSize, 10, 3);
-            } else {
-                MyGame.level = 0;
-                MyGame.palette.sheet = new SpriteSheetLoader(MyGame.tileSize, MyGame.tileSize, 10, 3,
-                        "gfx/PaletteBattle.png");
-            }
-        } catch (IOException e) {
+        if (MyGame.client == null) {
+            MyGame.level = MyGame.save.startLevel;
+        } else {
+            MyGame.level = 0;
         }
 
         MyGame.pity = 0;

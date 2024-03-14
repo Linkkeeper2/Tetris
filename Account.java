@@ -11,7 +11,8 @@ public class Account {
     public int prestige = 0;
     public int inputDelay = 150;
     public ArrayList<Integer> controls = new ArrayList<>();
-    public String skin = "gfx/PaletteBattle.png";
+    public String skin;
+    public int skinRows;
 
     public Account() {
         name = "Guest" + (int) (Math.random() * 10000);
@@ -23,6 +24,9 @@ public class Account {
         controls.add(47);
         controls.add(67);
         controls.add(90);
+
+        skin = "gfx/PaletteBattle.png";
+        skinRows = 10;
     }
 
     public void login() {
@@ -37,6 +41,8 @@ public class Account {
                 if (MyGame.database.getAccount(accName) != null) {
                     MyGame.database.linkAccount(accName, accPassword);
                 }
+
+                MyGame.palette = new ColorPalette(skinRows);
             } else {
                 reader.close();
                 return;

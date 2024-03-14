@@ -20,7 +20,7 @@ public class DatabaseUpdates {
         Bson query = Filters.eq("prestige", 0);
         // Creates instructions to update the values of two document fields
         Bson updates = Updates.combine(
-                Updates.set("skin", "gfx/PaletteBattle.png"));
+                Updates.set("skinRows", 10));
 
         try {
             collection.updateMany(query, updates);
