@@ -875,29 +875,31 @@ public class Board {
             SoundManager.playSound("sfx/LevelUpSolo.wav", false);
         }
 
-        switch (MyGame.level) {
-            case 9:
-                SoundManager.stopAllSounds();
-                SoundManager.playSound("sfx/Level9.wav", true);
-                break;
+        if (MyGame.client == null) {
+            switch (MyGame.level) {
+                case 9:
+                    SoundManager.stopAllSounds();
+                    SoundManager.playSound("sfx/Level9.wav", true);
+                    break;
 
-            case 19:
-                SoundManager.stopAllSounds();
-                SoundManager.playSound("sfx/Level19.wav", true);
-                break;
+                case 19:
+                    SoundManager.stopAllSounds();
+                    SoundManager.playSound("sfx/Level19.wav", true);
+                    break;
 
-            case 29:
-                SoundManager.stopAllSounds();
-                SoundManager.playSound("sfx/Level29.wav", true);
-                break;
+                case 29:
+                    SoundManager.stopAllSounds();
+                    SoundManager.playSound("sfx/Level29.wav", true);
+                    break;
 
-            case 138:
-                MyGame.palette = new ColorPalette(54, "gfx/Skins/Glitched.png");
-                break;
+                case 138:
+                    MyGame.palette = new ColorPalette(54, "gfx/Skins/Glitched.png");
+                    break;
 
-            case 255:
-                MyGame.level = 0;
-                break;
+                case 255:
+                    MyGame.level = 0;
+                    break;
+            }
         }
     }
 
