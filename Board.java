@@ -238,6 +238,7 @@ public class Board {
                     currentTetrimino = null;
 
                 lock = true;
+                MyGame.doActions = true;
                 return;
             } else if (board[nodes[i].row + 1][nodes[i].col] != null
                     && board[nodes[i].row + 1][nodes[i].col].parent == null) {
@@ -245,6 +246,7 @@ public class Board {
                     currentTetrimino = null;
 
                 lock = true;
+                MyGame.doActions = true;
                 return;
             } else if (board[nodes[i].row + 1][nodes[i].col] != null
                     && !board[nodes[i].row + 1][nodes[i].col].parent.equals(nodes[i].parent)) {
@@ -252,6 +254,7 @@ public class Board {
                     currentTetrimino = null;
 
                 lock = true;
+                MyGame.doActions = true;
                 return;
             }
         }
@@ -853,7 +856,7 @@ public class Board {
                 if ((MyGame.save.startLevel * 10 - 50) - MyGame.lines <= 0)
                     levelUp();
             } else {
-                if (((MyGame.level + 1) * 10 - MyGame.lines) - (MyGame.save.startLevel * 10 - 50) <= 0)
+                if (((MyGame.level + 1) * 10 - MyGame.lines - ((MyGame.save.startLevel * 10 - 50) / 2)) + 5 <= 0)
                     levelUp();
             }
         } else {
@@ -886,6 +889,14 @@ public class Board {
             case 29:
                 SoundManager.stopAllSounds();
                 SoundManager.playSound("sfx/Level29.wav", true);
+                break;
+
+            case 138:
+                MyGame.palette = new ColorPalette(54, "gfx/Skins/Glitched.png");
+                break;
+
+            case 255:
+                MyGame.level = 0;
                 break;
         }
     }
@@ -971,8 +982,10 @@ public class Board {
 
         if (MyGame.client == null) {
             MyGame.level = MyGame.save.startLevel;
+            MyGame.palette = new ColorPalette(10, "gfx/Palette.png");
         } else {
             MyGame.level = 0;
+            MyGame.palette = new ColorPalette(MyGame.account.skinRows);
         }
 
         MyGame.pity = 0;

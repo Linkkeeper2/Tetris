@@ -177,7 +177,10 @@ public class MyGame extends Game {
         else if (level >= 29)
             speed = (int) ((1 / 60f) * 1000);
 
-        palette.currentPalette = level % palette.rows;
+        if (level < 138 || client != null)
+            palette.currentPalette = level % palette.rows;
+        else
+            palette.currentPalette = (level - 30) % 54;
     }
 
     public void draw(Graphics pen) {
