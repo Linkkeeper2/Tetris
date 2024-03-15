@@ -264,12 +264,27 @@ public class Menus {
                         text.add(new Text("Lobby", MyGame.SCREEN_WIDTH / 2 - 20, 48, Color.WHITE,
                                         new Rectangle(0, 48, MyGame.SCREEN_WIDTH, 48)));
 
-                        if (MyGame.client != null && MyGame.client.gameHost)
+                        if (MyGame.client != null && MyGame.client.gameHost) {
                                 buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 200, 150, 50, Color.GRAY,
                                                 Color.DARK_GRAY,
                                                 "Start Game", new ButtonActions().new Start()));
-                        buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 275, 150, 50, Color.GRAY, Color.DARK_GRAY,
-                                        "Disconnect", new ButtonActions().new DisConnect()));
+
+                                /*
+                                 * buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 275, 150, 50,
+                                 * Color.GRAY,
+                                 * Color.DARK_GRAY,
+                                 * "Start Tournament", new ButtonActions().new StartTournament()));
+                                 */
+
+                                buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 350, 150, 50, Color.GRAY,
+                                                Color.DARK_GRAY,
+                                                "Disconnect", new ButtonActions().new DisConnect()));
+                        } else {
+                                buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 200, 150, 50, Color.GRAY,
+                                                Color.DARK_GRAY,
+                                                "Disconnect", new ButtonActions().new DisConnect()));
+                        }
+
                         // buttons.add(new Button(MyGame.SCREEN_WIDTH / 2 - 75, 350, 150, 50,
                         // Color.GRAY, Color.DARK_GRAY, "Add Bot", new ButtonActions().new AddBot()));
                 }

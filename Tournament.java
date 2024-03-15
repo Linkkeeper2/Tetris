@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Tournament {
-    private ArrayList<String[]> brackets;
+    public ArrayList<String[]> brackets;
 
     /**
      * Will construct a new tournament with the necessary amount of brackets.
@@ -15,8 +15,8 @@ public class Tournament {
         for (int i = 0; i < players.size(); i += 2) {
             String[] bracket = new String[2];
 
-            bracket[i] = players.get(i);
-            bracket[i + 1] = players.get(i + 1);
+            bracket[0] = players.get(i);
+            bracket[1] = players.get(i + 1);
             brackets.add(bracket);
         }
     }

@@ -55,7 +55,8 @@ public class Database {
                     .append("status", Arrays.asList())
                     .append("attacks", Arrays.asList())
                     .append("results", Arrays.asList())
-                    .append("inGame", false));
+                    .append("inGame", false)
+                    .append("brackets", Arrays.asList()));
         } catch (MongoException me) {
         }
     }
@@ -99,6 +100,39 @@ public class Database {
             collection.updateOne(query, updates);
         } catch (MongoException me) {
         }
+    }
+
+    public void updateTournament() {
+        collection = database.getCollection("Servers");
+
+        Document query = new Document().append("address", MyGame.client.host);
+
+        Bson updates = Updates.combine(
+                Updates.addEachToSet("brackets", MyGame.board.tournament.brackets));
+
+        try {
+            collection.updateOne(query, updates);
+        } catch (MongoException me) {
+        }
+    }
+
+    public ArrayList<String> getServerPlayers() {
+        collection = database.getCollection("Servers");
+
+        Bson projectionFields = Projections.fields(
+                Projections.include("lobby"),
+                Projections.excludeId());
+
+        Document doc = collection.find(Filters.eq("address", MyGame.client.host))
+                .projection(projectionFields)
+                .first();
+
+        @SuppressWarnings("unchecked")
+        ArrayList<String> players = (ArrayList<String>) doc.get("lobby");
+
+        players.remove(0);
+
+        return players;
     }
 
     public void closeServer() throws UnknownHostException {

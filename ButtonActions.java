@@ -16,6 +16,21 @@ public class ButtonActions {
         }
     }
 
+    public class StartTournament implements ButtonAction {
+        public void action() {
+            Client client = MyGame.client;
+            if (MyGame.client.gameHost && client.lobby.size() > 2 && (client.lobby.size() - 1) % 2 == 0) {
+                MyGame.database.addStatus(MyGame.client.name + " Begun a Tournament!");
+                MyGame.database.updateGameStatus(true);
+                MyGame.board.tournament = new Tournament(MyGame.database.getServerPlayers());
+                MyGame.database.updateTournament();
+            } else {
+                if (!MyGame.client.gameHost)
+                    MyGame.status.addMessage("Only the host can start a Tournament.");
+            }
+        }
+    }
+
     public class Host implements ButtonAction {
         public void action() {
             if (MyGame.client != null)

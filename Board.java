@@ -15,6 +15,7 @@ public class Board {
     private int lockTime = 0;
     private boolean moving = false;
     public boolean spectating = false;
+    public Tournament tournament;
 
     public Board() {
         board = new TetriminoNode[20][10];
