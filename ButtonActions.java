@@ -10,6 +10,7 @@ public class ButtonActions {
             else {
                 if (MyGame.client.gameHost && client.lobby.size() > 2) {
                     MyGame.database.addStatus(MyGame.client.name + " Started the Game!");
+                    MyGame.database.updateGameStatus(true);
                 }
             }
         }
@@ -144,6 +145,11 @@ public class ButtonActions {
         }
 
         public void action() {
+            if (MyGame.database.serverStarted(address)) {
+                MyGame.status.addMessage("Server is currently in a game.", 5000);
+                return;
+            }
+
             MyGame.client = new Client(address, false);
 
             MyGame.client.name = MyGame.account.name;

@@ -43,6 +43,8 @@ public class Menus {
                                         MyGame.status.messages.clear();
                                 }
                         }, 7500);
+
+                        MyGame.board.spectating = false;
                 }
         }
 

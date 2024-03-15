@@ -54,7 +54,8 @@ public class Database {
                     .append("lobby", Arrays.asList("Lobby"))
                     .append("status", Arrays.asList())
                     .append("attacks", Arrays.asList())
-                    .append("results", Arrays.asList()));
+                    .append("results", Arrays.asList())
+                    .append("inGame", false));
         } catch (MongoException me) {
         }
     }
@@ -70,6 +71,34 @@ public class Database {
                 .projection(projectionFields);
 
         return servers;
+    }
+
+    public boolean serverStarted(String address) {
+        collection = database.getCollection("Servers");
+
+        Bson projectionFields = Projections.fields(
+                Projections.include("address", "inGame"),
+                Projections.excludeId());
+
+        Document server = collection.find(Filters.eq("address", address))
+                .projection(projectionFields)
+                .first();
+
+        return server.getBoolean("inGame");
+    }
+
+    public void updateGameStatus(boolean inGame) {
+        collection = database.getCollection("Servers");
+
+        Document query = new Document().append("address", MyGame.client.host);
+
+        Bson updates = Updates.combine(
+                Updates.set("inGame", inGame));
+
+        try {
+            collection.updateOne(query, updates);
+        } catch (MongoException me) {
+        }
     }
 
     public void closeServer() throws UnknownHostException {

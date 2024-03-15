@@ -14,6 +14,7 @@ public class Board {
     public boolean lock = false;
     private int lockTime = 0;
     private boolean moving = false;
+    public boolean spectating = false;
 
     public Board() {
         board = new TetriminoNode[20][10];
@@ -23,15 +24,17 @@ public class Board {
         ClearAnimation animation = MyGame.animation;
 
         if (currentTetrimino == null && alive) {
-            if (animation.rowsToClear.size() == 0)
-                clearRow();
+            if (!spectating) {
+                if (animation.rowsToClear.size() == 0)
+                    clearRow();
 
-            if (animation.rowsToClear.size() == 0) {
-                held = false;
-                swapTetriminos();
-                move(1);
-                lock = false;
-                lockTime = 0;
+                if (animation.rowsToClear.size() == 0) {
+                    held = false;
+                    swapTetriminos();
+                    move(1);
+                    lock = false;
+                    lockTime = 0;
+                }
             }
         } else if (currentTetrimino != null) {
             try {
@@ -40,7 +43,7 @@ public class Board {
             } catch (NullPointerException e) {
             }
 
-            if (MyGame.direction != 0 && !moving) {
+            if (MyGame.direction != 0 && !moving && !spectating) {
                 move(MyGame.direction);
             }
         }
@@ -159,7 +162,7 @@ public class Board {
 
     public void updateArray() {
         // Updates the the board used to move Tetriminos
-        if (MyGame.menu == null) {
+        if (MyGame.menu == null && !spectating) {
             for (int r = 0; r < board.length; r++) {
                 for (int c = 0; c < board[r].length; c++) {
                     if (board[r][c] != null) {
@@ -196,7 +199,7 @@ public class Board {
                 time /= 2;
         }
 
-        if (!alive || !MyGame.doActions) {
+        if (!alive || !MyGame.doActions || spectating) {
             try {
                 MyGame.timer.schedule(new TimerTask() {
                     public void run() {
@@ -224,7 +227,7 @@ public class Board {
     }
 
     public void moveTetriminos() {
-        if (!alive || MyGame.menu != null)
+        if (!alive || MyGame.menu != null || spectating)
             return;
 
         if (currentTetrimino == null)
@@ -509,7 +512,7 @@ public class Board {
     }
 
     public void move(int direction) {
-        if (!alive || !MyGame.doActions)
+        if (!alive || !MyGame.doActions || spectating)
             return;
 
         if (currentTetrimino == null)
@@ -576,7 +579,7 @@ public class Board {
     }
 
     public void hold() {
-        if (MyGame.menu != null || currentTetrimino == null)
+        if (MyGame.menu != null || currentTetrimino == null || spectating)
             return;
 
         for (int i = 0; i < currentTetrimino.nodes.length; i++) {
@@ -1058,7 +1061,7 @@ public class Board {
     public void checkGame() {
         ArrayList<Menu.Text> status = MyGame.status.messages;
 
-        if (status == null)
+        if (status == null || spectating)
             return;
 
         for (int i = 0; i < status.size(); i++) {

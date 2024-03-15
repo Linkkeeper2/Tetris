@@ -295,6 +295,7 @@ public class MyGame extends Game {
         }
 
         MyGame.database.addResult(client.name + ": " + client.deaths + " deaths.");
+        MyGame.database.updateGameStatus(false);
         if (client != null)
             client.queue.clear();
     }
@@ -430,6 +431,7 @@ public class MyGame extends Game {
                     if (client != null && client.gameHost) {
                         exitToMenu();
                         MyGame.database.addStatus("Game Ended by Host.");
+                        MyGame.database.updateGameStatus(false);
                     } else {
                         if (client == null)
                             exitToMenu();
