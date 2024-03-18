@@ -855,7 +855,7 @@ public class Board {
     }
 
     public void levelCalculation() {
-        if (MyGame.save.startLevel >= 12) {
+        if (MyGame.save.startLevel >= 12 && MyGame.client == null) {
             if (MyGame.level == MyGame.save.startLevel) {
                 if ((MyGame.save.startLevel * 10 - 50) - MyGame.lines <= 0)
                     levelUp();
