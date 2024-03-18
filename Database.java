@@ -591,9 +591,11 @@ public class Database {
 
                 menu.otherDeaths = new ArrayList<>();
 
-                for (int i = 0; i < results.size(); i++)
-                    menu.otherDeaths.add(new Menu().new Text(results.get(i), MyGame.SCREEN_WIDTH / 2 - 75,
-                            144 + (i * 48) + 48, Color.WHITE));
+                if (results != null) {
+                    for (int i = 0; i < results.size(); i++)
+                        menu.otherDeaths.add(new Menu().new Text(results.get(i), MyGame.SCREEN_WIDTH / 2 - 75,
+                                144 + (i * 48) + 48, Color.WHITE));
+                }
             }
 
             ArrayList<String> attacks = readAttacks();
