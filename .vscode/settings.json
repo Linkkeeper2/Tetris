@@ -6,5 +6,6 @@
         "exclude": [
             "lib/mongodb-driver-sync-4.11.1.jar"
         ]
-    }
+    },
+    "java.project.outputPath": "bin"
 }
